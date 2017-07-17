@@ -1,0 +1,238 @@
+## Models alailable for training
+
+
+#Model	'method' value	Type	Libraries	Turing Parameters
+
+AdaBoost Classification Trees	adaboost	Classification	fastAdaboost	nIter, method
+AdaBoost.M1	AdaBoost.M1	Classification	adabag, plyr	mfinal, maxdepth, coeflearn
+Adaptive Mixture Discriminant Analysis	amdai	Classification	adaptDA	model
+Adaptive-Network-Based Fuzzy Inference System	ANFIS	Regression	frbs	num.labels, max.iter
+Adjacent Categories Probability Model for Ordinal Data	vglmAdjCat	Classification	VGAM	parallel, link
+Bagged AdaBoost	AdaBag	Classification	adabag, plyr	mfinal, maxdepth
+Bagged CART	treebag	Classification, Regression	ipred, plyr, e1071	None
+Bagged FDA using gCV Pruning	bagFDAGCV	Classification	earth	degree
+Bagged Flexible Discriminant Analysis	bagFDA	Classification	earth, mda	degree, nprune
+Bagged Logic Regression	logicBag	Classification, Regression	logicFS	nleaves, ntrees
+Bagged MARS	bagEarth	Classification, Regression	earth	nprune, degree
+Bagged MARS using gCV Pruning	bagEarthGCV	Classification, Regression	earth	degree
+Bagged Model	bag	Classification, Regression	caret	vars
+Bayesian Additive Regression Trees	bartMachine	Classification, Regression	bartMachine	num_trees, k, alpha, beta, nu
+Bayesian Generalized Linear Model	bayesglm	Classification, Regression	arm	None
+Bayesian Regularized Neural Networks	brnn	Regression	brnn	neurons
+Bayesian Ridge Regression	bridge	Regression	monomvn	None
+Bayesian Ridge Regression (Model Averaged)	blassoAveraged	Regression	monomvn	None
+Binary Discriminant Analysis	binda	Classification	binda	lambda.freqs
+Boosted Classification Trees	ada	Classification	ada, plyr	iter, maxdepth, nu
+Boosted Generalized Additive Model	gamboost	Classification, Regression	mboost, plyr	mstop, prune
+Boosted Generalized Linear Model	glmboost	Classification, Regression	plyr, mboost	mstop, prune
+Boosted Linear Model	BstLm	Classification, Regression	bst, plyr	mstop, nu
+Boosted Logistic Regression	LogitBoost	Classification	caTools	nIter
+Boosted Smoothing Spline	bstSm	Classification, Regression	bst, plyr	mstop, nu
+Boosted Tree	blackboost	Classification, Regression	party, mboost, plyr	mstop, maxdepth
+Boosted Tree	bstTree	Classification, Regression	bst, plyr	mstop, maxdepth, nu
+C4.5-like Trees	J48	Classification	RWeka	C, M
+C5.0	C5.0	Classification	C50, plyr	trials, model, winnow
+CART	rpart	Classification, Regression	rpart	cp
+CART	rpart1SE	Classification, Regression	rpart	None
+CART	rpart2	Classification, Regression	rpart	maxdepth
+CART or Ordinal Responses	rpartScore	Classification	rpartScore, plyr	cp, split, prune
+CHi-squared Automated Interaction Detection	chaid	Classification	CHAID	alpha2, alpha3, alpha4
+Conditional Inference Random Forest	cforest	Classification, Regression	party	mtry
+Conditional Inference Tree	ctree	Classification, Regression	party	mincriterion
+Conditional Inference Tree	ctree2	Classification, Regression	party	maxdepth, mincriterion
+Continuation Ratio Model for Ordinal Data	vglmContRatio	Classification	VGAM	parallel, link
+Cost-Sensitive C5.0	C5.0Cost	Classification	C50, plyr	trials, model, winnow, cost
+Cost-Sensitive CART	rpartCost	Classification	rpart	cp, Cost
+Cubist	cubist	Regression	Cubist	committees, neighbors
+Cumulative Probability Model for Ordinal Data	vglmCumulative	Classification	VGAM	parallel, link
+DeepBoost	deepboost	Classification	deepboost	num_iter, tree_depth, beta, lambda, loss_type
+Diagonal Discriminant Analysis	dda	Classification	sparsediscrim	model, shrinkage
+Distance Weighted Discrimination with Polynomial Kernel	dwdPoly	Classification	kerndwd	lambda, qval, degree, scale
+Distance Weighted Discrimination with Radial Basis Function Kernel	dwdRadial	Classification	kernlab, kerndwd	lambda, qval, sigma
+Dynamic Evolving Neural-Fuzzy Inference System 	DENFIS	Regression	frbs	Dthr, max.iter
+Elasticnet	enet	Regression	elasticnet	fraction, lambda
+Ensemble Partial Least Squares Regression	enpls	Regression	enpls	maxcomp
+Ensemble Partial Least Squares Regression with Feature Selection	enpls.fs	Regression	enpls	maxcomp, threshold
+Ensembles of Generalized Lienar Models	randomGLM	Classification, Regression	randomGLM	maxInteractionOrder
+eXtreme Gradient Boosting	xgbLinear	Classification, Regression	xgboost	nrounds, lambda, alpha, eta
+eXtreme Gradient Boosting	xgbTree	Classification, Regression	xgboost, plyr	nrounds, max_depth, eta, gamma, colsample_bytree, min_child_weight, subsample
+Extreme Learning Machine	elm	Classification, Regression	elmNN	nhid, actfun
+Factor-Based Linear Discriminant Analysis	RFlda	Classification	HiDimDA	q
+Flexible Discriminant Analysis	fda	Classification	earth, mda	degree, nprune
+Fuzzy Inference Rules by Descent Method	FIR.DM	Regression	frbs	num.labels, max.iter
+Fuzzy Rules Using Chi's Method	FRBCS.CHI	Classification	frbs	num.labels, type.mf
+Fuzzy Rules Using Genetic Cooperative-Competitive Learning	GFS.GCCL	Classification	frbs	num.labels, popu.size, max.gen
+Fuzzy Rules Using Genetic Cooperative-Competitive Learning and Pittsburgh	FH.GBML	Classification	frbs	max.num.rule, popu.size, max.gen
+Fuzzy Rules Using the Structural Learning Algorithm on Vague Environment	SLAVE	Classification	frbs	num.labels, max.iter, max.gen
+Fuzzy Rules via MOGUL	GFS.FR.MOGUL	Regression	frbs	max.gen, max.iter, max.tune
+Fuzzy Rules via Thrift	GFS.THRIFT	Regression	frbs	popu.size, num.labels, max.gen
+Fuzzy Rules with Weight Factor	FRBCS.W	Classification	frbs	num.labels, type.mf
+Gaussian Process	gaussprLinear	Classification, Regression	kernlab	None
+Gaussian Process with Polynomial Kernel	gaussprPoly	Classification, Regression	kernlab	degree, scale
+Gaussian Process with Radial Basis Function Kernel	gaussprRadial	Classification, Regression	kernlab	sigma
+Generalized Additive Model using LOESS	gamLoess	Classification, Regression	gam	span, degree
+Generalized Additive Model using Splines	bam	Classification, Regression	mgcv	select, method
+Generalized Additive Model using Splines	gam	Classification, Regression	mgcv	select, method
+Generalized Additive Model using Splines	gamSpline	Classification, Regression	gam	df
+Generalized Linear Model	glm	Classification, Regression		None
+Generalized Linear Model with Stepwise Feature Selection	glmStepAIC	Classification, Regression	MASS	None
+Generalized Partial Least Squares	gpls	Classification	gpls	K.prov
+Genetic Lateral Tuning and Rule Selection of Linguistic Fuzzy Systems	GFS.LT.RS	Regression	frbs	popu.size, num.labels, max.gen
+glmnet	gbm_h2o	Classification, Regression	h2o	ntrees, max_depth, min_rows, learn_rate, col_sample_rate
+glmnet	glmnet	Classification, Regression	glmnet, Matrix	alpha, lambda
+glmnet	glmnet_h2o	Classification, Regression	h2o	alpha, lambda
+Greedy Prototype Selection	protoclass	Classification	proxy, protoclass	eps, Minkowski
+Heteroscedastic Discriminant Analysis	hda	Classification	hda	gamma, lambda, newdim
+High Dimensional Discriminant Analysis	hdda	Classification	HDclassif	threshold, model
+High-Dimensional Regularized Discriminant Analysis	hdrda	Classification	sparsediscrim	gamma, lambda, shrinkage_type
+Hybrid Neural Fuzzy Inference System	HYFIS	Regression	frbs	num.labels, max.iter
+Independent Component Regression	icr	Regression	fastICA	n.comp
+k-Nearest Neighbors	kknn	Classification, Regression	kknn	kmax, distance, kernel
+k-Nearest Neighbors	knn	Classification, Regression		k
+Knn regression via sklearn.neighbors.KNeighborsRegressor	pythonKnnReg	Regression	rPython	n_neighbors, weights, algorithm, leaf_size, metric, p
+L2 Regularized Linear Support Vector Machines with Class Weights	svmLinearWeights2	Classification	LiblineaR	cost, Loss, weight
+L2 Regularized Support Vector Machine (dual) with Linear Kernel	svmLinear3	Classification, Regression	LiblineaR	cost, Loss
+Learning Vector Quantization	lvq	Classification	class	size, k
+Least Angle Regression	lars	Regression	lars	fraction
+Least Angle Regression	lars2	Regression	lars	step
+Least Squares Support Vector Machine	lssvmLinear	Classification	kernlab	tau
+Least Squares Support Vector Machine with Polynomial Kernel	lssvmPoly	Classification	kernlab	degree, scale, tau
+Least Squares Support Vector Machine with Radial Basis Function Kernel	lssvmRadial	Classification	kernlab	sigma, tau
+Linear Discriminant Analysis	lda	Classification	MASS	None
+Linear Discriminant Analysis	lda2	Classification	MASS	dimen
+Linear Discriminant Analysis with Stepwise Feature Selection	stepLDA	Classification	klaR, MASS	maxvar, direction
+Linear Distance Weighted Discrimination	dwdLinear	Classification	kerndwd	lambda, qval
+Linear Regression	lm	Regression		intercept
+Linear Regression with Backwards Selection	leapBackward	Regression	leaps	nvmax
+Linear Regression with Forward Selection	leapForward	Regression	leaps	nvmax
+Linear Regression with Stepwise Selection	leapSeq	Regression	leaps	nvmax
+Linear Regression with Stepwise Selection	lmStepAIC	Regression	MASS	None
+Linear Support Vector Machines with Class Weights	svmLinearWeights	Classification	e1071	cost, weight
+Localized Linear Discriminant Analysis	loclda	Classification	klaR	k
+Logic Regression	logreg	Classification, Regression	LogicReg	treesize, ntrees
+Logistic Model Trees	LMT	Classification	RWeka	iter
+Maximum Uncertainty Linear Discriminant Analysis	Mlda	Classification	HiDimDA	None
+Mixture Discriminant Analysis	mda	Classification	mda	subclasses
+Model Averaged Naive Bayes Classifier	manb	Classification	bnclassify	smooth, prior
+Model Averaged Neural Network	avNNet	Classification, Regression	nnet	size, decay, bag
+Model Rules	M5Rules	Regression	RWeka	pruned, smoothed
+Model Tree	M5	Regression	RWeka	pruned, smoothed, rules
+Multi-Layer Perceptron	mlp	Classification, Regression	RSNNS	size
+Multi-Layer Perceptron	mlpWeightDecay	Classification, Regression	RSNNS	size, decay
+Multi-Layer Perceptron, multiple layers	mlpWeightDecayML	Classification, Regression	RSNNS	layer1, layer2, layer3, decay
+Multi-Layer Perceptron, with multiple layers	mlpML	Classification, Regression	RSNNS	layer1, layer2, layer3
+Multilayer Perceptron Network by Stochastic Gradient Descent	mlpSGD	Classification, Regression	FCNN4R, plyr	size, l2reg, lambda, learn_rate, momentum, gamma, minibatchsz, repeats
+Multivariate Adaptive Regression Spline	earth	Classification, Regression	earth	nprune, degree
+Multivariate Adaptive Regression Splines	gcvEarth	Classification, Regression	earth	degree
+Naive Bayes	nb	Classification	klaR	fL, usekernel, adjust
+Naive Bayes Classifier	nbDiscrete	Classification	bnclassify	smooth
+Naive Bayes Classifier with Attribute Weighting	awnb	Classification	bnclassify	smooth
+Nearest Shrunken Centroids	pam	Classification	pamr	threshold
+Negative Binomial Generalized Linear Model	glm.nb	Regression		link
+Neural Network	neuralnet	Regression	neuralnet	layer1, layer2, layer3
+Neural Network	nnet	Classification, Regression	nnet	size, decay
+Neural Networks with Feature Extraction	pcaNNet	Classification, Regression	nnet	size, decay
+Non-Convex Penalized Quantile Regression	rqnc	Regression	rqPen	lambda, penalty
+Non-Negative Least Squares	nnls	Regression	nnls	None
+Oblique Random Forest	ORFlog	Classification	obliqueRF	mtry
+Oblique Random Forest	ORFpls	Classification	obliqueRF	mtry
+Oblique Random Forest	ORFridge	Classification	obliqueRF	mtry
+Oblique Random Forest	ORFsvm	Classification	obliqueRF	mtry
+Oblique Trees	oblique.tree	Classification	oblique.tree	oblique.splits, variable.selection
+Optimal Weighted Nearest Neighbor Classifier	ownn	Classification	snn	K
+Ordered Logistic or Probit Regression	polr	Classification	MASS	method
+Parallel Random Forest	parRF	Classification, Regression	e1071, randomForest, foreach	mtry
+partDSA	partDSA	Classification, Regression	partDSA	cut.off.growth, MPD
+Partial Least Squares	kernelpls	Classification, Regression	pls	ncomp
+Partial Least Squares	pls	Classification, Regression	pls	ncomp
+Partial Least Squares	simpls	Classification, Regression	pls	ncomp
+Partial Least Squares	widekernelpls	Classification, Regression	pls	ncomp
+Partial Least Squares Generalized Linear Models 	plsRglm	Classification, Regression	plsRglm	nt, alpha.pvals.expli
+Penalized Discriminant Analysis	pda	Classification	mda	lambda
+Penalized Discriminant Analysis	pda2	Classification	mda	df
+Penalized Linear Discriminant Analysis	PenalizedLDA	Classification	penalizedLDA, plyr	lambda, K
+Penalized Linear Regression	penalized	Regression	penalized	lambda1, lambda2
+Penalized Logistic Regression	plr	Classification	stepPlr	lambda, cp
+Penalized Multinomial Regression	multinom	Classification	nnet	decay
+Penalized Ordinal Regression	ordinalNet	Classification, Regression	ordinalNet, plyr	alpha, criteria, link
+Polynomial Kernel Regularized Least Squares	krlsPoly	Regression	KRLS	lambda, degree
+Principal Component Analysis	pcr	Regression	pls	ncomp
+Projection Pursuit Regression	ppr	Regression		nterms
+Quadratic Discriminant Analysis	qda	Classification	MASS	None
+Quadratic Discriminant Analysis with Stepwise Feature Selection	stepQDA	Classification	klaR, MASS	maxvar, direction
+Quantile Random Forest	qrf	Regression	quantregForest	mtry
+Quantile Regression Neural Network	qrnn	Regression	qrnn	n.hidden, penalty, bag
+Quantile Regression with LASSO penalty	rqlasso	Regression	rqPen	lambda
+Radial Basis Function Kernel Regularized Least Squares	krlsRadial	Regression	KRLS, kernlab	lambda, sigma
+Radial Basis Function Network	rbf	Classification, Regression	RSNNS	size
+Radial Basis Function Network	rbfDDA	Classification, Regression	RSNNS	negativeThreshold
+Random Ferns	rFerns	Classification	rFerns	depth
+Random Forest	ranger	Classification, Regression	e1071, ranger	mtry
+Random Forest	Rborist	Classification, Regression	Rborist	predFixed
+Random Forest	rf	Classification, Regression	randomForest	mtry
+Random Forest by Randomization	extraTrees	Classification, Regression	extraTrees	mtry, numRandomCuts
+Random Forest Rule-Based Model	rfRules	Classification, Regression	randomForest, inTrees, plyr	mtry, maxdepth
+Random Forest with Additional Feature Selection	Boruta	Classification, Regression	Boruta, randomForest	mtry
+Regularized Discriminant Analysis	rda	Classification	klaR	gamma, lambda
+Regularized Linear Discriminant Analysis	rlda	Classification	sparsediscrim	estimator
+Regularized Random Forest	RRF	Classification, Regression	randomForest, RRF	mtry, coefReg, coefImp
+Regularized Random Forest	RRFglobal	Classification, Regression	RRF	mtry, coefReg
+Relaxed Lasso	relaxo	Regression	relaxo, plyr	lambda, phi
+Relevance Vector Machines with Linear Kernel	rvmLinear	Regression	kernlab	None
+Relevance Vector Machines with Polynomial Kernel	rvmPoly	Regression	kernlab	scale, degree
+Relevance Vector Machines with Radial Basis Function Kernel	rvmRadial	Regression	kernlab	sigma
+Ridge Regression	ridge	Regression	elasticnet	lambda
+Ridge Regression with Variable Selection	foba	Regression	foba	k, lambda
+Robust Linear Discriminant Analysis	Linda	Classification	rrcov	None
+Robust Linear Model	rlm	Regression	MASS	intercept, psi
+Robust Mixture Discriminant Analysis	rmda	Classification	robustDA	K, model
+Robust Quadratic Discriminant Analysis	QdaCov	Classification	rrcov	None
+Robust Regularized Linear Discriminant Analysis	rrlda	Classification	rrlda	lambda, hp, penalty
+Robust SIMCA	RSimca	Classification	rrcovHD	None
+ROC-Based Classifier	rocc	Classification	rocc	xgenes
+Rotation Forest	rotationForest	Classification	rotationForest	K, L
+Rotation Forest	rotationForestCp	Classification	rpart, plyr, rotationForest	K, L, cp
+Rule-Based Classifier	JRip	Classification	RWeka	NumOpt, NumFolds, MinWeights
+Rule-Based Classifier	PART	Classification	RWeka	threshold, pruned
+Self-Organizing Map	bdk	Classification, Regression	kohonen	xdim, ydim, xweight, topo
+Self-Organizing Maps	xyf	Classification, Regression	kohonen	xdim, ydim, xweight, topo
+Semi-Naive Structure Learner Wrapper	nbSearch	Classification	bnclassify	k, epsilon, smooth, final_smooth, direction
+Shrinkage Discriminant Analysis	sda	Classification	sda	diagonal, lambda
+SIMCA	CSimca	Classification	rrcovHD	None
+Simplified TSK Fuzzy Rules	FS.HGD	Regression	frbs	num.labels, max.iter
+Single C5.0 Ruleset	C5.0Rules	Classification	C50	None
+Single C5.0 Tree	C5.0Tree	Classification	C50	None
+Single Rule Classification	OneR	Classification	RWeka	None
+Sparse Distance Weighted Discrimination	sdwd	Classification	sdwd	lambda, lambda2
+Sparse Linear Discriminant Analysis	sparseLDA	Classification	sparseLDA	NumVars, lambda
+Sparse Mixture Discriminant Analysis	smda	Classification	sparseLDA	NumVars, lambda, R
+Sparse Partial Least Squares	spls	Classification, Regression	spls	K, eta, kappa
+Spike and Slab Regression	spikeslab	Regression	spikeslab, plyr	vars
+Stabilized Linear Discriminant Analysis	slda	Classification	ipred	None
+Stabilized Nearest Neighbor Classifier	snn	Classification	snn	lambda
+Stacked AutoEncoder Deep Neural Network	dnn	Classification, Regression	deepnet	layer1, layer2, layer3, hidden_dropout, visible_dropout
+Stepwise Diagonal Linear Discriminant Analysis	sddaLDA	Classification	SDDA	None
+Stepwise Diagonal Quadratic Discriminant Analysis	sddaQDA	Classification	SDDA	None
+Stochastic Gradient Boosting	gbm	Classification, Regression	gbm, plyr	n.trees, interaction.depth, shrinkage, n.minobsinnode
+Subtractive Clustering and Fuzzy c-Means Rules	SBC	Regression	frbs	r.a, eps.high, eps.low
+Supervised Principal Component Analysis	superpc	Regression	superpc	threshold, n.components
+Support Vector Machines with Boundrange String Kernel	svmBoundrangeString	Classification, Regression	kernlab	length, C
+Support Vector Machines with Class Weights	svmRadialWeights	Classification	kernlab	sigma, C, Weight
+Support Vector Machines with Exponential String Kernel	svmExpoString	Classification, Regression	kernlab	lambda, C
+Support Vector Machines with Linear Kernel	svmLinear	Classification, Regression	kernlab	C
+Support Vector Machines with Linear Kernel	svmLinear2	Classification, Regression	e1071	cost
+Support Vector Machines with Polynomial Kernel	svmPoly	Classification, Regression	kernlab	degree, scale, C
+Support Vector Machines with Radial Basis Function Kernel	svmRadial	Classification, Regression	kernlab	sigma, C
+Support Vector Machines with Radial Basis Function Kernel	svmRadialCost	Classification, Regression	kernlab	C
+Support Vector Machines with Radial Basis Function Kernel	svmRadialSigma	Classification, Regression	kernlab	sigma, C
+Support Vector Machines with Spectrum String Kernel	svmSpectrumString	Classification, Regression	kernlab	length, C
+The Bayesian lasso	blasso	Regression	monomvn	sparsity
+The lasso	lasso	Regression	elasticnet	fraction
+Tree Augmented Naive Bayes Classifier	tan	Classification	bnclassify	score, smooth
+Tree Augmented Naive Bayes Classifier Structure Learner Wrapper	tanSearch	Classification	bnclassify	k, epsilon, smooth, final_smooth, sp
+Tree Augmented Naive Bayes Classifier with Attribute Weighting	awtan	Classification	bnclassify	score, smooth
+Tree Models from Genetic Algorithms	evtree	Classification, Regression	evtree	alpha
+Tree-Based Ensembles	nodeHarvest	Classification, Regression	nodeHarvest	maxinter, mode
+Variational Bayesian Multinomial Probit Regression	vbmpRadial	Classification	vbmp	estimateTheta
+Wang and Mendel Fuzzy Rules	WM	Regression	frbs	num.labels, type.mf
+Weighted Subspace Random Forest	wsrf	Classification	wsrf	mtry

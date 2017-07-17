@@ -1,0 +1,91 @@
+ada	Boosted Classification Trees
+AdaBag	Bagged AdaBoost
+adaboost	AdaBoost Classification Trees
+AdaBoost.M1	AdaBoost.M1
+avNNet	Model Averaged Neural Network
+bagEarth	Bagged MARS
+bagEarthGCV	Bagged MARS using gCV Pruning
+bagFDA	Bagged Flexible Discriminant Analysis
+bagFDAGCV	Bagged FDA using gCV Pruning
+bayesglm	Bayesian Generalized Linear Model
+blackboost	Boosted Tree
+BstLm	Boosted Linear Model
+bstTree	Boosted Tree
+C5.0	C5.0
+C5.0Cost	Cost-Sensitive C5.0
+cforest	Conditional Inference Random Forest
+ctree	Conditional Inference Tree
+deepboost	DeepBoost
+dnn	Stacked AutoEncoder Deep Neural Network
+dwdLinear	Linear Distance Weighted Discrimination
+elm	Extreme Learning Machine
+evtree	Tree Models from Genetic Algorithms
+extraTrees	Random Forest by Randomization
+fda	Flexible Discriminant Analysis
+gaussprPoly	Gaussian Process with Polynomial Kernel
+gaussprRadial	Gaussian Process with Radial Basis Function Kernel
+gbm	Stochastic Gradient Boosting
+glm	Generalized Linear Model
+glmboost	Boosted Generalized Linear Model
+glmnet	glmnet
+glmStepAIC	Generalized Linear Model with Stepwise Feature Selection
+gpls	Generalized Partial Least Squares
+J48	C4.5-like Trees
+JRip	Rule-Based Classifier
+kernelpls	Partial Least Squares
+kknn	k-Nearest Neighbors
+knn	k-Nearest Neighbors
+lda	Linear Discriminant Analysis
+LMT	Logistic Model Trees
+LogitBoost	Boosted Logistic Regression
+lssvmRadial	Least Squares Support Vector Machine with Radial Basis Function Kernel
+lvq	Learning Vector Quantization
+mda	Mixture Discriminant Analysis
+mlp	Multi-Layer Perceptron
+mlpML	Multi-Layer Perceptron, with multiple layers
+mlpSGD	Multilayer Perceptron Network by Stochastic Gradient Descent
+mlpWeightDecay	Multi-Layer Perceptron
+mlpWeightDecayML	Multi-Layer Perceptron, multiple layers
+multinom	Penalized Multinomial Regression
+nb	Naive Bayes
+nnet	Neural Network
+nodeHarvest	Tree-Based Ensembles
+ownn	Optimal Weighted Nearest Neighbor Classifier
+parRF	Parallel Random Forest
+PART	Rule-Based Classifier
+pcaNNet	Neural Networks with Feature Extraction
+pda	Penalized Discriminant Analysis
+pda2	Penalized Discriminant Analysis
+PenalizedLDA	Penalized Linear Discriminant Analysis
+plr	Penalized Logistic Regression
+pls	Partial Least Squares
+plsRglm	Partial Least Squares Generalized Linear Models 
+randomGLM	Ensembles of Generalized Lienar Models
+Rborist	Random Forest
+rda	Regularized Discriminant Analysis
+rf	Random Forest
+RFlda	Factor-Based Linear Discriminant Analysis
+rfRules	Random Forest Rule-Based Model
+rmda	Robust Mixture Discriminant Analysis
+rocc	ROC-Based Classifier
+rotationForest	Rotation Forest
+rotationForestCp	Rotation Forest
+rpart	CART
+rpartCost	Cost-Sensitive CART
+RRF	Regularized Random Forest
+rrlda	Robust Regularized Linear Discriminant Analysis
+sdwd	Sparse Distance Weighted Discrimination
+slda	Stabilized Linear Discriminant Analysis
+snn	Stabilized Nearest Neighbor Classifier
+spls	Sparse Partial Least Squares
+stepLDA	Linear Discriminant Analysis with Stepwise Feature Selection
+stepQDA	Quadratic Discriminant Analysis with Stepwise Feature Selection
+svmLinear	Support Vector Machines with Linear Kernel
+svmLinear2	Support Vector Machines with Linear Kernel
+svmLinearWeights	Linear Support Vector Machines with Class Weights
+svmPoly	Support Vector Machines with Polynomial Kernel
+svmRadial	Support Vector Machines with Radial Basis Function Kernel
+svmRadialCost	Support Vector Machines with Radial Basis Function Kernel
+svmRadialSigma	Support Vector Machines with Radial Basis Function Kernel
+svmRadialWeights	Support Vector Machines with Class Weights
+treebag	Bagged CART
