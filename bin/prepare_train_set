@@ -1,0 +1,79 @@
+#!/bin/bash
+
+echo ======================================
+
+echo " "
+echo USAGE:
+echo " "
+echo " $0 -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [--re-sample (re-sample and overwrite data set if exsist)] "
+echo " "
+
+echo --------------------------------------
+
+echo " "
+echo EXAMPLEs:
+echo " "
+echo " $0 -t GM12878 --circ GM12878_circ.bed -R 1 "
+echo " "
+
+echo ======================================
+
+echo " "
+echo Command is: $0 $*
+echo " "
+
+
+if [ ! -d "log" ] && [ $# -ge "6" ]; then
+
+	mkdir log
+
+fi
+
+
+if [ $# -ge "6" ]  && [ $1 == "-t" ] && [ $3 == "--circ" ] && [ $5 == "-R" ] && [ -f "$2_anno_comb" ] && [ -f "$4" ]; then
+
+
+	if [ ! -f "$2_circ_true" ] || [ ! -f "$2_unknown" ]; then
+		echo '>>> circRNA intron pairs have not been selected,'
+		echo " "
+		echo ' start to separate intron pairs into ture and unknown pairs ... '
+		echo " "
+		time python $PKG_DIR/bin/model/sep_intron_true_unknown.py -t $2 --circ $4
+		echo " "
+		echo " "
+		echo '>>> Intron pairs separated.'
+		echo " "
+	fi
+
+	if [ ! -f "$2_pred" ] || [ ! -f "$2_train" ]; then
+		echo '>>> Traning set do not exsist,'
+		echo " "
+		echo ' start to build traning set ... '
+		echo " "
+		echo " "
+		time python $PKG_DIR/bin/model/make_set.py -t $2 -R $6
+		echo " "
+		echo " "
+		echo '>>> Training set built.'
+		echo " "
+	elif [ $# == "7" ] && [ $7 == "--re-sample" ]; then
+		echo '>>> Start to re-sample ...'
+		echo " "
+		echo " "
+		time python $PKG_DIR/bin/model/make_set.py -t $2 -R $6
+		echo " "
+		echo " "
+		echo '>>> Re-sample finished.'
+	else \
+		echo '>>> Traning set exsist.'
+		echo '>>> Please add "--re-sample" args if want to do re-sample. '
+		echo " "
+	fi
+
+	echo '>>> Task finished.'
+	echo " "
+
+
+fi
+
+

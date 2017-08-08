@@ -1,0 +1,165 @@
+#!/bin/bash
+
+echo ======================================
+
+echo " "
+echo USAGE:
+echo " "
+echo " $0 -t <cell_type> -f <feature (rbp, his, hmm, dnase, hic ...)> [ --is (Ignore strands) ] --bed/--bedpe <feature.bed/feature.bedpe> "
+echo " "
+
+echo --------------------------------------
+
+echo " "
+echo EXAMPLEs:
+echo " "
+echo " $0 -t GM12878 -f his --is --bed GM12878_his.bed "
+echo " "
+
+echo ======================================
+
+echo " "
+echo Command is: $0 $*
+echo " "
+
+
+if [ ! -d "log" ]; then
+
+	mkdir log
+
+fi
+
+
+if [ $# == "6" ] && [ $1 == "-t" ] && [ $3 == "-f" ] && [ ! -f "$6" ]; then
+
+	echo ">>> Coud not find feature bed file $6. "
+	echo " "
+
+fi
+
+if [ $# == "7" ] && [ $1 == "-t" ] && [ $3 == "-f" ] && [ $5 == "--is" ] && [ ! -f "$7" ]; then
+
+	echo ">>> Coud not find feature bed file $7. "
+	echo " "
+
+fi
+
+
+if [ $# == "6" ] && [ $1 == "-t" ] && [ $3 == "-f" ] && [ -f "$6" ]; then
+
+	if [ ! -f "$2_$4.list" ]; then
+		
+		if [ $5 == "--bed" ]; then
+			echo ">>> Could not find feature list $2_$4.list,"
+			echo ' and start to build feature list file ... '
+			echo " "
+			cut -f4 $6 | sort -k1,1 -u - > $2_$4.list
+			echo ">>> Feature list $2_$4.list built. "
+			echo " "
+		elif [ $5 == "--bedpe" ]; then
+			echo ">>> Could not find feature list $2_$4.list,"
+			echo ' and start to build feature list file ... '
+			echo " "
+			cut -f7 $6 | sort -k1,1 -u - > $2_$4.list
+			echo ">>> Feature list $2_$4.list built. "
+			echo " "
+		fi
+
+	fi
+
+	if [ ! -f "overlap_$2_$4" ]; then
+		
+		echo ">>> Start to overlap feature regions and introns (intron pairs) ... "
+		echo " "
+		$PKG_DIR/bin/anno/bt_overlap $2 $4 $5 $6
+		echo '>>> All have been intersected.'
+		echo " "
+	fi
+
+	if [ $5 == "--bedpe" ]; then
+		echo '>>> Annotate intron pairs with Hi-C interactions ... '
+		echo " "
+		nohup time python $PKG_DIR/bin/anno/anno_bedpe.py -t $2 -f $4 -l $2_$4.list -r $PKG_DIR/data/intron_pairs.bedpe > log/anno_$2_$4.out
+		echo " "
+		mkdir _tmp
+		head -1 raw_pair_anno_$2_$4 > _tmp/hic_header
+		sed -n '2,$p' raw_pair_anno_$2_$4 | sort -k1,1 - | cat _tmp/hic_header - > pair_anno_$2_$4
+		rm -rf raw_pair_anno_$2_hic _tmp
+		echo " "
+		echo '>>> Annotation finished. '
+		echo " "
+	elif [ $5 == "--bed" ]; then
+		echo ">>> Annotate introns with $4 ... "
+		echo " "
+		nohup time python $PKG_DIR/bin/anno/anno_intron.py -t $2 -f $4 -l $2_$4.list -r $PKG_DIR/data/intron.bed > log/anno_$2_$4.out
+		echo " "
+		echo '>>> All introns have annotated, start to annotate intron pairs ... '
+		echo " "
+		nohup time python $PKG_DIR/bin/anno/comb_pair_anno.py -t $2 -f $4 -r $PKG_DIR/data/intron_pairs-intron > log/anno_$2_$4.out
+		echo " "
+		echo '>>> Annotation finished. '
+		echo " "
+	fi
+
+fi
+
+
+if [ $# == "7" ] && [ $1 == "-t" ] && [ $3 == "-f" ] && [ $5 == "--is" ] && [ -f "$7" ]; then
+
+	if [ ! -f "$2_$4.list" ]; then
+		
+		if [ $6 == "--bed" ]; then
+			echo ">>> Could not find feature list $2_$4.list,"
+			echo ' and start to build feature list file ... '
+			echo " "
+			cut -f4 $7 | sort -k1,1 -u - > $2_$4.list
+			echo ">>> Feature list $2_$4.list built. "
+			echo " "
+		elif [ $6 == "--bedpe" ]; then
+			echo ">>> Could not find feature list $2_$4.list,"
+			echo ' and start to build feature list file ... '
+			echo " "
+			cut -f7 $7 | sort -k1,1 -u - > $2_$4.list
+			echo ">>> Feature list $2_$4.list built. "
+			echo " "
+		fi
+
+	fi
+
+	if [ ! -f "overlap_$2_$4" ]; then
+		
+		echo ">>> Start to overlap feature regions and introns (intron pairs) ... "
+		echo " "
+		$PKG_DIR/bin/anno/bt_overlap $2 $4 $5 $6 $7
+		echo '>>> All have been intersected.'
+		echo " "
+	fi
+
+	if [ $6 == "--bedpe" ]; then
+		echo '>>> Annotate intron pairs with Hi-C interactions ... '
+		echo " "
+		nohup time python $PKG_DIR/bin/anno/anno_bedpe.py -t $2 -f $4 -l $2_$4.list -r $PKG_DIR/data/intron_pairs.bedpe > log/anno_$2_$4.out
+		echo " "
+		mkdir _tmp
+		head -1 raw_pair_anno_$2_$4 > _tmp/hic_header
+		sed -n '2,$p' raw_pair_anno_$2_$4 | sort -k1,1 - | cat _tmp/hic_header - > pair_anno_$2_$4
+		rm -rf raw_pair_anno_$2_$4 _tmp
+		echo " "
+		echo '>>> Annotation finished. '
+		echo " "
+	elif [ $6 == "--bed" ]; then
+		echo ">>> Annotate introns with $4 ... "
+		echo " "
+		nohup time python $PKG_DIR/bin/anno/anno_intron.py -t $2 -f $4 -l $2_$4.list -r $PKG_DIR/data/intron.bed > log/anno_$2_$4.out
+		echo " "
+		echo '>>> All introns have annotated, start to annotate intron pairs ... '
+		echo " "
+		nohup time python $PKG_DIR/bin/anno/comb_pair_anno.py -t $2 -f $4 -r $PKG_DIR/data/intron_pairs-intron > log/anno_$2_$4.out
+		echo " "
+		echo '>>> Annotation finished. '
+		echo " "
+	fi
+
+fi
+
+

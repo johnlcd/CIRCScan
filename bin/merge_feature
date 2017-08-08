@@ -1,0 +1,46 @@
+#!/bin/bash
+
+echo ======================================
+
+echo " "
+echo USAGE:
+echo " "
+echo " $0 -t <cell_type> "
+echo " "
+
+echo --------------------------------------
+
+echo " "
+echo EXAMPLEs:
+echo " "
+echo " $0 -t GM12878 "
+echo " "
+
+echo ======================================
+
+echo " "
+echo Command is: $0 $*
+echo " "
+
+
+if [ $# == "2" ] && [ $1 == "-t" ]; then
+
+	if [ -f "$2_anno_comb" ]; then
+		echo ">>> Merged annotation file $2_anno_comb exsists,"
+		echo ">>> If want to re-merge annotaion, please remove old file and run this program again."
+	else \
+		echo '>>> No merged annotation file, start to merge features ... '
+		echo " "
+		mkdir _tmp
+		ls --color=never pair_anno_$2* | while read a; do cut -f 2- $a > _tmp/$a.tmp; done
+		paste $PKG_DIR/data/intron_pairs_interval.bed _tmp/pair_anno_$2* > $2_anno_comb
+		rm -rf _tmp/
+		echo '>>> All features have merged. '
+		echo " "
+		echo '>>> Task finished. '
+	fi
+	echo " "
+
+fi
+
+
