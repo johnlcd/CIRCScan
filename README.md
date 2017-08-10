@@ -34,11 +34,13 @@ Please describe in details, and attach your command line and log messages if pos
 - **Python** \(recommended: python2.7\)
 - **R** \(>= 3.2.4\)
 		R packages: caret, ggplot, doParallel, ROCR, etc. (Dependent packages for different models) 
+		
 		Check the output file ".out" to validate which package is required if got an error
 <br>
 
 ## Directory catalog
 <br>
+
 - **bin**  	
 	- **anno**  
 		- anno_bedpe.py  
