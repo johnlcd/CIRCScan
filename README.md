@@ -1,30 +1,47 @@
-=================================================================
 
-### Tutorial of circRNAs predition.
+# CIRCScan <br>
+###### Tools for predicting circRNAs with `EPIGENETIC` features by `Machine Learning`
+<br><br>
 
-=================================================================
+## Introduction
+######
+<br>
+
+## License
+###### This software is distributed under the terms of GPL 2.0
+<br>
+
+## Source
+###### [https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan) 
+<br>
+
+## Contact
+### Author <br>
+######		Jia-Bin Chen, Shan-Shan Dong, Shi Yao, Yan Guo, Tie-Lin Yang
+######		Key Laboratory of Biomedical Information Engineering of Ministry of Education, School of Life Science and Technology, Xi'an Jiaotong University, Xi'an, Shaanxi Province, 710049, P. R. China
+######		[yangtielin@mail.xjtu.edu.cn](yangtielin@mail.xjtu.edu.cn)
+<br>
+
+## Maintainer <br>
+######		Jia-Bin Chen
+######		You can contact [johnlcd@stu.xjtu.edu.cn](johnlcd@stu.xjtu.edu.cn) when you have any questions, suggestions, comments, etc.
+######		Please describe in details, and attach your command line and log messages if possible.
+<br>
+
+## Requiremnets
+- #####bedtools \(v2.25.0\)
+- #####Python 2.7 \(recommended\)
+- #####R \(>= 3.2.4\)
+	- ######R packages: caret, ggplot, doParallel, ROCR \(main\) , other dependent packages for different models 
+	######\(Check the output file ".out" to validate which package is required if got an error\)
+
+## Runing preparation <br>
+### Set environment variables <br>
+######		export PKG_DIR=/path/to/tool_package
+######		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:PKG_DIR/bin/model:$PATH
 
 
------------------------------------------------------------------
-
-# Set environment variables
-
-export PKG_DIR=/path/to/tool_package
-export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:PKG_DIR/bin/model:$PATH
-
-# Tools and packages required
-## bedtools (v2.25.0) 
-## Python 2.7 (recommended) or Python 2.6
-## R (>= 3.2.4)
-## R packages: caret, ggplot, doParallel, ROCR (main) && other dependent packages for different models 
-## (Check the output file ".out" to validate which package is required if got an error)
-
------------------------------------------------------------------
-
-
------------------------------------------------------------------
-
-# Directory catalog
+## Directory catalog <br>
 
 	$PKG_DIR/bin: All script, including:
 		
