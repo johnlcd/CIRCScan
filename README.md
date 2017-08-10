@@ -119,6 +119,7 @@ Please describe in details, and attach your command line and log messages if pos
 		export PKG_DIR=/path/to/tool_package
 		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:$PKG_DIR/bin/model:$PATH
 <br>
+
 ### Unzip data files  
 		cd $PKG_DIR/data
 		tar -zxvf intron_intron-pairs.tgz
@@ -126,6 +127,7 @@ Please describe in details, and attach your command line and log messages if pos
 		gunzip *.gz
 		cat Histone_part1.txt Histone_part2.txt > Histone.txt
 <br>
+
 
 ## Work flow
 
