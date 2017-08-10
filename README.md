@@ -1,99 +1,131 @@
 
-# CIRCScan <br>
-Tools for predicting circRNAs with `EPIGENETIC` features by `Machine Learning`
-<br><br>
-
-## Introduction
-######
+# CIRCScan  
+Tools for predicting circRNAs with `EPIGENETIC` features by `Machine Learning`  
 <br>
 
+## Introduction
+Circular RNAs (circRNAs) are an abundant class of noncoding RNAs with the widespread, cell/tissue specific pattern. This tool \(pipeline\), 
+		 **CIRCScan**, is used to predict circRNAs in a cell/tissue specific manner by machine learning based on epigenetic features.  
+<br>
+  
 ## License
-This software is distributed under the terms of GPL 2.0
+This software is distributed under the terms of GPL 2.0  
 <br>
 
 ## Source
-[https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan) 
+[https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
 <br>
 
 ## Contact
-### Author <br>
+### Author
 **Jia-Bin Chen**, **Shan-Shan Dong**, **Shi Yao**, **Yan Guo**, **Tie-Lin Yang**  
 Key Laboratory of Biomedical Information Engineering of Ministry of Education, School of Life Science and Technology, Xi'an Jiaotong University, Xi'an, Shaanxi Province, 710049, P. R. China  
 [yangtielin@mail.xjtu.edu.cn](yangtielin@mail.xjtu.edu.cn)
 <br>
 
-## Maintainer <br>
+## Maintainer
 **Jia-Bin Chen**  
 You can contact [johnlcd@stu.xjtu.edu.cn](johnlcd@stu.xjtu.edu.cn) when you have any questions, suggestions, comments, etc.  
 Please describe in details, and attach your command line and log messages if possible.
 <br>
 
 ## Requiremnets
-- #####bedtools \(v2.25.0\)
-- #####Python 2.7 \(recommended\)
-- #####R \(>= 3.2.4\)
-	- R packages: caret, ggplot, doParallel, ROCR \(main\) , other dependent packages for different models 
-	\(Check the output file ".out" to validate which package is required if got an error\)
+- **bedtools** \(v2.25.0\)
+- **Python** \(recommended: python2.7\)
+- **R** \(>= 3.2.4\)
+		R packages: caret, ggplot, doParallel, ROCR, etc. (Dependent packages for different models) 
+		Check the output file ".out" to validate which package is required if got an error
+<br>
 
-## Runing preparation <br>
-### Set environment variables <br>
+## Directory catalog
+<br>
+- **bin**  	
+	- **anno**  
+		- anno_bedpe.py  
+		- anno_intron.py
+		- bt_overlap
+		- comb_pair_anno.py
+	- anno_pair
+	- circpred
+	- fast_model
+	- merge_feature
+	- **model**
+		- Circ_pred.R
+		- fast_model.R
+		- feature_selection.R
+		- make_set.py
+		- Model_train.R
+		- sep_intron_true_unknown.py
+	- prepare_train_set
+- **data**
+	- intron_intron-pairs.tgz
+	- **pred_circ_bycell**
+		- A549_pred_circ.bed.gz
+		- GM12878_pred_circ.bed.gz
+		- H1-hESC_pred_circ.bed.gz
+		- HeLa-S3_pred_circ.bed.gz
+		- HepG2_pred_circ.bed.gz
+		- HMEC_pred_circ.bed.gz
+		- HSMM_pred_circ.bed.gz
+		- HUVEC_pred_circ.bed.gz
+		- K562_pred_circ.bed.gz
+		- NHEK_pred_circ.bed.gz
+		- NHLF_pred_circ.bed.gz
+	- **raw_data**
+		- 4DGenome_HomoSapiens_hg19.txt.gz
+		- ChromHMM.txt.gz
+		- DNaseI.txt.gz
+		- GSE63525_GM12878_primary+replicate_HiCCUPS_looplist_new.txt.gz
+		- GSE63525_HeLa_HiCCUPS_looplist_new.txt.gz
+		- GSE63525_HMEC_HiCCUPS_looplist_new.txt.gz
+		- GSE63525_K562_HiCCUPS_looplist_new.txt.gz
+		- GSE63525_NHEK_HiCCUPS_looplist_new.txt.gz
+		- Histone_part1.txt.gz
+		- Histone_part2.txt.gz
+		- RBP.txt.gz
+		- select_cell.list
+- **info**
+	- models_ALL.list
+	- models_classification.list
+	- models_test.list
+	- models_test.txt
+- README.md
+- **sample**
+	- **anno**
+		- intron_anno_K562_dnase.gz
+		- ...
+	- **fast_process**
+		- K562_pred.gz
+		- K562_train.gz
+	- **feature**
+		- **all_feature**
+		- feature_select.list
+		- K562_dnase.bed.gz
+		- ...
+	- K562_anno_comb.gz
+	- K562_circ.bed.gz
+	- K562_circ_true.gz
+	- K562_unknown.gz
+	- **model**
+		- K562_pred.gz
+		- K562_train.gz
+<br>
+
+
+## Runing preparation
+### Set environment variables  
 		export PKG_DIR=/path/to/tool_package
-		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:PKG_DIR/bin/model:$PATH
+		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:$PKG_DIR/bin/model:$PATH
+<br>
+### Unzip data files  
+		cd $PKG_DIR/data
+		tar -zxvf intron_intron-pairs.tgz
+		cd $PKG_DIR/data/raw_data
+		gunzip *.gz
+		cat Histone_part1.txt Histone_part2.txt > Histone.txt
+<br>
 
-
-## Directory catalog <br>
-
-	$PKG_DIR/bin: All script, including:
-		
-		directory:
-		anno/	# script used for annotation
-		anno/anno_bedpe.py
-		anno/anno_intron.py
-		anno/bt_overlap
-		anno/comb_pair_anno.py
-		model/  # script used for model traning, feature selection and prediction
-		model/Circ_pred.R
-		model/fast_model.R
-		model/fast_train_pred.R
-		model/feature_selection.R
-		model/make_set.py
-		model/Model_train.R
-		model/sep_intron_true_unknown.py
-
-		file:
-		anno_pair
-		circpred
-		fast_model
-		merge_feature
-
-
-	$PKG_DIR/data: All data (intron and intron pairs, altenative epigenetic data), including:
-		
-		directory:
-		pred_circ_bycell/	# preditcted circRNAs by H3K36me3 and H3K79me2
-		raw_data/	# alternative epigenetic data
-
-		file: (packaged in 'intron_intron-pairs.tgz')
-		intron.bed
-		intron_pairs.bedpe
-		intron_pairs_interval.bed
-		intron_pairs-intron
-
-
-	$PKG_DIR/info: Information about 'caret' models
-
-
-	$PKG_DIR/sample: Sample of circRNA pipeline
-
-
-	$PKG_DIR/README
-
------------------------------------------------------------------
-
-
------------------------------------------------------------------
-
-# Work flow
+## Work flow
 
 
 # PART 1: Data preparation and feature generation
