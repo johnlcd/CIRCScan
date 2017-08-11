@@ -345,7 +345,7 @@ Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 `"K562_train"`, `"K562_pred"` used for machine learning later  
 
 >***NOTE:***   
->> `"known_circ.bed"`: reported circRNA BED file from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
+>> `"known_circ.bed"`: reported circRNAs from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
 **`CIRCpedia`** \( [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) \)  
 <br>
 
