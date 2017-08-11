@@ -131,8 +131,8 @@ Please describe in details, and attach your command line and log messages if pos
 ## Work flow
 <br>
 
-####1. Data preparation and feature generation
-- #####Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
+#### 1. Data preparation and feature generation
+- ##### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 
 **CMD:**  
 
