@@ -377,7 +377,7 @@ features, e.g.:
 		e.g.:
 		fast_model -t K562 -m rf -n 8
 	
-Generate models and R data and log file `"K562_rf_fast_model.RData"`, output file `"K562_rf_fast_model.out"` and predicted circRNA file `"K562_rf_pred_true.bed"`  
+Generate models and R data and log file `"K562_rf_fast_model.RData"`, output file `"K562_rf_fast_model.out"` and predicted circRNAs `"K562_rf_pred_true.bed"`  
 
 
 - #### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
@@ -420,8 +420,8 @@ Generate R data file "K562_rf_FS.RData" of feature selection and log file `"K562
 		e.g.:
 		circpred --pred -t K562 -m rf -n 8
 
-Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"  
-<br><br><br>
+Generate predicted anaotated circRNAs file "K562_rf_pred_true.bed"  
+<br><br>
 
 
 >### *All data are avaliable in `$PKG_DIR/sample` for performing and replicating the works in this Document.*
