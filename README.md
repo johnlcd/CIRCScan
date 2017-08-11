@@ -13,20 +13,20 @@
 <br>
 
 ## Source
-[https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
+> [https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
 <br>
 
 ## Contact
 ### Author
-**Jia-Bin Chen**, **Shan-Shan Dong**, **Shi Yao**, **Yan Guo**, **Tie-Lin Yang**  
-Key Laboratory of Biomedical Information Engineering of Ministry of Education, School of Life Science and Technology, Xi'an Jiaotong University, Xi'an, Shaanxi Province, 710049, P. R. China  
-[yangtielin@mail.xjtu.edu.cn](yangtielin@mail.xjtu.edu.cn)  
+> **Jia-Bin Chen**, **Shan-Shan Dong**, **Shi Yao**, **Yan Guo**, **Tie-Lin Yang**  
+> Key Laboratory of Biomedical Information Engineering of Ministry of Education, School of Life Science and Technology, Xi'an Jiaotong University, Xi'an, Shaanxi Province, 710049, P. R. China  
+> [yangtielin@mail.xjtu.edu.cn](yangtielin@mail.xjtu.edu.cn)  
 <br>
 
 ## Maintainer
-**Jia-Bin Chen**  
-You can contact [johnlcd@stu.xjtu.edu.cn](johnlcd@stu.xjtu.edu.cn) when you have any questions, suggestions, comments, etc.  
-Please describe in details, and attach your command line and log messages if possible.  
+> **Jia-Bin Chen**  
+> You can contact [johnlcd@stu.xjtu.edu.cn](johnlcd@stu.xjtu.edu.cn) when you have any questions, suggestions, comments, etc.  
+> Please describe in details, and attach your command line and log messages if possible.  
 <br>
 
 ## Requiremnets
