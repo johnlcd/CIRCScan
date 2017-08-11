@@ -139,7 +139,7 @@
 <br>
 
 ### 1. Data preparation and feature generation
-- #### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
+- ### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 > Epigenetic data including DNaseI HS, RBP, Histone modification, ChromHMM downloaded from `ENCODE`
 > \( [ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/) \)  
 
@@ -204,7 +204,7 @@
 	chr1	889676	894765	chr1	933851	937168	Hi-C  
 	chr1	889676	896594	chr1	933897	938982	Hi-C  
 
-- #### Feature generation and annotation:
+- ### Feature generation and annotation:
 
 ***1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of `"bed"` format )***  
 
@@ -316,7 +316,7 @@ Generate 2 files:
 	A1BG-1-5_3	0  
 
 
-- #### Merge all features  
+- ### Merge all features  
 
 ***CMD:***  
 
@@ -340,7 +340,7 @@ Generate `"K562_anno_comb"`, e.g.:
 
 
 
-- #### Data set preparation for model training, testing, validation and prediction
+- ### Data set preparation for model training, testing, validation and prediction
 
 ***CMD:***  
 
@@ -360,7 +360,7 @@ Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 
 ### 2. Model traing and prediction
 
-- #### Fast process for model training and prediction ( Train and predict with `H3K36me3` and `H3K79me2` )
+- ### Fast process for model training and prediction ( Train and predict with `H3K36me3` and `H3K79me2` )
 
 >***NOTE:***  
 >> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but no other
@@ -388,7 +388,7 @@ features, e.g.:
 Generate models and R data and log file `"K562_rf_fast_model.RData"`, output file `"K562_rf_fast_model.out"` and predicted circRNAs `"K562_rf_pred_true.bed"`  
 
 
-- #### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
+- ### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
 
 ***1. Model training ( Used for obtaining rank of importance )***  
 
