@@ -132,7 +132,7 @@ Please describe in details, and attach your command line and log messages if pos
 <br>
 
 ### 1. Data preparation and feature generation
-- ##### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
+- #### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 
 **CMD:**  
 
@@ -193,7 +193,7 @@ Please describe in details, and attach your command line and log messages if pos
 	chr1	889676	894765	chr1	933851	937168	Hi-C  
 	chr1	889676	896594	chr1	933897	938982	Hi-C  
 
-- ##### Feature generation and annotation:
+- #### Feature generation and annotation:
 
 	- ###### RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )
 
