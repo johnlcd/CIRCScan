@@ -198,7 +198,7 @@ Please describe in details, and attach your command line and log messages if pos
 
 - #### Feature generation and annotation:
 
-	*1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )*
+	***1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )***
 
 Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
@@ -267,7 +267,7 @@ Generate 4 files:
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
 
 
-	##### 2. Hi-C/pairs data ( Feature types of "bedpe" format )
+	***2. Hi-C/pairs data ( Feature types of "bedpe" format )***
 	
 Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
 
@@ -382,7 +382,7 @@ Generate models and R data and log file `"K562_rf_fast_model.RData"`, output fil
 
 - #### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
 
-	##### 1. Model training ( Used for obtaining rank of importance )
+	***1. Model training ( Used for obtaining rank of importance )***
 
 ***CMD:***  
 
@@ -396,7 +396,7 @@ Generate models and R data and log file `"K562_rf_fast_model.RData"`, output fil
 Generate models and R data file `"cell_model_fast_model.RData"`, log file `"cell_model_fast_model.out"` with model evaluation  
 
 
-	##### 2. Feature selection
+	***2. Feature selection***
 
 ***CMD:***  
 
@@ -410,7 +410,7 @@ Generate R data file "cell_model_FS.RData" of feature selection and log file `"c
 > Feature selection is required to generate and select the best model for circRNA prediction.  
 
 
-	##### 3. circRNA prediction and annotation
+	***3. circRNA prediction and annotation***
 
 ***CMD:***  
 
