@@ -412,6 +412,9 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 		# "-n": used for models training by parellel
 		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
 
+		e.g.:
+		circpred --fs -t K562 -m rf -n 8 -l 5,10,15,20,25,30
+
 Generate R data file "K562_rf_FS.RData" of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
 >***NOTE:***  
