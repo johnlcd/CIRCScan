@@ -131,7 +131,7 @@ Please describe in details, and attach your command line and log messages if pos
 ## Work flow
 <br>
 
-#### 1. Data preparation and feature generation
+### 1. Data preparation and feature generation
 - ##### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 
 **CMD:**  
@@ -193,20 +193,11 @@ Please describe in details, and attach your command line and log messages if pos
 	chr1	889676	894765	chr1	933851	937168	Hi-C  
 	chr1	889676	896594	chr1	933897	938982	Hi-C  
 
+- ##### Feature generation and annotation:
 
+	- ###### RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )
 
-
-
-		Prepare intron and intron pair data file.
-
-	CMD:	cd $PKG_DIR/data; tar -zxvf intron_intron-pairs.tgz
-
-
-## 1. Feature generation and annotation:
-
-## RBPs, Histoen modifications, ChromHMM, DNaseI HS && other features of region ( Feature types of "bed" format )
-
-	Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( "anno_pair" )
+>>> Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
 	CMD:	$PKG_DIR/bin/anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
 
