@@ -318,7 +318,7 @@ Generate 2 files:
 		e.g.:
 		merge_feature -t K562
 
-Generate `"K562_anno_comb"`, e.g:  
+Generate `"K562_anno_comb"`, e.g.:  
 
 	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag  
 	chr19	58864657	58864693	A1BG-1-2_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
@@ -333,7 +333,7 @@ Generate `"K562_anno_comb"`, e.g:
 
 
 
-#### Data set preparation for model training, testing, validation and prediction
+- #### Data set preparation for model training, testing, validation and prediction
 
 ***CMD:***  
 
@@ -351,11 +351,12 @@ Generate 4 files:	"K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 ### 2. Model traing and prediction
 
 
-- #### Fast process for model training and prediction ( Train and predict with H3K36me3 and H3K79me2 )
+- #### Fast process for model training and prediction ( Train and predict with `H3K36me3` and `H3K79me2` )
 
 ***NOTE:***  
 
-Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but not other features, e.g:  
+Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but not other
+features, e.g.:  
 
 	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type  
 	chr12	53702065	53714476	AAAS-1-12_1	2	1	T  
@@ -372,8 +373,11 @@ Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"`
 
 		fast_model -t <cell_type> -m <model> -n <cores>
 		# "-n": used for models training by parellel
+
+		e.g.:
+		fast_model -t K562 -m rf -n 8
 	
-Generate models and R data file ( "cell_model_fast_model.RData" ), output file ( "cell_model_fast_model.out" ) and predicted circRNA file "cell_model_pred_true.bed"
+Generate models and R data and log file ( `"K562_rf_fast_model.RData"` ), output file ( `"K562_rf_fast_model.out"` ) and predicted circRNA file `"K562_rf_pred_true.bed"`  
 
 
 ## 2-2. Complete process for model training prediction ( With feature selection )
