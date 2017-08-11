@@ -415,7 +415,7 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 		e.g.:
 		circpred --fs -t K562 -m rf -n 8 -l 5,10,15,20,25,30
 
-Generate R data file "K562_rf_FS.RData" of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
+Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
 >***NOTE:***  
 >> Feature selection is required to generate and select the best model for circRNA prediction.  
@@ -431,7 +431,7 @@ Generate R data file "K562_rf_FS.RData" of feature selection and log file `"K562
 		e.g.:
 		circpred --pred -t K562 -m rf -n 8
 
-Generate predicted anaotated circRNAs file "K562_rf_pred_true.bed"  
+Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`  
 <br><br>
 
 
