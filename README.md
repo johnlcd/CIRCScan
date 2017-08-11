@@ -198,7 +198,7 @@ Please describe in details, and attach your command line and log messages if pos
 
 - #### Feature generation and annotation:
 
-	##### 1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )
+	*1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )*
 
 Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
