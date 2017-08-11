@@ -34,7 +34,7 @@ Please describe in details, and attach your command line and log messages if pos
 - **R** \(>= 3.2.4\)
 		R packages: caret, ggplot, doParallel, ROCR, etc. (Dependent packages for different models) 
 		
-		Check the output file ".out" to validate which package is required if got an error
+> Check the log file ".out" to validate which package is required if got an error
 <br>
 
 ## Directory catalog
@@ -115,7 +115,7 @@ Please describe in details, and attach your command line and log messages if pos
 
 ## Runing preparation
 ### Set environment variables  
-		export PKG_DIR=/path/to/tool_package
+		export PKG_DIR=/path/to/CIRCScan
 		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:$PKG_DIR/bin/model:$PATH
 
 ### Unzip data files  
@@ -356,7 +356,7 @@ Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 
 ***NOTE:***  
 
-> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but not other
+> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but no other
 features, e.g.:  
 
 	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type  
@@ -425,5 +425,5 @@ Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"
 
 
 
-All data 
+> #### All data are avaliable in $PKG_DIR/sample for performing and replicating the work in README.
 
