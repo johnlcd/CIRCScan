@@ -198,7 +198,7 @@ Please describe in details, and attach your command line and log messages if pos
 
 - #### Feature generation and annotation:
 
-	***1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )***
+	1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of `"bed"` format )
 
 Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
@@ -267,7 +267,7 @@ Generate 4 files:
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
 
 
-	***2. Hi-C/pairs data ( Feature types of "bedpe" format )***
+	2. Hi-C/pairs data ( Feature types of `"bedpe"` format )
 	
 Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
 
@@ -344,8 +344,8 @@ Generate `"K562_anno_comb"`, e.g.:
 Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
 `"K562_train"`, `"K562_pred"` used for machine learning later  
 
-***NOTE:***   
-> `"known_circ.bed"`: reported circRNA BED file from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
+>***NOTE:***   
+>> `"known_circ.bed"`: reported circRNA BED file from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
 **`CIRCpedia`** \( [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) \)  
 
 
@@ -353,9 +353,8 @@ Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 
 - #### Fast process for model training and prediction ( Train and predict with `H3K36me3` and `H3K79me2` )
 
-***NOTE:***  
-
-> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but no other
+>***NOTE:***  
+>> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but no other
 features, e.g.:  
 
 	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type  
@@ -382,7 +381,7 @@ Generate models and R data and log file `"K562_rf_fast_model.RData"`, output fil
 
 - #### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
 
-	***1. Model training ( Used for obtaining rank of importance )***
+	1. Model training ( Used for obtaining rank of importance )
 
 ***CMD:***  
 
@@ -396,7 +395,7 @@ Generate models and R data and log file `"K562_rf_fast_model.RData"`, output fil
 Generate models and R data file `"cell_model_fast_model.RData"`, log file `"cell_model_fast_model.out"` with model evaluation  
 
 
-	***2. Feature selection***
+	2. Feature selection
 
 ***CMD:***  
 
@@ -406,11 +405,11 @@ Generate models and R data file `"cell_model_fast_model.RData"`, log file `"cell
 
 Generate R data file "cell_model_FS.RData" of feature selection and log file `"cell_model_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
-***NOTE:***  
-> Feature selection is required to generate and select the best model for circRNA prediction.  
+>***NOTE:***  
+>> Feature selection is required to generate and select the best model for circRNA prediction.  
 
 
-	***3. circRNA prediction and annotation***
+	3. circRNA prediction and annotation
 
 ***CMD:***  
 
