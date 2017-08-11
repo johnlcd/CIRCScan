@@ -198,7 +198,7 @@ Please describe in details, and attach your command line and log messages if pos
 
 - #### Feature generation and annotation:
 
-	- ###### RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )
+	##### 1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )
 
 Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
@@ -268,8 +268,7 @@ Generate 4 files:
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
 > 
 
-- 
-	- ###### Hi-C/pairs data ( Feature types of "bedpe" format )
+	##### 2. Hi-C/pairs data ( Feature types of "bedpe" format )
 	
 Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
 
@@ -347,7 +346,7 @@ Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 `"K562_train"`, `"K562_pred"` used for machine learning later  
 
 ***NOTE:***   
-`"known_circ.bed"`: reported circRNA BED file from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
+> `"known_circ.bed"`: reported circRNA BED file from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
 **`CIRCpedia`** \( [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) \)  
 
 
@@ -357,7 +356,7 @@ Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"
 
 ***NOTE:***  
 
-Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but not other
+> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but not other
 features, e.g.:  
 
 	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type  
@@ -379,55 +378,52 @@ features, e.g.:
 		e.g.:
 		fast_model -t K562 -m rf -n 8
 	
-Generate models and R data and log file ( `"K562_rf_fast_model.RData"` ), output file ( `"K562_rf_fast_model.out"` ) and predicted circRNA file `"K562_rf_pred_true.bed"`  
+Generate models and R data and log file `"K562_rf_fast_model.RData"`, output file `"K562_rf_fast_model.out"` and predicted circRNA file `"K562_rf_pred_true.bed"`  
 
 
-- #### Complete process for circRNAs prediction ( model training prediction ( With feature selection )
+- #### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
 
-### 1. Model training ( Used for obtaining rank of importance )
+	##### 1. Model training ( Used for obtaining rank of importance )
 
-	CMD:	circpred --train -t <cell_type> -m <model> -s <seed> -n <cores>
-	# "-n": used for models training by parellel
-	# "seed": used for random sample training set (multiple traning and reproducibility)
+***CMD:***  
 
-	generate models and R data file ( "cell_model_fast_model.RData" ), output file ( "cell_model_fast_model.out" ) with model evaluation
+		circpred --train -t <cell_type> -m <model> -s <seed> -n <cores>
+		# "-n": used for models training by parellel
+		# "-s": used for random sample training set ( multiple traning and reproducibility )
 
+		e.g.:
+		circpred --train -t K562 -m rf -s 111 -n 8
 
-### 2. Feature selection
-	
-	CMD:	circpred --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list>	
-	# "-n": used for models training by parellel
-	# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number (comma separsted), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provided
-
-	generate R data file "cell_model_FS.RData" of feature selection and output file ( "cell_model_FS.out" ) with results of feature selection	# Select feature number with best performance (F1 score)
-
-## NOTE:
-# Feature selection is required to generate and select the best model for circRNA prediction.
+Generate models and R data file `"cell_model_fast_model.RData"`, log file `"cell_model_fast_model.out"` with model evaluation  
 
 
-### 3. circRNA prediction and annotation with trained model
+	##### 2. Feature selection
 
-	CMD:	circpred --pred -t <cell_type> -m <model> -n <cores>
-	# "-n": used for models training by parellel
+***CMD:***  
 
-	generate predicted anaotated circRNA file "cell_model_pred_true.bed"
+		circpred --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list>	
+		# "-n": used for models training by parellel
+		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
 
------------------------------------------------------------------
+Generate R data file "cell_model_FS.RData" of feature selection and log file `"cell_model_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
+
+***NOTE:***  
+> Feature selection is required to generate and select the best model for circRNA prediction.  
 
 
-=================================================================
+	##### 3. circRNA prediction and annotation
 
-### END
+***CMD:***  
 
-=================================================================
+		circpred --pred -t <cell_type> -m <model> -n <cores>
+		# "-n": used for models training by parellel
 
-Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag
-chr19	58864657	58864693	A1BG-1-2_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58864293	58864693	A1BG-1-3_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58864293	58864563	A1BG-1-3_2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58863648	58864693	A1BG-1-4_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58863648	58864563	A1BG-1-4_2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58863648	58863921	A1BG-1-4_3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58862756	58864693	A1BG-1-5_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58862756	58864563	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
-chr19	58862756	58863921	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0
+		e.g.:
+		circpred --pred -t K562 -m rf -n 8
+
+Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"
+
+
+
+All data 
+
