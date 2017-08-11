@@ -197,30 +197,35 @@ Please describe in details, and attach your command line and log messages if pos
 
 	- ###### RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of "bed" format )
 
-> Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
+Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
 **CMD:**  
 
 		$PKG_DIR/bin/anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
 
 		e.g.:
-		$PKG_DIR/bin/anno_pair `-t` K562 `-f` his `--is` `--bed` K562_his.bed
+		$PKG_DIR/bin/anno_pair -t K562 -f his --is --bed K562_his.bed
 
-	 generate 4 files:
+	Generate 4 files:  
 
-	 a. "cell_feature.list"
-#   CBP_(sc-369)
-#   CBX2
-#   CBX3_(SC-101004)
-#   CBX8
-#   CHD1_(A301-218A)
-#   CHD4_Mi2
-#   CHD7_(A301-223A-1)
-#   CTCF
-#   EZH2_(39875)
-#   H2A.Z
+> `"K562_his.list"`  
 
-	 b. "ovelapped_cell_feature"
+	CTCF  
+	EZH2_(39875)  
+	H2A.Z  
+	H3K27ac  
+	H3K27me3  
+	H3K36me3  
+	H3K4me1  
+	H3K4me2  
+	H3K4me3  
+	H3K79me2  
+	H3K9ac  
+	H3K9me3  
+	H4K20me1  
+
+
+> "ovelapped_cell_feature"
 #	chrY	16636816	16733888	NLGN4Y-1-1	1.00	+	chrY	16636680	16636830	dnase	14
 #	chrY	16734471	16834996	NLGN4Y-1-2	1.00	+	chrY	16740180	16740330	dnase	150
 #	chrY	16835149	16936067	NLGN4Y-1-3	1.00	+	chrY	16875640	16875790	dnase	150
