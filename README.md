@@ -118,7 +118,6 @@ Please describe in details, and attach your command line and log messages if pos
 ### Set environment variables  
 		export PKG_DIR=/path/to/tool_package
 		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:$PKG_DIR/bin/model:$PATH
-<br>
 
 ### Unzip data files  
 		cd $PKG_DIR/data
@@ -130,11 +129,75 @@ Please describe in details, and attach your command line and log messages if pos
 
 
 ## Work flow
+<br>
+
+####1. Data preparation and feature generation
+- #####Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
+
+**CMD:**  
+
+		grep K562 Histon.txt | awk '{print $4,$5,$6,$3}' | sed 's/ /\t/g' > K562_his.bed
+
+		grep K562 4DGenome_HomoSapiens_hg19.txt | cut -f1-6 | sed 's/$/\tHi-C/g' > K562_4DGenome.bedpe
+		awk '{print "chr"$1,$2,$3,"chr"$4,$5,$6,"Hi-C"}' GSE63525_K562_HiCCUPS_looplist_new.txt | sed 's/ /\t/g' | cat K562_4DGenome.bedpe - | sort -k1,1 -k2,2n -k3,3n > K562_hic.bedpe
+
+> e.g. `"Histon.txt"`  
+
+	cell	treatment	antibody	chr	start	end  
+	GM12878	None	CTCF	chr22	16846634	16869580  
+	GM12878	None	CTCF	chr22	16850639	16850924  
+	GM12878	None	CTCF	chr22	16851700	16851834  
+	GM12878	None	CTCF	chr22	16852344	16852458  
+	GM12878	None	CTCF	chr22	16853076	16853192  
+	GM12878	None	CTCF	chr22	16853755	16853871  
+	GM12878	None	CTCF	chr22	16854517	16854638  
+	GM12878	None	CTCF	chr22	16857119	16857231  
+	GM12878	None	CTCF	chr22	16857764	16857871  
+
+> e.g. `"GSE63525_K562_HiCCUPS_looplist_new.txt"`  
+
+	10	100180000	100190000	10	100410000	100420000  
+	10	101600000	101610000	10	101800000	101810000  
+	10	102100000	102105000	10	102190000	102195000  
+	10	102100000	102105000	10	102265000	102270000  
+	10	102190000	102200000	10	102260000	102270000  
+	10	102800000	102810000	10	102890000	102900000  
+	10	102850000	102860000	10	102900000	102910000  
+	10	102920000	102925000	10	102970000	102975000  
+	10	103060000	103065000	10	103325000	103330000  
+	10	103060000	103070000	10	103190000	103200000  
+
+> e.g. `"K562_his.bed"`  
+
+	chr22	16166521	16166753	CTCF  
+	chr22	16202053	16202248	CTCF  
+	chr22	16841803	16868572	CTCF  
+	chr22	16872252	16872600	CTCF  
+	chr22	16884507	16884698	CTCF  
+	chr22	16921691	16921933	CTCF  
+	chr22	16921948	16922259	CTCF  
+	chr22	17049655	17049997	CTCF  
+	chr22	17076182	17076618	CTCF  
+	chr22	17081008	17082024	CTCF  
+
+> e.g. `"K562_hic.bedpe"`  
+
+	chr1	752092	754092	chr1	1044401	1046401	Hi-C  
+	chr1	831908	837312	chr1	837749	842314	Hi-C  
+	chr1	838882	841792	chr1	954104	957431	Hi-C  
+	chr1	839092	842508	chr1	935255	939050	Hi-C  
+	chr1	872113	879175	chr1	933836	938416	Hi-C  
+	chr1	874165	879175	chr1	933340	938306	Hi-C  
+	chr1	874190	877867	chr1	955674	959630	Hi-C  
+	chr1	886072	888265	chr1	935329	938908	Hi-C  
+	chr1	889676	894765	chr1	933851	937168	Hi-C  
+	chr1	889676	896594	chr1	933897	938982	Hi-C  
 
 
-# PART 1: Data preparation and feature generation
 
-	Prepare intron and intron pair data file.
+
+
+		Prepare intron and intron pair data file.
 
 	CMD:	cd $PKG_DIR/data; tar -zxvf intron_intron-pairs.tgz
 
