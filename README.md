@@ -117,10 +117,14 @@
 
 ## Runing preparation
 ### Set environment variables  
+
+***CMD:***  
 		export PKG_DIR=/path/to/CIRCScan
 		export PATH=$PKG_DIR/bin:PKG_DIR/bin/anno:$PKG_DIR/bin/model:$PATH
 
 ### Unzip data files  
+
+***CMD:***  
 		cd $PKG_DIR/data
 		tar -zxvf intron_intron-pairs.tgz
 		cd $PKG_DIR/data/raw_data
