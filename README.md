@@ -267,7 +267,6 @@ Generate 4 files:
 	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
 > 
-<br>
 
 - 
 	- ###### Hi-C/pairs data ( Feature types of "bedpe" format )
@@ -340,7 +339,7 @@ Generate `"K562_anno_comb"`, e.g.:
 ***CMD:***  
 
 		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [--re-sample (re-sample and overwrite data set if exsist)]	
-		( `"known_circ.bed"`: reported circRNA BED file from **circBase** and **CIRCpedia** )
+		( "known_circ.bed": reported circRNA BED file from circBase[http://circbase.org/](http://circbase.org/) and CIRCpedia[http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) )
 
 		e.g.:
 		prepare_train_set -t K562 --circ K562_circ.bed -R 1
