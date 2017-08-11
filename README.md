@@ -1,6 +1,6 @@
 
 # CIRCScan  
-Tools for predicting circRNAs with `EPIGENETIC` features by `Machine Learning`  
+Tools for predicting circRNAs with `***EPIGENETIC***` features by `***Machine Learning***`  
 <br>
 
 ## Introduction
