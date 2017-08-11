@@ -425,5 +425,5 @@ Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"
 <br>
 
 
-> ### All data are avaliable in `$PKG_DIR/sample` for performing and replicating the work in README.
+> ### All data are avaliable in `$PKG_DIR/sample` for performing and replicating the work in this Documentary.
 
