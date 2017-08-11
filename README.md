@@ -265,7 +265,7 @@ Generate 4 files:
 	A1BG-1-5_1	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
-
+>  
 
 	##### 2. Hi-C/pairs data ( Feature types of "bedpe" format )
 	
