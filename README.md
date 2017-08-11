@@ -204,10 +204,10 @@ Make feature list, and overlap intron with feature, annotate intron by features,
 
 ***CMD:***  
 
-		$PKG_DIR/bin/anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
+		anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
 
 		e.g.:
-		$PKG_DIR/bin/anno_pair -t K562 -f his --is --bed K562_his.bed
+		anno_pair -t K562 -f his --is --bed K562_his.bed
 
 Generate 4 files:  
 
@@ -273,10 +273,10 @@ Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
 
 ***CMD:***  
 
-		$PKG_DIR/bin/anno_pair -t <cell_type> -f <paired feature (hic ...)> [ --is (Ignor strands) ] --bedpe <feature.bedpe>
+		anno_pair -t <cell_type> -f <paired feature (hic ...)> [ --is (Ignor strands) ] --bedpe <feature.bedpe>
 
 		e.g.:
-		$PKG_DIR/bin/anno_pair -t K562 -f hic --is --bedpe K562_hic.bedpe
+		anno_pair -t K562 -f hic --is --bedpe K562_hic.bedpe
 
 Generate 2 files:
 
