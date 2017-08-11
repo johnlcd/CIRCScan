@@ -199,7 +199,12 @@ Please describe in details, and attach your command line and log messages if pos
 
 > Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
-	CMD:	$PKG_DIR/bin/anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
+**CMD:**  
+
+		$PKG_DIR/bin/anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
+
+		e.g.:
+		$PKG_DIR/bin/anno_pair `-t` K562 `-f` his `--is` `--bed` K562_his.bed
 
 	 generate 4 files:
 
