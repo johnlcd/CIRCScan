@@ -5,7 +5,7 @@
 
 ## Introduction  
 
-> Circular RNAs (circRNAs) are an abundant class of noncoding RNAs with the widespread, cell/tissue specific pattern. This tool, `CIRCScan`, is used to predict circRNAs in a cell/tissue specific manner by machine learning based on epigenetic features.  
+> Circular RNAs ( circRNAs ) are an abundant class of noncoding RNAs with the widespread, cell/tissue specific pattern. This tool, `CIRCScan`, is used to predict circRNAs in a cell/tissue specific manner by machine learning based on epigenetic features.  
 <br>
   
 ## License
@@ -30,10 +30,10 @@
 <br>
 
 ## Requiremnets
-- **bedtools** \(v2.25.0\)
-- **Python** \(recommended: python2.7\)
-- **R** \(>= 3.2.4\)
-		R packages: caret, ggplot, doParallel, ROCR, etc. (Dependent packages for different models) 
+- **bedtools** \( v2.25.0 \)
+- **Python** \( recommended: python2.7 \)
+- **R** \( >= 3.2.4 \)
+		R packages: caret, ggplot, doParallel, ROCR, etc. ( Dependent packages for different models ) 
 		
 > Check the log file ".out" to validate which package is required if get an error info
 <br>
@@ -134,9 +134,9 @@
 ### 1. Data preparation and feature generation
 - #### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 > Epigenetic data including DNaseI HS, RBP, Histone modification, ChromHMM downloaded from `ENCODE`
-> \([ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/)\)  
+> \( [ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/) \)  
 
-> Hi-C data downloaded from `4DGenome` \([http://4dgenome.research.chop.edu](http://4dgenome.research.chop.edu)\) and `GEO` \(GSE63525\)  
+> Hi-C data downloaded from `4DGenome` \([http://4dgenome.research.chop.edu](http://4dgenome.research.chop.edu)\) and `GEO` \( GSE63525 \)  
 
 ***CMD:***  
 
@@ -337,7 +337,7 @@ Generate `"K562_anno_comb"`, e.g.:
 
 ***CMD:***  
 
-		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [--re-sample (re-sample and overwrite data set if exsist)]	
+		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [ --re-sample (re-sample and overwrite data set if exsist) ]	
 
 		e.g.:
 		prepare_train_set -t K562 --circ K562_circ.bed -R 1
