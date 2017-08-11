@@ -34,7 +34,7 @@ Please describe in details, and attach your command line and log messages if pos
 - **R** \(>= 3.2.4\)
 		R packages: caret, ggplot, doParallel, ROCR, etc. (Dependent packages for different models) 
 		
-> Check the log file ".out" to validate which package is required if got an error
+> Check the log file ".out" to validate which package is required if get an error info
 <br>
 
 ## Directory catalog
@@ -422,8 +422,8 @@ Generate R data file "cell_model_FS.RData" of feature selection and log file `"c
 		circpred --pred -t K562 -m rf -n 8
 
 Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"
+<br>
 
 
-
-> #### All data are avaliable in $PKG_DIR/sample for performing and replicating the work in README.
+> ## All data are avaliable in $PKG_DIR/sample for performing and replicating the work in README.
 
