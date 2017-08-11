@@ -267,7 +267,7 @@ Generate 4 files:
 	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
 
-
+-
 	- ###### Hi-C/pairs data ( Feature types of "bedpe" format )
 	
 Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
@@ -380,7 +380,7 @@ features, e.g.:
 Generate models and R data and log file ( `"K562_rf_fast_model.RData"` ), output file ( `"K562_rf_fast_model.out"` ) and predicted circRNA file `"K562_rf_pred_true.bed"`  
 
 
-## 2-2. Complete process for model training prediction ( With feature selection )
+- #### Complete process for circRNAs prediction ( model training prediction ( With feature selection )
 
 ### 1. Model training ( Used for obtaining rank of importance )
 
