@@ -421,9 +421,9 @@ Generate R data file "cell_model_FS.RData" of feature selection and log file `"c
 		e.g.:
 		circpred --pred -t K562 -m rf -n 8
 
-Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"
+Generate predicted anaotated circRNA file "K562_rf_pred_true.bed"  
 <br>
 
 
-> ## All data are avaliable in $PKG_DIR/sample for performing and replicating the work in README.
+> ### All data are avaliable in `$PKG_DIR/sample` for performing and replicating the work in README.
 
