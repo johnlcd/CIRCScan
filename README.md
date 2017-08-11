@@ -134,6 +134,7 @@ Please describe in details, and attach your command line and log messages if pos
 - #### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 > Epigenetic data including DNaseI HS, RBP, Histone modification, ChromHMM downloaded from `ENCODE`
 > \([ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/)\)  
+
 > Hi-C data downloaded from `4DGenome` \([http://4dgenome.research.chop.edu](http://4dgenome.research.chop.edu)\) and `GEO` \(GSE63525\)  
 
 ***CMD:***  
@@ -143,7 +144,7 @@ Please describe in details, and attach your command line and log messages if pos
 		grep K562 4DGenome_HomoSapiens_hg19.txt | cut -f1-6 | sed 's/$/\tHi-C/g' > K562_4DGenome.bedpe
 		awk '{print "chr"$1,$2,$3,"chr"$4,$5,$6,"Hi-C"}' GSE63525_K562_HiCCUPS_looplist_new.txt | sed 's/ /\t/g' | cat K562_4DGenome.bedpe - | sort -k1,1 -k2,2n -k3,3n > K562_hic.bedpe
 
-> e.g. `"Histon.txt"`  
+> `"Histon.txt"`  
 
 	cell	treatment	antibody	chr	start	end  
 	GM12878	None	CTCF	chr22	16846634	16869580  
@@ -156,7 +157,7 @@ Please describe in details, and attach your command line and log messages if pos
 	GM12878	None	CTCF	chr22	16857119	16857231  
 	GM12878	None	CTCF	chr22	16857764	16857871  
 
-> e.g. `"GSE63525_K562_HiCCUPS_looplist_new.txt"`  
+> `"GSE63525_K562_HiCCUPS_looplist_new.txt"`  
 
 	10	100180000	100190000	10	100410000	100420000  
 	10	101600000	101610000	10	101800000	101810000  
@@ -169,7 +170,7 @@ Please describe in details, and attach your command line and log messages if pos
 	10	103060000	103065000	10	103325000	103330000  
 	10	103060000	103070000	10	103190000	103200000  
 
-> e.g. `"K562_his.bed"`  
+> `"K562_his.bed"`  
 
 	chr22	16166521	16166753	CTCF  
 	chr22	16202053	16202248	CTCF  
@@ -182,7 +183,7 @@ Please describe in details, and attach your command line and log messages if pos
 	chr22	17076182	17076618	CTCF  
 	chr22	17081008	17082024	CTCF  
 
-> e.g. `"K562_hic.bedpe"`  
+> `"K562_hic.bedpe"`  
 
 	chr1	752092	754092	chr1	1044401	1046401	Hi-C  
 	chr1	831908	837312	chr1	837749	842314	Hi-C  
@@ -275,10 +276,10 @@ Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
 
 		$PKG_DIR/bin/anno_pair -t <cell_type> -f <paired feature (hic ...)> [ --is (Ignor strands) ] --bedpe <feature.bedpe>
 
-		e.g.
+		e.g.:
 		$PKG_DIR/bin/anno_pair -t K562 -f hic --is --bedpe K562_hic.bedpe
 
-generate 2 files:
+Generate 2 files:
 
 > `"overlapped_K562_hic"  
 
@@ -314,10 +315,10 @@ generate 2 files:
 
 		merge_feature -t <cell_type>
 
-		e.g.
+		e.g.:
 		merge_feature -t K562
 
-generate `"K562_anno_comb"`, e.g:  
+Generate `"K562_anno_comb"`, e.g:  
 
 	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag  
 	chr19	58864657	58864693	A1BG-1-2_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
@@ -339,33 +340,40 @@ generate `"K562_anno_comb"`, e.g:
 		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [--re-sample (re-sample and overwrite data set if exsist)]	
 		( `"known_circ.bed"`: reported circRNA BED file from **circBase** and **CIRCpedia** )
 
-generate 4 files:	"K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
-`"K562_train"`, `"K562_pred"` used for machine learning  
+		e.g.:
+		prepare_train_set -t K562 --circ K562_circ.bed -R 1
+
+Generate 4 files:	"K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
+`"K562_train"`, `"K562_pred"` used for machine learning later  
 
 
 
-## 2. Model traing and prediction
+### 2. Model traing and prediction
 
 
-## 2-1. Fast process for model training and prediction ( Train and predict with H3K36me3 and H3K79me2 )
+- #### Fast process for model training and prediction ( Train and predict with H3K36me3 and H3K79me2 )
 
-# NOTE: 
-#	Data matrix for model training ( "cell_train" ) and prediction ( "cell_pred" ) contain only H3K36me3 and H3K79me2 but not other features, e.g
-#	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type
-#	chr12	53702065	53714476	AAAS-1-12_1	2	1	T
-#	chr12	53701835	53709210	AAAS-1-13_3	2	0	T
-#	chr12	125587224	125603311	AACS-1-5_10	2	1	T
-#	chr12	125587224	125591814	AACS-1-5_8	2	1	T
-#	chr12	125587224	125599103	AACS-1-5_9	2	1	T
-#	chr12	125599022	125603311	AACS-1-8_10	2	0	T
-#	chr15	67524151	67529158	AAGAB-1-5_1	2	2	T
-#	chr15	67496381	67529158	AAGAB-1-8_1	2	2	T
-#	chr15	67524151	67529158	AAGAB-2-5_1	2	2	T
+***NOTE:***  
+
+Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but not other features, e.g:  
+
+	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type  
+	chr12	53702065	53714476	AAAS-1-12_1	2	1	T  
+	chr12	53701835	53709210	AAAS-1-13_3	2	0	T  
+	chr12	125587224	125603311	AACS-1-5_10	2	1	T  
+	chr12	125587224	125591814	AACS-1-5_8	2	1	T  
+	chr12	125587224	125599103	AACS-1-5_9	2	1	T  
+	chr12	125599022	125603311	AACS-1-8_10	2	0	T  
+	chr15	67524151	67529158	AAGAB-1-5_1	2	2	T  
+	chr15	67496381	67529158	AAGAB-1-8_1	2	2	T  
+	chr15	67524151	67529158	AAGAB-2-5_1	2	2	T  
 	
-	CMD:	fast_model -t <cell_type> -m <model> -n <cores>
-	# "-n": used for models training by parellel
+***CMD:***  
+
+		fast_model -t <cell_type> -m <model> -n <cores>
+		# "-n": used for models training by parellel
 	
-	generate models and R data file ( "cell_model_fast_model.RData" ), output file ( "cell_model_fast_model.out" ) and predicted circRNA file "cell_model_pred_true.bed"
+Generate models and R data file ( "cell_model_fast_model.RData" ), output file ( "cell_model_fast_model.out" ) and predicted circRNA file "cell_model_pred_true.bed"
 
 
 ## 2-2. Complete process for model training prediction ( With feature selection )
