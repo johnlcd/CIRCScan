@@ -134,7 +134,7 @@ Please describe in details, and attach your command line and log messages if pos
 ### 1. Data preparation and feature generation
 - #### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
 
-CMD:  
+***CMD:***  
 
 		grep K562 Histon.txt | awk '{print $4,$5,$6,$3}' | sed 's/ /\t/g' > K562_his.bed
 
@@ -199,7 +199,7 @@ CMD:
 
 Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
-CMD:  
+***CMD:***  
 
 		$PKG_DIR/bin/anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
 
