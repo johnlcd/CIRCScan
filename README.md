@@ -393,7 +393,7 @@ Generate models and R data and log file `"K562_rf_fast_model.RData"`, output fil
 		e.g.:
 		circpred --train -t K562 -m rf -s 111 -n 8
 
-Generate models and R data file `"cell_model_fast_model.RData"`, log file `"cell_model_fast_model.out"` with model evaluation  
+Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
 
 ***2. Feature selection***  
@@ -404,7 +404,7 @@ Generate models and R data file `"cell_model_fast_model.RData"`, log file `"cell
 		# "-n": used for models training by parellel
 		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
 
-Generate R data file "cell_model_FS.RData" of feature selection and log file `"cell_model_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
+Generate R data file "K562_rf_FS.RData" of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
 >***NOTE:***  
 >> Feature selection is required to generate and select the best model for circRNA prediction.  
