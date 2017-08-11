@@ -339,18 +339,19 @@ Generate `"K562_anno_comb"`, e.g.:
 ***CMD:***  
 
 		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [--re-sample (re-sample and overwrite data set if exsist)]	
-		( "known_circ.bed": reported circRNA BED file from circBase[http://circbase.org/](http://circbase.org/) and CIRCpedia[http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) )
 
 		e.g.:
 		prepare_train_set -t K562 --circ K562_circ.bed -R 1
 
-Generate 4 files:	"K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
+Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
 `"K562_train"`, `"K562_pred"` used for machine learning later  
 
+***NOTE:***   
+`"known_circ.bed"`: reported circRNA BED file from `**circBase**` [http://circbase.org/](http://circbase.org/) and
+`**CIRCpedia**` [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/)  
 
 
 ### 2. Model traing and prediction
-
 
 - #### Fast process for model training and prediction ( Train and predict with `H3K36me3` and `H3K79me2` )
 
