@@ -253,7 +253,6 @@ Generate 4 files:
 	chr1	17368	17605	WASH7P-1-5	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	chr1	17742	17914	WASH7P-1-4	0	0	0	0	0	0	0	0	0	0	0	0	0  
 
-
 > `"pair_anno_K562_his"`  
 
 	Intron_pair	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1  
@@ -266,7 +265,7 @@ Generate 4 files:
 	A1BG-1-5_1	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
 	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
-> 
+
 
 	##### 2. Hi-C/pairs data ( Feature types of "bedpe" format )
 	
