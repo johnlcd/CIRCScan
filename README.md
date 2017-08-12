@@ -284,7 +284,7 @@ Generate 4 files:
 
 ***2. Hi-C/pairs data ( Feature types of `"bedpe"` format )***  
 	
-Overlap intron pairs with Hi-C pairs, annotate intron pairs ( "anno_pair" )
+Overlap intron pairs with Hi-C pairs, annotate intron pairs ( `"anno_pair"` )
 
 ***CMD:***  
 
