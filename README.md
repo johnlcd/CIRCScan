@@ -295,7 +295,7 @@ Overlap intron pairs with Hi-C pairs, annotate intron pairs ( `"anno_pair"` )
 
 Generate 2 files:
 
-> `"overlapped_K562_hic"  
+> `"overlapped_K562_hic"`  
 
 	chr19	58859006	58861735	chr19	58864693	58864769	A1BG-1-6_1	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
 	chr19	58859006	58861735	chr19	58864563	58864657	A1BG-1-6_2	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
@@ -361,6 +361,34 @@ Generate `"K562_anno_comb"`, e.g.:
 
 Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
 `"K562_train"`, `"K562_pred"` used for machine learning later  
+
+> `"K562_train"` 
+
+	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag	Type  
+	chr12	53702508	53709210	AAAS-1-10_3	0	0	0	1	0	1	0	2	1	1	0	1	0	0	1	1	0	0	0	0	0	0	0	0	0	1	0	0	0	0	2	0	T  
+	chr12	53702065	53714476	AAAS-1-12_1	1	1	1	1	1	2	0	2	2	1	1	1	1	0	2	0	0	0	0	0	0	1	0	0	1	0	0	0	0	1	2	0	T  
+	chr12	53701835	53702312	AAAS-1-13_10	0	0	0	2	0	2	0	2	2	1	0	1	1	0	2	1	0	0	0	0	0	0	0	0	0	1	0	0	0	1	2	0	T  
+	chr12	53701835	53708225	AAAS-1-13_5	0	0	0	1	0	1	0	2	1	0	0	0	1	0	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	1	2	0	T  
+	chr12	53701835	53708225	AAAS-2-14_6	0	0	0	1	0	1	0	2	1	0	0	0	1	0	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	1	2	0	T  
+	chr12	125558421	125561157	AACS-1-1_3	1	0	1	2	2	1	1	2	2	1	1	1	1	0	2	0	2	0	0	0	0	0	1	0	0	0	1	2	0	0	0	0	T  
+	chr12	125558421	125576069	AACS-1-1_5	2	0	2	2	2	1	2	2	2	2	1	1	1	0	2	0	2	0	0	0	0	0	1	0	0	0	2	2	1	0	0	0	T  
+	chr12	125587224	125603311	AACS-1-5_10	1	0	2	2	1	0	2	2	1	1	0	0	0	0	2	0	2	0	1	0	0	0	0	0	0	0	1	2	2	0	0	0	T  
+	chr5	178194130	178203277	AACSP1-1-10_4	1	0	1	1	0	0	1	2	1	0	0	0	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	1	1	0	0	0	T  
+	...  
+
+> `"K562_pred"`  
+
+	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag	Type  
+	chr9	117788812	117819704	TNC-1-26_14	0	0	0	2	0	0	0	0	0	0	0	0	0	0	2	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	chr1	39896373	39905172	MACF1-1-59_67	0	0	0	0	0	0	0	2	0	0	0	1	0	0	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	chr15	62212696	62257060	VPS13C-4-56_30	0	0	0	0	0	0	0	2	0	0	0	0	0	2	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	chr9	139916342	139916453	ABCA2-1-7_6	1	0	0	2	0	0	0	0	1	2	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	0	1	2	0	0	0	0	P  
+	chr19	42471400	42489575	ATP1A3-1-22_6	0	0	0	2	0	0	2	0	0	0	0	0	0	0	2	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	chrX	102968447	102978866	GLRA4-2-8_4	1	0	1	2	1	0	2	0	1	0	0	0	0	0	2	0	0	0	2	0	0	0	0	0	0	0	0	0	1	0	0	0	P  
+	chr16	710057	712059	WDR90-1-26_32	0	0	1	0	1	0	0	0	2	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	P  
+	chrX	44919266	44945224	KDM6A-2-12_24	0	0	0	0	0	0	0	2	0	0	0	2	1	2	1	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	chr19	55044261	55053854	KIR3DX1-4-1_6	0	0	0	2	0	0	2	0	0	0	0	0	0	0	1	0	0	1	1	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	...  
 
 >***NOTE:***   
 >> `"known_circ.bed"`: reported circRNAs from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
@@ -448,3 +476,23 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 
 >### *All data are avaliable in `$PKG_DIR/sample` for performing and replicating the works in this Document.*
 
+Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag	Type
+chr12	53702508	53709210	AAAS-1-10_3	0	0	0	1	0	1	0	2	1	1	0	1	0	0	1	1	0	0	0	0	0	0	0	0	0	1	0	0	0	0	2	0	T
+chr12	53702065	53714476	AAAS-1-12_1	1	1	1	1	1	2	0	2	2	1	1	1	1	0	2	0	0	0	0	0	0	1	0	0	1	0	0	0	0	1	2	0	T
+chr12	53701835	53702312	AAAS-1-13_10	0	0	0	2	0	2	0	2	2	1	0	1	1	0	2	1	0	0	0	0	0	0	0	0	0	1	0	0	0	1	2	0	T
+chr12	53701835	53708225	AAAS-1-13_5	0	0	0	1	0	1	0	2	1	0	0	0	1	0	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	1	2	0	T
+chr12	53701835	53708225	AAAS-2-14_6	0	0	0	1	0	1	0	2	1	0	0	0	1	0	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	1	2	0	T
+chr12	125558421	125561157	AACS-1-1_3	1	0	1	2	2	1	1	2	2	1	1	1	1	0	2	0	2	0	0	0	0	0	1	0	0	0	1	2	0	0	0	0	T
+chr12	125558421	125576069	AACS-1-1_5	2	0	2	2	2	1	2	2	2	2	1	1	1	0	2	0	2	0	0	0	0	0	1	0	0	0	2	2	1	0	0	0	T
+chr12	125587224	125603311	AACS-1-5_10	1	0	2	2	1	0	2	2	1	1	0	0	0	0	2	0	2	0	1	0	0	0	0	0	0	0	1	2	2	0	0	0	T
+chr5	178194130	178203277	AACSP1-1-10_4	1	0	1	1	0	0	1	2	1	0	0	0	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	1	1	0	0	0	T
+Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag	Type
+chr9	117788812	117819704	TNC-1-26_14	0	0	0	2	0	0	0	0	0	0	0	0	0	0	2	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	P
+chr1	39896373	39905172	MACF1-1-59_67	0	0	0	0	0	0	0	2	0	0	0	1	0	0	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P
+chr15	62212696	62257060	VPS13C-4-56_30	0	0	0	0	0	0	0	2	0	0	0	0	0	2	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P
+chr9	139916342	139916453	ABCA2-1-7_6	1	0	0	2	0	0	0	0	1	2	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	0	1	2	0	0	0	0	P
+chr19	42471400	42489575	ATP1A3-1-22_6	0	0	0	2	0	0	2	0	0	0	0	0	0	0	2	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P
+chrX	102968447	102978866	GLRA4-2-8_4	1	0	1	2	1	0	2	0	1	0	0	0	0	0	2	0	0	0	2	0	0	0	0	0	0	0	0	0	1	0	0	0	P
+chr16	710057	712059	WDR90-1-26_32	0	0	1	0	1	0	0	0	2	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	P
+chrX	44919266	44945224	KDM6A-2-12_24	0	0	0	0	0	0	0	2	0	0	0	2	1	2	1	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P
+chr19	55044261	55053854	KIR3DX1-4-1_6	0	0	0	2	0	0	2	0	0	0	0	0	0	0	1	0	0	1	1	0	0	0	0	0	0	0	0	0	0	0	0	0	P
