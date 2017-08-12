@@ -63,17 +63,17 @@
 - **data**
 	- intron_intron-pairs.tgz
 	- **pred_circ_bycell**
-		- A549_pred_circ.bed.gz
-		- GM12878_pred_circ.bed.gz
-		- H1-hESC_pred_circ.bed.gz
-		- HeLa-S3_pred_circ.bed.gz
-		- HepG2_pred_circ.bed.gz
-		- HMEC_pred_circ.bed.gz
-		- HSMM_pred_circ.bed.gz
-		- HUVEC_pred_circ.bed.gz
-		- K562_pred_circ.bed.gz
-		- NHEK_pred_circ.bed.gz
-		- NHLF_pred_circ.bed.gz
+		- A549_pred_circ.bed
+		- GM12878_pred_circ.bed
+		- H1-hESC_pred_circ.bed
+		- HeLa-S3_pred_circ.bed
+		- HepG2_pred_circ.bed
+		- HMEC_pred_circ.bed
+		- HSMM_pred_circ.bed
+		- HUVEC_pred_circ.bed
+		- K562_pred_circ.bed
+		- NHEK_pred_circ.bed
+		- NHLF_pred_circ.bed
 	- **raw_data**
 		- 4DGenome_HomoSapiens_hg19.txt.gz
 		- ChromHMM.txt.gz
