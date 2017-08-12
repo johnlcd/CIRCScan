@@ -34,7 +34,7 @@
 - **bedtools** \( v2.25.0 \)
 - **Python** \( recommended: python2.7 \)
 - **R** \( >= 3.2.4 \)
-		R packages: caret, ggplot, doParallel, ROCR, etc. ( Dependent packages for different models ) 
+	- R packages: caret, ggplot, doParallel, ROCR, etc. ( Dependent packages for different models ) 
 		
 > Check the log file ".out" to validate which package is required if get an error info
 <br>
