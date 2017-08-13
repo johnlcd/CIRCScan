@@ -35,7 +35,7 @@ fda
 gaussprLinear
 gaussprPoly
 gaussprRadial
-??gamLoess
+gamLoess
 glm
 glmStepAIC
 gpls
@@ -79,7 +79,7 @@ multinom
 qda
 stepQDA
 rbf
-??rbfDDA
+rbfDDA
 ranger
 Rborist
 rf
