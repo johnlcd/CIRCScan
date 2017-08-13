@@ -460,7 +460,7 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***3. circRNAs prediction and annotation***  
+***3. CircRNAs prediction and annotation***  
 
 ***CMD:***  
 
