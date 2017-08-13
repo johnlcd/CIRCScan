@@ -457,10 +457,10 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
 >***NOTE:***  
->> Feature selection is required to generate and select the best model for circRNA prediction.  
+>> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***3. circRNA prediction and annotation***  
+***3. circRNAs prediction and annotation***  
 
 ***CMD:***  
 
