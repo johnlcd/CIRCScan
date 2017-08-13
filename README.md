@@ -88,7 +88,7 @@
 		- RBP.txt.gz
 		- select_cell.list
 - **info**
-	- models_ALL.list
+	- models_ALL.txt
 	- models_classification.list
 	- models_test.list
 	- models_test.txt
