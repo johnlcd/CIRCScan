@@ -56,7 +56,7 @@
 		- bt_overlap
 		- comb_pair_anno.py
 	- anno_pair
-	- circpred
+	- circscan
 	- fast_model
 	- merge_feature
 	- **model**
@@ -440,12 +440,12 @@ Generate models and R data and log file `"K562_rf_fast_model.RData"`, output fil
 
 ***CMD:***  
 
-		circpred --train -t <cell_type> -m <model> -s <seed> -n <cores>
+		circscan --train -t <cell_type> -m <model> -s <seed> -n <cores>
 		# "-n": used for models training by parellel
 		# "-s": used for random sample training set ( multiple traning and reproducibility )
 
 		e.g.:
-		circpred --train -t K562 -m rf -s 111 -n 8
+		circscan --train -t K562 -m rf -s 111 -n 8
 
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
@@ -454,12 +454,12 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 
 ***CMD:***  
 
-		circpred --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list>	
+		circscan --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list>	
 		# "-n": used for models training by parellel
 		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
 
 		e.g.:
-		circpred --fs -t K562 -m rf -n 8 -l 5,10,15,20,25,30
+		circscan --fs -t K562 -m rf -n 8 -l 5,10,15,20,25,30
 
 Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
@@ -471,11 +471,11 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 
 ***CMD:***  
 
-		circpred --pred -t <cell_type> -m <model> -n <cores>
+		circscan --pred -t <cell_type> -m <model> -n <cores>
 		# "-n": used for models training by parellel
 
 		e.g.:
-		circpred --pred -t K562 -m rf -n 8
+		circscan --pred -t K562 -m rf -n 8
 
 Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`  
 <br><br>
