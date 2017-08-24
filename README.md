@@ -41,7 +41,7 @@
 
 ## Building `CIRCscan`
 
-**CMD:**  
+***CMD:***  
 
 		git clone https://github.com/johnlcd/CIRCScan.git
 
