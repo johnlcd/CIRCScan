@@ -39,16 +39,15 @@
 > Check the log file ".out" to validate which package is required if get an error info
 <br>
 
-## Building **`CIRCscan`**
-<br>
-***CMD:***  
+## Building `CIRCscan`
+
+**CMD:**  
 
 		git clone https://github.com/johnlcd/CIRCScan.git
 
 <br>
 
 ## Directory catalog
-<br>
 
 - **bin**  	
 	- **anno**  
