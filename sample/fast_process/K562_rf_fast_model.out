@@ -1,0 +1,162 @@
+Loading required package: mlbench
+Loading required package: caret
+Loading required package: lattice
+Loading required package: ggplot2
+Loading required package: DT
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+Loading required package: limma
+Loading required package: graph
+Loading required package: RBGL
+PerfMeas: Performance Measures for ranking and classification tasks.
+
+
+Attaching package: ‘gplots’
+
+The following object is masked from ‘package:stats’:
+
+    lowess
+
+      Chr            Start                End                Intron_pair   
+ chr1   : 6883   Min.   :    59952   Min.   :    60046   A1BG-1-6_4:    1  
+ chr2   : 6094   1st Qu.: 34153640   1st Qu.: 34242106   A1CF-2-3_1:    1  
+ chr3   : 3808   Median : 67387272   Median : 67428843   A1CF-2-6_1:    1  
+ chr7   : 3418   Mean   : 79699178   Mean   : 79735981   A1CF-6-4_3:    1  
+ chr12  : 3374   3rd Qu.:118280253   3rd Qu.:118280344   A2M-1-10_2:    1  
+ chr6   : 3351   Max.   :249107187   Max.   :249107444   A2M-1-11_1:    1  
+ (Other):36622                                           (Other)   :63544  
+      Alu              DNaseI_HS             CTCF          EZH2_.39875.   
+ Min.   :-3539.454   Min.   :0.000000   Min.   :0.00000   Min.   :0.0000  
+ 1st Qu.:   -1.981   1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.:0.0000  
+ Median :    0.000   Median :0.000000   Median :0.00000   Median :0.0000  
+ Mean   :   -5.186   Mean   :0.004704   Mean   :0.03721   Mean   :0.2846  
+ 3rd Qu.:    0.000   3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.:0.9230  
+ Max.   :   31.743   Max.   :0.407000   Max.   :1.00000   Max.   :1.0000  
+                                                                          
+     H2A.Z            H3K27ac           H3K27me3        H3K36me3     
+ Min.   :0.00000   Min.   :0.00000   Min.   :0.000   Min.   :0.0000  
+ 1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.000   1st Qu.:0.0000  
+ Median :0.00000   Median :0.00000   Median :0.000   Median :1.0000  
+ Mean   :0.05418   Mean   :0.05733   Mean   :0.129   Mean   :0.6248  
+ 3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.000   3rd Qu.:1.0000  
+ Max.   :1.00000   Max.   :1.00000   Max.   :1.000   Max.   :1.0000  
+                                                                     
+    H3K4me1          H3K4me2          H3K4me3           H3K79me2     
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.00000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.0000  
+ Median :0.0000   Median :0.0000   Median :0.00000   Median :0.0000  
+ Mean   :0.1016   Mean   :0.0232   Mean   :0.03738   Mean   :0.2154  
+ 3rd Qu.:0.0000   3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:0.1688  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.00000   Max.   :1.0000  
+                                                                     
+     H3K9ac           H3K9me3          H4K20me1        Type        
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.000   Mode :logical  
+ 1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:0.000   FALSE:31775    
+ Median :0.00000   Median :0.0000   Median :0.000   TRUE :31775    
+ Mean   :0.07004   Mean   :0.1964   Mean   :0.431   NA's :0        
+ 3rd Qu.:0.00000   3rd Qu.:0.0000   3rd Qu.:1.000                  
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.000                  
+                                                                   
+Loading required package: randomForest
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+
+Attaching package: ‘randomForest’
+
+The following object is masked from ‘package:ggplot2’:
+
+    margin
+
+note: only 2 unique complexity parameters in default grid. Truncating the grid to 2 .
+
+[1] ">>> Model summary:"
+                Length Class      Mode     
+call                 5 -none-     call     
+type                 1 -none-     character
+predicted        63550 factor     numeric  
+err.rate          1500 -none-     numeric  
+confusion            6 -none-     numeric  
+votes           127100 matrix     numeric  
+oob.times        63550 -none-     numeric  
+classes              2 -none-     character
+importance           3 -none-     numeric  
+importanceSD         0 -none-     NULL     
+localImportance      0 -none-     NULL     
+proximity            0 -none-     NULL     
+ntree                1 -none-     numeric  
+mtry                 1 -none-     numeric  
+forest              14 -none-     list     
+y                63550 factor     numeric  
+test                 0 -none-     NULL     
+inbag                0 -none-     NULL     
+xNames               3 -none-     character
+problemType          1 -none-     character
+tuneValue            1 data.frame list     
+obsLevels            2 -none-     character
+[1] ">>> Confusion matrix:"
+Confusion Matrix and Statistics
+
+          Reference
+Prediction FALSE  TRUE
+     FALSE 25373  6816
+     TRUE   6402 24959
+                                          
+               Accuracy : 0.792           
+                 95% CI : (0.7888, 0.7952)
+    No Information Rate : 0.5             
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.584           
+ Mcnemar's Test P-Value : 0.0003278       
+                                          
+            Sensitivity : 0.7855          
+            Specificity : 0.7985          
+         Pos Pred Value : 0.7959          
+         Neg Pred Value : 0.7883          
+             Prevalence : 0.5000          
+         Detection Rate : 0.3927          
+   Detection Prevalence : 0.4935          
+      Balanced Accuracy : 0.7920          
+                                          
+       'Positive' Class : TRUE            
+                                          
+[1] ">>> Precision is:"
+[1] 0.7958611
+[1] ">>> Sensitivity is:"
+[1] 0.7854917
+[1] ">>> Specificity is:"
+[1] 0.7985208
+[1] ">>> ACC is:"
+[1] 0.7920063
+[1] ">>> AUC is:"
+[1] 0.8621714
+[1] ">>> F1 score is:"
+[1] 0.7906424
+[1] ">>> Number of intron pairs to predict and features:"
+[1] "1444718;3"
+[1] ">>> Features:"
+[1] "Alu"      "H3K36me3" "H3K79me2"
+[1] ">>> Head of prediction matrix:"
+              Alu H3K36me3 H3K79me2
+A1BG-1-4_3  0.000        0        0
+A1BG-1-5_3  0.000        0        0
+A1BG-1-5_4  0.000        0        0
+A1BG-1-6_3 -1.985        0        0
+A1BG-1-6_5 -1.408        0        0
+A1BG-1-7_3  0.000        0        0
+[1] ">>> Threshold for prediction:"
+[1] 0.756
+[1] ">>> Number of predicted circRNAs:"
+[1] 315242
+[1] ">>> Sunmmary of prediction:"
+     FALSE             TRUE       
+ Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.4860   1st Qu.:0.0000  
+ Median :0.9980   Median :0.0020  
+ Mean   :0.7597   Mean   :0.2403  
+ 3rd Qu.:1.0000   3rd Qu.:0.5140  
+ Max.   :1.0000   Max.   :1.0000  
+> proc.time()
+   user  system elapsed 
+159.961   5.810 673.822 
