@@ -34,7 +34,7 @@
 - **bedtools** \( v2.25.0 \)
 - **Python** \( recommended: python2.7 \)
 - **R** \( >= 3.2.4 \)
-	- R packages: caret, ggplot, doParallel, ROCR, etc. ( Dependent packages for different models ) 
+	- R packages: caret (6.0-73), ggplot2 (2.2.0), doParallel (3.2.4), ROCR (1.0-7), etc. ( Dependent packages for different models ) 
 		
 > Check the log file ".out" to validate which package is required if get an error info
 <br>
@@ -65,7 +65,6 @@
 		- feature_selection.R
 		- make_set.py
 		- Model_train.R
-		- sep_intron_true_unknown.py
 	- prepare_train_set
 - **data**
 	- intron_intron-pairs.tgz
@@ -75,25 +74,15 @@
 		- H1-hESC_pred_circ.bed.gz
 		- HeLa-S3_pred_circ.bed.gz
 		- HepG2_pred_circ.bed.gz
-		- HMEC_pred_circ.bed.gz
-		- HSMM_pred_circ.bed.gz
 		- HUVEC_pred_circ.bed.gz
 		- K562_pred_circ.bed.gz
 		- NHEK_pred_circ.bed.gz
-		- NHLF_pred_circ.bed.gz
 	- **raw_data**
-		- 4DGenome_HomoSapiens_hg19.txt.gz
-		- ChromHMM.txt.gz
 		- DNaseI.txt.gz
-		- GSE63525_GM12878_primary+replicate_HiCCUPS_looplist_new.txt.gz
-		- GSE63525_HeLa_HiCCUPS_looplist_new.txt.gz
-		- GSE63525_HMEC_HiCCUPS_looplist_new.txt.gz
-		- GSE63525_K562_HiCCUPS_looplist_new.txt.gz
-		- GSE63525_NHEK_HiCCUPS_looplist_new.txt.gz
 		- Histone_part1.txt.gz
 		- Histone_part2.txt.gz
-		- RBP.txt.gz
 		- select_cell.list
+		- select_his.list
 - **info**
 	- models_ALL.txt
 	- models_classification.list
@@ -135,7 +124,7 @@
 ***CMD:***  
 
 		cd $PKG_DIR/data
-		tar -zxvf intron_intron-pairs.tgz
+		tar -zxvf intron_pairs_data.tgz
 		cd $PKG_DIR/data/raw_data
 		gunzip *.gz
 		cat Histone_part1.txt Histone_part2.txt > Histone.txt
@@ -146,18 +135,15 @@
 <br>
 
 ### 1. Data preparation and feature generation
-- ### Extract features data from `.txt` file, transform into `BED` or `BEDPE` fromate
-> Epigenetic data including DNaseI HS, RBP, Histone modification, ChromHMM downloaded from `ENCODE`
+- ### Extract features data from `.txt` file, transform into `BED` fromate
+> Epigenetic data including DNaseI HS, Histone modification, downloaded from `ENCODE`
 > \( [ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/) \)  
-
-> Hi-C data downloaded from `4DGenome` \([http://4dgenome.research.chop.edu](http://4dgenome.research.chop.edu)\) and `GEO` \( GSE63525 \)  
 
 ***CMD:***  
 
-		grep K562 Histon.txt | awk '{print $4,$5,$6,$3}' | sed 's/ /\t/g' > K562_his.bed
+		grep K562 Histon.txt | grep -f $PKG_DIR/data/raw_data/select_his.list | awk -v OFS='\t' '{print $4,$5,$6,$3}' > K562_his.bed
 
-		grep K562 4DGenome_HomoSapiens_hg19.txt | cut -f1-6 | sed 's/$/\tHi-C/g' > K562_4DGenome.bedpe
-		awk '{print "chr"$1,$2,$3,"chr"$4,$5,$6,"Hi-C"}' GSE63525_K562_HiCCUPS_looplist_new.txt | sed 's/ /\t/g' | cat K562_4DGenome.bedpe - | sort -k1,1 -k2,2n -k3,3n > K562_hic.bedpe
+		grep K562 DNaseI.txt | awk -v OFS='\t' '{print $4,$5,$6,"DNaseI_HS"}' > K562_dnase.bed
 
 > `"Histon.txt"`  
 
@@ -173,60 +159,63 @@
 	GM12878	None	CTCF	chr22	16857764	16857871  
 	...  
 
-> `"GSE63525_K562_HiCCUPS_looplist_new.txt"`  
+> `"DNaseI.txt"`  
 
-	10	100180000	100190000	10	100410000	100420000  
-	10	101600000	101610000	10	101800000	101810000  
-	10	102100000	102105000	10	102190000	102195000  
-	10	102100000	102105000	10	102265000	102270000  
-	10	102190000	102200000	10	102260000	102270000  
-	10	102800000	102810000	10	102890000	102900000  
-	10	102850000	102860000	10	102900000	102910000  
-	10	102920000	102925000	10	102970000	102975000  
-	10	103060000	103065000	10	103325000	103330000  
-	10	103060000	103070000	10	103190000	103200000  
+	lab	cell	treatment	chr	start	end
+	Duke	8988T	None	chr1	564665	564815
+	Duke	8988T	None	chr1	565025	565175
+	Duke	8988T	None	chr1	565865	566015
+	Duke	8988T	None	chr1	714005	714155
+	Duke	8988T	None	chr1	762785	762935
+	Duke	8988T	None	chr1	766705	766855
+	Duke	8988T	None	chr1	767945	768095
+	Duke	8988T	None	chr1	794145	794295
+	Duke	8988T	None	chr1	795945	796095
 	...  
 
 > `"K562_his.bed"`  
 
-	chr22	16166521	16166753	CTCF  
-	chr22	16202053	16202248	CTCF  
-	chr22	16841803	16868572	CTCF  
-	chr22	16872252	16872600	CTCF  
-	chr22	16884507	16884698	CTCF  
-	chr22	16921691	16921933	CTCF  
-	chr22	16921948	16922259	CTCF  
-	chr22	17049655	17049997	CTCF  
-	chr22	17076182	17076618	CTCF  
-	chr22	17081008	17082024	CTCF  
+	chr1	10140	10374	H3K9me3
+	chr1	118494	118714	H3K9ac
+	chr1	118556	118713	H3K4me3
+	chr1	137502	140080	H3K9ac
+	chr1	138030	140084	H3K4me2
+	chr1	138411	138738	H3K4me3
+	chr1	138424	138651	H3K27ac
+	chr1	138426	138651	H3K79me2
+	chr1	138934	139174	H3K4me3
+	chr1	138938	139177	CTCF
 	...  
 
-> `"K562_hic.bedpe"`  
+> `"K562_dnase.bed"`  
 
-	chr1	752092	754092	chr1	1044401	1046401	Hi-C  
-	chr1	831908	837312	chr1	837749	842314	Hi-C  
-	chr1	838882	841792	chr1	954104	957431	Hi-C  
-	chr1	839092	842508	chr1	935255	939050	Hi-C  
-	chr1	872113	879175	chr1	933836	938416	Hi-C  
-	chr1	874165	879175	chr1	933340	938306	Hi-C  
-	chr1	874190	877867	chr1	955674	959630	Hi-C  
-	chr1	886072	888265	chr1	935329	938908	Hi-C  
-	chr1	889676	894765	chr1	933851	937168	Hi-C  
-	chr1	889676	896594	chr1	933897	938982	Hi-C  
-	...  
+	chr1	115600	115750	DNaseI_HS
+	chr1	136280	136430	DNaseI_HS
+	chr1	138960	139110	DNaseI_HS
+	chr1	235040	235190	DNaseI_HS
+	chr1	235600	235750	DNaseI_HS
+	chr1	237640	237790	DNaseI_HS
+	chr1	521460	521610	DNaseI_HS
+	chr1	564480	564630	DNaseI_HS
+	chr1	565280	565430	DNaseI_HS
+	chr1	565860	566010	DNaseI_HS
+	...
+
 
 - ### Feature generation and annotation:
 
-***1. RBPs, Histone modifications, ChromHMM, DNaseI HS ... ( Feature types of `"bed"` format )***  
+***1. Histone modifications, DNaseI HS ... ( Feature types of `"bed"` format )***  
 
 Make feature list, and overlap intron with feature, annotate intron by features, then combine intron annotation to pair ( `"anno_pair"` )
 
 ***CMD:***  
 
-		anno_pair -t <cell_type> -f <feature (rbp, his, hmm, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
+		anno_pair -t <cell_type> -f <feature (his, dnase ...)> [ --is (Ignor strands) ] --bed <feature.bed>
 
 		e.g.:
 		anno_pair -t K562 -f his --is --bed K562_his.bed
+
+		anno_pair -t K562 -f dnase --is --bed K562_dnase.bed
 
 Generate 4 files:  
 
@@ -246,89 +235,92 @@ Generate 4 files:
 	H3K9me3  
 	H4K20me1  
 
-> "ovelapped_K562_his"  
+> "overlap_K562_his"  
 
-	chr1	1115117	1115413	TTLL10-1-5	1.00	+	chr1	1093924	1119666	EZH2_(39875)	296  
-	chr1	1115117	1115413	TTLL10-1-5	1.00	+	chr1	1094350	1119995	H3K27me3	296  
-	chr1	1115117	1115413	TTLL10-1-5	1.00	+	chr1	1092969	1123034	H4K20me1	296  
-	chr1	1115233	1115413	TTLL10-2-1	1.00	+	chr1	1093924	1119666	EZH2_(39875)	180  
-	chr1	1115233	1115413	TTLL10-2-1	1.00	+	chr1	1094350	1119995	H3K27me3	180  
-	chr1	1115233	1115413	TTLL10-2-1	1.00	+	chr1	1092969	1123034	H4K20me1	180  
-	chr1	1115720	1115862	TTLL10-1-6	1.00	+	chr1	1093924	1119666	EZH2_(39875)	142  
-	chr1	1115720	1115862	TTLL10-1-6	1.00	+	chr1	1094350	1119995	H3K27me3	142  
-	chr1	1115720	1115862	TTLL10-1-6	1.00	+	chr1	1092969	1123034	H4K20me1	142  
-	chr1	1115720	1115862	TTLL10-2-2	1.00	+	chr1	1093924	1119666	EZH2_(39875)	142  
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	712769	712874	H3K79me2	105
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713056	713748	H3K4me3	607
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713188	713524	H3K27ac	336
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713195	713556	H3K4me2	361
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713199	713548	H3K79me2	349
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713205	713560	H3K9ac	355
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713575	713751	H3K27ac	88
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713578	713747	H3K4me2	85
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713578	713752	H3K79me2	85
+	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713579	713759	H3K9ac	84
 	...  
 
 > `"intron_anno_K562_his"`  
 
-	Chr	Start	End	INTRON	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2   H3K9ac	H3K9me3	H4K20me1  
-	chr1	12227	12612	DDX11L1-1-1	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	12721	13220	DDX11L1-1-2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	14829	14969	WASH7P-1-10	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	15038	15795	WASH7P-1-9	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	15947	16606	WASH7P-1-8	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	16765	16857	WASH7P-1-7	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	17055	17232	WASH7P-1-6	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	17368	17605	WASH7P-1-5	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr1	17742	17914	WASH7P-1-4	0	0	0	0	0	0	0	0	0	0	0	0	0  
+	Chr	Start	End	INTRON	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2 H3K9ac	H3K9me3	H4K20me1
+	chr1	12227	12612	DDX11L1-1-1	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	12721	13220	DDX11L1-1-2	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	15038	15795	WASH7P-1-9	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	15947	16606	WASH7P-1-8	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	18366	24737	WASH7P-1-2	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	24891	29320	WASH7P-1-1	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	700627	701708	LOC100288069-1-6	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	701767	703927	LOC100288069-1-5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr1	703993	704876	LOC100288069-1-4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
 	...  
 
 > `"pair_anno_K562_his"`  
 
-	Intron_pair	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1  
-	A1BG-1-2_1	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-3_1	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-3_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-4_1	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-4_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-4_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-5_1	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0  
+	Intron_pair	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3 H4K20me1
+	A1BG-1-4_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-5_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-5_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-6_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-6_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-6_5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-7_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-7_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	A1BG-1-7_5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
 	...  
 
+> `"K562_dnase.list"`  
 
-***2. Hi-C/pairs data ( Feature types of `"bedpe"` format )***  
-	
-Overlap intron pairs with Hi-C pairs, annotate intron pairs ( `"anno_pair"` )
+	DNaseI_HS  
 
-***CMD:***  
+> "overlap_K562_dnase"  
 
-		anno_pair -t <cell_type> -f <paired feature (hic ...)> [ --is (Ignor strands) ] --bedpe <feature.bedpe>
-
-		e.g.:
-		anno_pair -t K562 -f hic --is --bedpe K562_hic.bedpe
-
-Generate 2 files:
-
-> `"overlapped_K562_hic"`  
-
-	chr19	58859006	58861735	chr19	58864693	58864769	A1BG-1-6_1	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
-	chr19	58859006	58861735	chr19	58864563	58864657	A1BG-1-6_2	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
-	chr19	58859006	58861735	chr19	58863921	58864293	A1BG-1-6_3	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
-	chr19	58858395	58858718	chr19	58864693	58864769	A1BG-1-7_1	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
-	chr19	58858395	58858718	chr19	58864563	58864657	A1BG-1-7_2	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
-	chr19	58858395	58858718	chr19	58863921	58864293	A1BG-1-7_3	1.00	-	-	chr19	58858001   58860001	chr19	58863865	58865865	Hi-C  
-	chr10	52570936	52573616	chr10	52573798	52575765	A1CF-1-10_9	1.00	-	-	chr10	52568068   52571258	chr10	52571525	52575297	Hi-C  
-	chr10	52569802	52570799	chr10	52570936	52573616	A1CF-1-11_10	1.00	-	-	chr10	52568068   52571258	chr10	52571525	52575297	Hi-C  
-	chr10	52569802	52570799	chr10	52573798	52575765	A1CF-1-11_9	1.00	-	-	chr10	52568068   52571258	chr10	52571525	52575297	Hi-C  
-	chr10	52566640	52569653	chr10	52570936	52573616	A1CF-1-12_10	1.00	-	-	chr10	52568068   52571258	chr10 52571525	52575297	Hi-C  
+	chr1	705092	708355	LOC100288069-1-3	1.00	-	chr1	706265	706415	DNaseI_HS	150
+	chr1	764484	776579	LINC01128-3-2	1.00	+	chr1	767140	767290	DNaseI_HS	150
+	chr1	764484	783033	LINC01128-2-2	1.00	+	chr1	767140	767290	DNaseI_HS	150
+	chr1	764484	783033	LINC01128-2-2	1.00	+	chr1	778220	778370	DNaseI_HS	150
+	chr1	764484	787306	LINC01128-1-2	1.00	+	chr1	767140	767290	DNaseI_HS	150
+	chr1	764484	787306	LINC01128-1-2	1.00	+	chr1	778220	778370	DNaseI_HS	150
+	chr1	764484	787306	LINC01128-1-2	1.00	+	chr1	785040	785190	DNaseI_HS	150
+	chr1	764484	787306	LINC01128-4-2	1.00	+	chr1	767140	767290	DNaseI_HS	150
+	chr1	764484	787306	LINC01128-4-2	1.00	+	chr1	778220	778370	DNaseI_HS	150
+	chr1	764484	787306	LINC01128-4-2	1.00	+	chr1	785040	785190	DNaseI_HS	150
 	...  
 
+> `"intron_anno_K562_dnase"`  
 
-> `"pair_anno_K562_hic"`  
+	Chr	Start	End	INTRON	DNaseI_HS
+	chr1	12227	12612	DDX11L1-1-1	0.000
+	chr1	12721	13220	DDX11L1-1-2	0.000
+	chr1	15038	15795	WASH7P-1-9	0.000
+	chr1	15947	16606	WASH7P-1-8	0.000
+	chr1	18366	24737	WASH7P-1-2	0.000
+	chr1	24891	29320	WASH7P-1-1	0.000
+	chr1	700627	701708	LOC100288069-1-6	0.000
+	chr1	701767	703927	LOC100288069-1-5	0.000
+	chr1	703993	704876	LOC100288069-1-4	0.000
+	...  
 
-	Intron_pair	Hi-C  
-	A1BG-1-2_1	0  
-	A1BG-1-3_1	0  
-	A1BG-1-3_2	0  
-	A1BG-1-4_1	0  
-	A1BG-1-4_2	0  
-	A1BG-1-4_3	0  
-	A1BG-1-5_1	0  
-	A1BG-1-5_2	0  
-	A1BG-1-5_3	0  
+> `"pair_anno_K562_dnase"`  
+
+	Intron_pair	DNaseI_HS
+	A1BG-1-4_3	0.000
+	A1BG-1-5_3	0.000
+	A1BG-1-5_4	0.000
+	A1BG-1-6_3	0.000
+	A1BG-1-6_4	0.000
+	A1BG-1-6_5	0.000
+	A1BG-1-7_3	0.000
+	A1BG-1-7_4	0.000
+	A1BG-1-7_5	0.000
 	...  
 
 
@@ -343,16 +335,16 @@ Generate 2 files:
 
 Generate `"K562_anno_comb"`, e.g.:  
 
-	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag  
-	chr19	58864657	58864693	A1BG-1-2_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58864293	58864693	A1BG-1-3_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58864293	58864563	A1BG-1-3_2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58863648	58864693	A1BG-1-4_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58863648	58864563	A1BG-1-4_2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58863648	58863921	A1BG-1-4_3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58862756	58864693	A1BG-1-5_1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58862756	58864563	A1BG-1-5_2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
-	chr19	58862756	58863921	A1BG-1-5_3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0  
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1
+	chr19	58863648	58863921	A1BG-1-4_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58862756	58863921	A1BG-1-5_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58862756	58863053	A1BG-1-5_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58861735	58863921	A1BG-1-6_3	-1.985	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58861735	58863053	A1BG-1-6_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58861735	58862017	A1BG-1-6_5	-1.408	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58858718	58863921	A1BG-1-7_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58858718	58863053	A1BG-1-7_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
+	chr19	58858718	58862017	A1BG-1-7_5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000
 	...  
 
 
@@ -361,68 +353,52 @@ Generate `"K562_anno_comb"`, e.g.:
 
 ***CMD:***  
 
-		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [ --re-sample (re-sample and overwrite data set if exsist) ]	
+		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [ --sl < list of intron pair length ( sum of 2 introns ) to do stratified random sampling (space seperated 3 number, defult: 20000 30000 40000 ) > ]
 
 		e.g.:
-		prepare_train_set -t K562 --circ K562_circ.bed -R 1
+		prepare_train_set -t K562 --circ K562_circ.bed -R 1 --sl 30000 50000 70000
 
-Generate 4 files:   "K562_circ_true", "K562_unknown", "K562_train", "K562_pred"  
+Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4"
 `"K562_train"`, `"K562_pred"` used for machine learning later  
 
 > `"K562_train"` 
 
-	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag	Type  
-	chr12	53702508	53709210	AAAS-1-10_3	0	0	0	1	0	1	0	2	1	1	0	1	0	0	1	1	0	0	0	0	0	0	0	0	0	1	0	0	0	0	2	0	T  
-	chr12	53702065	53714476	AAAS-1-12_1	1	1	1	1	1	2	0	2	2	1	1	1	1	0	2	0	0	0	0	0	0	1	0	0	1	0	0	0	0	1	2	0	T  
-	chr12	53701835	53702312	AAAS-1-13_10	0	0	0	2	0	2	0	2	2	1	0	1	1	0	2	1	0	0	0	0	0	0	0	0	0	1	0	0	0	1	2	0	T  
-	chr12	53701835	53708225	AAAS-1-13_5	0	0	0	1	0	1	0	2	1	0	0	0	1	0	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	1	2	0	T  
-	chr12	53701835	53708225	AAAS-2-14_6	0	0	0	1	0	1	0	2	1	0	0	0	1	0	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	1	2	0	T  
-	chr12	125558421	125561157	AACS-1-1_3	1	0	1	2	2	1	1	2	2	1	1	1	1	0	2	0	2	0	0	0	0	0	1	0	0	0	1	2	0	0	0	0	T  
-	chr12	125558421	125576069	AACS-1-1_5	2	0	2	2	2	1	2	2	2	2	1	1	1	0	2	0	2	0	0	0	0	0	1	0	0	0	2	2	1	0	0	0	T  
-	chr12	125587224	125603311	AACS-1-5_10	1	0	2	2	1	0	2	2	1	1	0	0	0	0	2	0	2	0	1	0	0	0	0	0	0	0	1	2	2	0	0	0	T  
-	chr5	178194130	178203277	AACSP1-1-10_4	1	0	1	1	0	0	1	2	1	0	0	0	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	1	1	0	0	0	T  
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	Type
+	chr19	58861735	58863053	A1BG-1-6_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr10	52610424	52619745	A1CF-2-3_1	-0.464	0.000	0.000	0.335	0.062	0.000	0.744	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr10	52595833	52619745	A1CF-2-6_1	-0.850	0.000	0.000	0.482	0.000	0.000	0.716	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr10	52619601	52619745	A1CF-6-4_3	-0.148	0.000	0.000	0.000	0.000	0.000	0.300	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr12	9258831	9265132	A2M-1-10_2	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr12	9256834	9266139	A2M-1-11_1	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr12	9246060	9262930	A2M-1-18_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr12	9242497	9246175	A2M-1-21_17	0.000	0.000	0.000	0.000	0.000	0.000	1.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
+	chr12	9231839	9247680	A2M-1-25_16	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	F
 	...  
 
 > `"K562_pred"`  
 
-	Chr	Start	End	Intron_pair	DNaseI_HS	Hi-C	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	10_Txn_Elongation	11_Weak_Txn	12_Repressed	13_Heterochrom/lo	14_Repetitive/CNV	15_Repetitive/CNV	1_Active_Promoter	2_Weak_Promoter	3_Poised_Promoter	4_Strong_Enhancer	5_Strong_Enhancer	6_Weak_Enhancer	7_Weak_Enhancer	8_Insulator	9_Txn_Transition	Elavl1	T7tag	Type  
-	chr9	117788812	117819704	TNC-1-26_14	0	0	0	2	0	0	0	0	0	0	0	0	0	0	2	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
-	chr1	39896373	39905172	MACF1-1-59_67	0	0	0	0	0	0	0	2	0	0	0	1	0	0	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
-	chr15	62212696	62257060	VPS13C-4-56_30	0	0	0	0	0	0	0	2	0	0	0	0	0	2	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
-	chr9	139916342	139916453	ABCA2-1-7_6	1	0	0	2	0	0	0	0	1	2	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	0	1	2	0	0	0	0	P  
-	chr19	42471400	42489575	ATP1A3-1-22_6	0	0	0	2	0	0	2	0	0	0	0	0	0	0	2	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
-	chrX	102968447	102978866	GLRA4-2-8_4	1	0	1	2	1	0	2	0	1	0	0	0	0	0	2	0	0	0	2	0	0	0	0	0	0	0	0	0	1	0	0	0	P  
-	chr16	710057	712059	WDR90-1-26_32	0	0	1	0	1	0	0	0	2	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	P  
-	chrX	44919266	44945224	KDM6A-2-12_24	0	0	0	0	0	0	0	2	0	0	0	2	1	2	1	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
-	chr19	55044261	55053854	KIR3DX1-4-1_6	0	0	0	2	0	0	2	0	0	0	0	0	0	0	1	0	0	1	1	0	0	0	0	0	0	0	0	0	0	0	0	0	P  
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	Type
+	chr19	58863648	58863921	A1BG-1-4_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58862756	58863921	A1BG-1-5_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58862756	58863053	A1BG-1-5_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58861735	58863921	A1BG-1-6_3	-1.985	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58861735	58862017	A1BG-1-6_5	-1.408	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58858718	58863921	A1BG-1-7_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58858718	58863053	A1BG-1-7_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58858718	58862017	A1BG-1-7_5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
+	chr19	58858718	58859006	A1BG-1-7_6	-2.130	0.000	0.000	0.000	0.519	0.000	0.000	0.768	0.000	0.729	0.533	0.000	0.279	0.000	0.000	P
 	...  
 
 >***NOTE:***   
->> `"known_circ.bed"`: reported circRNAs from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
+>> `known_circ.bed`: reported circRNAs from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
 **`CIRCpedia`** \( [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) \)  
 <br>
 
 
 ### 2. Model traing and prediction
 
-- ### Fast process for model training and prediction ( Train and predict with `H3K36me3` and `H3K79me2` )
+- ### Fast process for model training and prediction ( Train and predict with `Alu`, `H3K36me3` and `H3K79me2` )
 
->***NOTE:***  
->> Data matrix for model training ( `"K562_train"` ) and prediction ( `"K562_pred"` ) contain only H3K36me3 and H3K79me2 but no other
-features, e.g.:  
-
-	Chr	Start	End	Intron_pair	H3K36me3	H3K79me2	Type  
-	chr12	53702065	53714476	AAAS-1-12_1	2	1	T  
-	chr12	53701835	53709210	AAAS-1-13_3	2	0	T  
-	chr12	125587224	125603311	AACS-1-5_10	2	1	T  
-	chr12	125587224	125591814	AACS-1-5_8	2	1	T  
-	chr12	125587224	125599103	AACS-1-5_9	2	1	T  
-	chr12	125599022	125603311	AACS-1-8_10	2	0	T  
-	chr15	67524151	67529158	AAGAB-1-5_1	2	2	T  
-	chr15	67496381	67529158	AAGAB-1-8_1	2	2	T  
-	chr15	67524151	67529158	AAGAB-2-5_1	2	2	T  
-	...  
-	
 ***CMD:***  
 
 		fast_model -t <cell_type> -m <model> -n <cores>
@@ -454,12 +430,14 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 
 ***CMD:***  
 
-		circscan --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list>	
+		circscan --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list> < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ]	
 		# "-n": used for models training by parellel
 		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
+		# "--auc / --f1": referenece index to evaluate model performance
+		# "--pt": type of prediction, defult is 'prob' (probabilities), 'raw' is used for models without probabilities
 
 		e.g.:
-		circscan --fs -t K562 -m rf -n 8 -l 5,10,15,20,25,30
+		circscan --fs -t K562 -m rf -n 8 -l all --auc
 
 Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
 
