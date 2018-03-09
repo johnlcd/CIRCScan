@@ -374,7 +374,8 @@ Generate `"K562_anno_comb"`, e.g.:
 		e.g.:
 		prepare_train_set -t K562 --circ K562_circ.bed -R 1 --sl 30000 50000 70000
 
-Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4"
+Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4" 
+
 `"K562_train"`, `"K562_pred"` used for machine learning later  
 
 > `"K562_train"` 
