@@ -251,7 +251,7 @@ Generate 4 files:
 	H3K9me3  
 	H4K20me1  
 
-> "overlap_K562_his"  
+> `"overlap_K562_his"` 
 
 	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	712769	712874	H3K79me2	105
 	chr1	709660	713663	LOC100288069-1-1	1.00	-	chr1	713056	713748	H3K4me3	607
@@ -297,7 +297,7 @@ Generate 4 files:
 
 	DNaseI_HS  
 
-> "overlap_K562_dnase"  
+> `"overlap_K562_dnase"`  
 
 	chr1	705092	708355	LOC100288069-1-3	1.00	-	chr1	706265	706415	DNaseI_HS	150
 	chr1	764484	776579	LINC01128-3-2	1.00	+	chr1	767140	767290	DNaseI_HS	150
