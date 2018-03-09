@@ -51,8 +51,10 @@
 
 - **bin**  	
 	- **anno**  
+		- alu_anno_IP.py
 		- anno_bedpe.py  
 		- anno_intron.py
+		- bt_intersect_alu_intron.sh
 		- bt_overlap
 		- comb_pair_anno.py
 	- anno_pair
@@ -67,7 +69,35 @@
 		- Model_train.R
 	- prepare_train_set
 - **data**
-	- intron_intron-pairs.tgz
+	- **Alu**
+		- alu_hg19.bed
+		- pair_anno_alu
+	- **DNaseI**
+		- GM12878_dnase.bed
+		- H1-hESC_dnase.bed
+		- HeLa-S3_dnase.bed
+		- HepG2_dnase.bed
+		- HUVEC_dnase.bed
+		- K562_dnase.bed
+		- NHEK_dnase.bed
+	- **histone**
+		- A549_his.bed
+		- GM12878_his.bed
+		- H1-hESC_his.bed
+		- HeLa-S3_his.bed
+		- HepG2_his.bed
+		- HUVEC_his.bed
+		- K562_his.bed
+		- NHEK_his.bed
+	- **known_circ**
+		- A549_circ.bed
+		- GM12878_circ.bed
+		- H1-hESC_circ.bed
+		- HeLa-S3_circ.bed
+		- HepG2_circ.bed
+		- HUVEC_circ.bed
+		- K562_circ.bed
+		- NHEK_circ.bed
 	- **pred_circ_bycell**
 		- A549_pred_circ.bed.gz
 		- GM12878_pred_circ.bed.gz
@@ -91,23 +121,9 @@
 - README.md
 - **sample**
 	- **anno**
-		- intron_anno_K562_dnase.gz
-		- ...
 	- **fast_process**
-		- K562_pred.gz
-		- K562_train.gz
 	- **feature**
-		- **all_feature**
-		- feature_select.list
-		- K562_dnase.bed.gz
-		- ...
-	- K562_anno_comb.gz
-	- K562_circ.bed.gz
-	- K562_circ_true.gz
-	- K562_unknown.gz
 	- **model**
-		- K562_pred.gz
-		- K562_train.gz
 <br>
 
 
