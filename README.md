@@ -414,7 +414,7 @@ Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "
 
 ### 2. Model traing and prediction
 
-- ### Fast process for model training and prediction ( Train and predict with `Alu`, `H3K36me3` and `H3K79me2` )
+- ### Fast process for model training and prediction ( Train and predict with selected features )
 
 ***CMD:***  
 
