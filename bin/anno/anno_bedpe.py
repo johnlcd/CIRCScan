@@ -23,12 +23,12 @@ def anno_pairs():
 						Fea = []
 						for rd in d:
 							Fea.append(rd.strip())	
-						print 'Features are:\n',Fea,'\n'
+						print '>>> Features are:\n',Fea,'\n'
 						
 						Intron_pair = []
 						for rc in c:
 							Intron_pair.append(rc.strip().split('\t')[6])
-						print 'The number of intron pairs:\n',len(Intron_pair),'\n'
+						print '>>> The number of intron pairs:\n',len(Intron_pair),'\n'
 						
 						D = {}
 						for i in Intron_pair:
@@ -54,10 +54,10 @@ def anno_pairs():
 							a.write('\t'.join(wl) + '\n')
 							n+=1
 							if n%10000 == 0:
-								print 'This is the %s intron pair in the list,' % str(n)
-								print 'and the annotation type of intron pair %s is:\n' % i
+								print '>>> This is the %s intron pair in the list,' % str(n)
+								print '    and the annotation type of intron pair %s is:\n' % i
 								print wl[0:len(Fea)],'\n'
-						print 'Total of %d intron pairs.\n' % n
+						print '>>> Total of %d intron pairs.\n' % n
 
 
 if __name__ == '__main__':

@@ -23,7 +23,7 @@ if [ $# == "4" ]; then
 
 	elif [ $3 == "--bed" ]; then
 
-		bedtools intersect -s -a $PKG_DIR/data/intron.bed -b $4 -wao > overlap_$1_$2
+		bedtools intersect -s -a $PKG_DIR/data/intron.bed -b $4 -wao | sed '/\t0$/d' > overlap_$1_$2
 	
 	fi
 
@@ -37,7 +37,7 @@ if [ $# == "5" ] && [ $3 == "--is" ]; then
 
 	elif [ $4 == "--bed" ]; then
 
-		bedtools intersect -a $PKG_DIR/data/intron.bed -b $5 -wao > overlap_$1_$2
+		bedtools intersect -a $PKG_DIR/data/intron.bed -b $5 -wao | sed '/\t0$/d' > overlap_$1_$2
 
 	fi
 

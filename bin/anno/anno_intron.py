@@ -19,48 +19,76 @@ def anno_intron():
 			with open('overlap_' + CELL + '_' + FEA,'r') as b:
 				with open(RI,'r') as c:
 					with open(FL,'r') as d:
+						print '>>> Make feature list ... ...\n'
 						Fea = []	
 						for rd in d:
 							Fea.append(rd.strip())	
-						print 'Features are:\n',Fea,'\n'
+						print '    Features are:\n',Fea,'\n'
 	
+						print '>>> Make intron list ... ...\n'
+						D_IL = {}
+						D_IP = {}
 						Intron = []
 						for rc in c:
-							Intron.append(rc.strip().split('\t')[3])
-						print 'The number of intron:\n',len(Intron),'\n'
+							lc = rc.strip().split('\t')
+							i_chr = lc[0]
+							i_sts = lc[1]
+							i_end = lc[2]
+							pos = lc[0:3]
+							i_len = int(i_end) - int(i_sts)
+							intron = rc.strip().split('\t')[3]
+							Intron.append(intron)
+							if len(Intron) % 10000 == 0:
+								print '    The %d intron: %s\n' % (len(Intron), intron)
+							D_IL[intron] = i_len
+							D_IP[intron] = pos
+						print '>>> The number of intron:\n    ', len(Intron), '\n'
 					
-						D = {}
+						print '>>> Make intron feature pairs ... ...\n'
+						D_IFL = {}
 						for i in Intron:
-							D[i] = []
+							for fea in Fea:
+								i_fea = i + '_' + fea
+								D_IFL[i_fea] = 0
+						print '    %d intron feature pairs.\n' % len(D_IFL)
 						
+						print '>>> Calculate the feature length in each intron ... ...\n'
 						header = ['Chr','Start','End','INTRON'] + Fea 
 						a.write('\t'.join(header) + '\n')
-						hp = {}
+						nn = 0
 						for rb in b:
+							nn += 1
 							lb = rb.strip().split('\t')
-							fea = lb[9]	
-							pos = lb[0:3]
 							intron = lb[3]
-							hp[intron] = pos
-							F = D.get(intron)	
-							if fea in Fea and fea not in F:	
-								F.append(fea)	
-								D[intron] = F	
-						
+							if ( len(lb) == 11 ) or ( len(lb) == 13 ):
+								fea = lb[9]
+								o_len = int(lb[-1])
+								i_fea = intron + '_' + fea
+								len_sum = D_IFL.get(i_fea)	
+								D_IFL[i_fea] = len_sum + o_len
+
+						print '>>> Calculate the density of feature in intron region ... ...\n'
 						n = 0
-						for i in Intron:
-							pos = hp.get(i)
-							wl = pos + [i] + ['0']*len(Fea)
-							F = D.get(i)
-							for fea in F:
-								wl[header.index(fea)] = '1'
+						for intron in Intron:
+							n += 1
+							if n % 10000 == 0:
+								print '>>> This is the %s intron in the list.\n' % str(n)
+							pos = D_IP.get(intron)
+							wl = pos + [intron]
+							for fea in Fea:
+								i_fea = intron + '_' + fea
+								o_len_sum = D_IFL.get(i_fea)
+								i_len = D_IL.get(intron)
+								if n % 10000 == 0:
+									print '    Intron length of intron %s: %d, overlapped length with %s: %d. \n' % (intron, i_len, fea , o_len_sum)
+								dense = "%.3f" % (float(o_len_sum)/float(i_len))
+								wl = wl + [str(dense)]
 							a.write('\t'.join(wl) + '\n')
 							n+=1
-							if n%10000 == 0:
-								print 'This is the %s intron in the list,' % str(n)
-								print 'and the annotation type of intron %s is:\n' % i
+							if n % 50000 == 0:
+								print '    Annotation of %d intron %s is:\n' % (n, intron)
 								print wl[3:len(Fea)+3],'\n'
-						print 'Total of %d introns.\n' % n
+						print '    Total of %d introns.\n' % n
 
 
 if __name__ == '__main__':

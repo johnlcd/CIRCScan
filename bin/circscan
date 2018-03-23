@@ -6,7 +6,7 @@ echo " "
 echo USAGE:
 echo " "
 echo " $0 --train -t <cell_type> -m <model> -s <seed> -n <cores> "
-echo " $0 --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list>"
+echo " $0 --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list> < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ] "
 echo " $0 --pred -t <cell_type> -m <model> -n <cores> "
 echo " "
 
@@ -16,7 +16,7 @@ echo " "
 echo EXAMPLEs:
 echo " "
 echo " $0 --train -t GM12878 -m C5.0 -s 123456 -n 12 "
-echo " $0 --fs -t GM12878 -m C5.0 -n 12 -l all/1,2,3,4,5 "
+echo " $0 --fs -t GM12878 -m C5.0 -n 12 -l all/1,2,3,4,5 --auc [ -pt raw ] "
 echo " $0 --pred -t GM12878 -m C5.0 -n 12 "
 echo " "
 
@@ -27,42 +27,68 @@ echo Command is: $0 $*
 echo " "
 
 
-if [ $# -ge "5" ] && [ $# -le "9" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
+if [ $# -ge "5" ] && [ $# -le "12" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 
 	if [ $1 == "--train" ] && [ $# == "9" ] && [ $6 == "-s" ] && [ $8 == "-n" ]; then
-		echo '>>> Start to train model ... '
+		echo '>>> Start to train model ... ... '
 		echo " "
 		nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train.R $3_$5_train.out
 		echo " "
-		echo '>>> Model training finished.'
+		echo '    Model training finished. '
+		echo " "
+		echo "### Task finished. "
+		echo " "
 
 	elif [ $1 == "--fs" ]; then
 		if [ -f "$3_$5_train.RData" ]; then
-			if [ $# == "9" ] && [ $6 == "-n" ] && [ $8 == "-l" ]; then
-				echo ">>> Start to do feature selection ... "
-				echo " "
-				nohup time R CMD BATCH --slave "--args $3 $5 $7 $9" $PKG_DIR/bin/model/feature_selection.R $3_$5_FS.out
-				echo " "
-				echo '>>> Feature selection finished. '
+			if [ $# == "10" ] && [ $6 == "-n" ] && [ $8 == "-l" ]; then
+				if [ ${10} == '--auc' ] || [ ${10} == '--f1' ]; then
+					echo ">>> Start to do feature selection ... ... "
+					echo " "
+					nohup time R CMD BATCH --slave "--args $3 $5 $7 $9 ${10} prob" $PKG_DIR/bin/model/feature_selection.R $3_$5_FS.out
+					echo " "
+					echo '    Feature selection finished. '
+					echo " "
+					echo "### Task finished. "
+					echo " "
+				fi
+			elif [ $# == "12" ] && [ $6 == "-n" ] && [ $8 == "-l" ] && [ ${11} == "-pt" ]; then
+				if [ ${12} != 'raw' ] && [ ${10} == '--auc' ]; then
+					echo ">>> Could not get AUC without probability."
+					echo " "
+				elif ([ ${12} != 'prob' ] && [ ${12} != 'raw' ]) || ([ ${10} != '--auc' ] && [ ${10} != '--f1' ]); then
+					echo ">>> Wrong FROMAT of input ! ! !"
+					echo " "
+				else \
+					echo ">>> Start to do feature selection ... ... "
+					echo " "
+					nohup time R CMD BATCH --slave "--args $3 $5 $7 $9 ${10} ${12}" $PKG_DIR/bin/model/feature_selection.R $3_$5_FS.out
+					echo " "
+					echo '    Feature selection finished. '
+					echo " "
+					echo "### Task finished. "
+					echo " "
+				fi
 			fi
 		else \
-			echo "R data file of trained model ($3_$5_train.RData) do not exsist, do model traning first. "
+			echo ">>> R data file of trained model ($3_$5_train.RData) do not exsist, do model traning first. "
 		fi
 
 	elif [ $1 == "--pred" ] && [ $# == "7" ]; then
 		if [ -f "$3_$5_FS.RData" ]; then
-			echo ">>> Start to predict circRNAs ... "
+			echo ">>> Start to predict circRNAs ... ... "
 			echo " "
 			nohup time R CMD BATCH --slave "--args $3 $5 $7" $PKG_DIR/bin/model/Circ_pred.R $3_$5_pred.out
 			echo " "
-			echo '>>> Predicting of circRNAs finished. '
+			echo '    Predicting of circRNAs finished. '
+			echo " "
+			echo "### Task finished. "
+			echo " "
 		else \
-			echo "R data file of model traning ($3_$5_FS.RData) do not exsist, do feature selection first. "
+			echo ">>> R data file of model traning ($3_$5_FS.RData) do not exsist, do feature selection first. "
 		fi
 
 	fi
-
-	echo " "
 
 fi
 

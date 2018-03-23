@@ -21,7 +21,7 @@ cores <- as.numeric(args[3])
 file <- paste(cell, 'train', sep = '_')
 data_train <- read.table(file, head = T)
 summary(data_train)
-fea <- c('H3K36me3', 'H3K79me2')
+fea <- c('Alu', 'H3K36me3', 'H3K79me2')
 data_train_mat <- data_train[fea]
 data_train$Type <- as.factor(data_train$Type)
 
@@ -40,23 +40,28 @@ Pred_prob <- Prob[, 2]
 Prediction <- prediction(predictions = Pred_prob, labels = data_train$Type)
 Perf.roc <- performance(Prediction, measure = 'tpr', x.measure = 'fpr')
 Perf.auc <- performance(Prediction, measure = 'auc')
-print(confusionMatrix(Pred, data_train$Type, positive = 'TRUE'))
-Precision <- posPredValue(Pred, data_train$Type, positive = 'TRUE')
-Recall <- sensitivity(Pred, data_train$Type, positive = 'TRUE') # Sensitivity
-Spe <- specificity(Pred, data_train$Type, negative = 'FALSE')
+results <- confusionMatrix(Pred, data_train$Type, positive = 'TRUE')
+print('>>> Confusion matrix:')
+print(results)
+ACC <- as.numeric(results$byClass['Balanced Accuracy'])
+Precision <- as.numeric(results$byClass['Precision'])
+Recall <- as.numeric(results$byClass['Recall']) # Sensitivity
+Spe <- as.numeric(results$byClass['Specificity'])
 AUC <- unlist(Perf.auc@y.values)
-F1 <- (2 * Precision * Recall) / (Precision + Recall) 
-
+F1 <- as.numeric(results$byClass['F1'])
 print('>>> Precision is:')
 print(Precision)
 print('>>> Sensitivity is:')
 print(Recall)
 print('>>> Specificity is:')
 print(Spe)
+print('>>> ACC is:')
+print(ACC)
 print('>>> AUC is:')
 print(AUC)
 print('>>> F1 score is:')
 print(F1)
+
 
 # stop cluster and register sequntial front end
 stopCluster(cl); registerDoSEQ();

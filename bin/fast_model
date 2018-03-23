@@ -26,7 +26,7 @@ echo " "
 if [ $# == "6" ] && [ $1 == "-t" ] && [ $3 == "-m" ] && [ $5 == "-n" ]; then
 
 
-	nohup R CMD BATCH --slave "--args $2 $4 $6" $PKG_DIR/bin/model/fast_model.R $2_$4_fast_model.out
+	time nohup R CMD BATCH --slave "--args $2 $4 $6" $PKG_DIR/bin/model/fast_model.R $2_$4_fast_model.out
 
 
 fi
