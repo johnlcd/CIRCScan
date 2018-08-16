@@ -129,7 +129,6 @@
 - README.md
 - **sample**
 	- **anno**
-	- **fast_process**
 	- **feature**
 	- **model**
 <br>
