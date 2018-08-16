@@ -1,12 +1,12 @@
 
 # CIRCScan  
-> Tools for predicting circRNAs with ***`EPIGENETIC`*** features by ***`Machine Learning`***  
+> Tools for predicting circRNAs expression with ***`EPIGENETIC`*** features by ***`Machine Learning`***  
 <br>
 
 ## Introduction  
 
 > Circular RNAs ( circRNAs ) are an abundant class of noncoding RNAs with the widespread, cell/tissue specific pattern.  
-> This tool, `CIRCScan`, is used for predicting circRNAs in a cell/tissue specific manner by machine learning based on epigenetic features.  
+> This tool, `CIRCScan`, is used for predicting circRNAs expression in a cell/tissue specific manner by machine learning based on epigenetic features.  
 <br>
   
 ## License
