@@ -379,7 +379,7 @@ Generate `"K562_anno_comb"`, e.g.:
 
 		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [ --sl < list of intron pair length ( sum of 2 introns ) to do stratified random sampling (space seperated 3 number, defult: 20000 30000 40000 ) > ]
 		
-		or:
+		OR:
 		
 		prepare_train_set -t <cell_type> --circ <known_circ.bed (with expression (RPM) of 5 column)> ] --exp ( prepare data sets for expression prediction )
 
@@ -389,7 +389,7 @@ Generate `"K562_anno_comb"`, e.g.:
 
 Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4"
 
-or:
+OR:
 
 "K562_exptrain", "K562_exp_pred"
 
@@ -464,7 +464,7 @@ or:
 
 - ### Complete process for predicting circRNAs expression status 
 
-***1. Model training ( Used for obtaining rank of importance )***  
+***a. Model training ( Used for obtaining rank of importance )***  
 
 ***CMD:***  
 
@@ -478,7 +478,7 @@ or:
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
 
-***2. Feature selection***  
+***b. Feature selection***  
 
 ***CMD:***  
 
@@ -497,7 +497,7 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***3. CircRNAs prediction and annotation***  
+***c. CircRNAs prediction and annotation***  
 
 ***CMD:***  
 
@@ -512,7 +512,7 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 
 - ### Complete process for predicting circRNAs expression levels 
 
-***1. Model training ( Used for obtaining rank of importance )***  
+***a. Model training ( Used for obtaining rank of importance )***  
 
 ***CMD:***  
 
@@ -526,7 +526,7 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
 
-***2. Feature selection***  
+***b. Feature selection***  
 
 ***CMD:***  
 
@@ -545,7 +545,7 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***3. CircRNAs prediction and annotation***  
+***c. CircRNAs prediction and annotation***  
 
 ***CMD:***  
 
