@@ -522,7 +522,7 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 		e.g.:
 		circscan --exp-fs -t K562 -m rf -n 8
 
-Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
+Generate models and R data file `"K562_rf_FS_exp.RData"`, log file `"K562_rf_FS_exp.out"` with model evaluation, model performance of each resample `"K562_rf_cv_perf"` in cross-validation, and importance of features `"K562_rf_Imp_all", "K562_rf_sort_Imp"`
 
 
 ***Mode 2). Model training, feature selection, and validation (circBase known circRNAs)***  
@@ -539,9 +539,6 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 		circscan --fs -t K562 -m rf -n 8 -l all --auc
 
 Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
-
->***NOTE:***  
->> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
 <br><br>
