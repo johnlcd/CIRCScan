@@ -512,7 +512,7 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 
 - ### Complete process for predicting circRNAs expression levels 
 
-***Mode 1). Model training and feature selection***  
+***Mode 1). Model training and feature selection (Core mode)***  
 
 ***CMD:***  
 
@@ -522,23 +522,26 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 		e.g.:
 		circscan --exp-fs -t K562 -m rf -n 8
 
-Generate models and R data file `"K562_rf_FS_exp.RData"`, log file `"K562_rf_FS_exp.out"` with model evaluation, model performance of each resample `"K562_rf_cv_perf"` in cross-validation, and importance of features `"K562_rf_Imp_all", "K562_rf_sort_Imp"`
+Output files:
+
+models and R data file `"K562_rf_FS_exp.RData", "K562_rf_train_pred_exp_allfea.RData"`
+log file `"K562_rf_FS_exp.out"` with model evaluation
+model performance of each resample `"K562_rf_cv_perf"` in cross-validation
+importance of features `"K562_rf_Imp_all", "K562_rf_sort_Imp"`
+observed and predited expression levels `"K562_rf_train_pred_exp"`
 
 
-***Mode 2). Model training, feature selection, and validation (circBase known circRNAs)***  
+***Mode 2). Model training, feature selection, and validation (circBase known circRNAs) (Optional)***  
 
 ***CMD:***  
 
-		circscan --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list> < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ]	
+		circscan --exp -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> -l <reported_intron_FIP_list (circBase)>	
 		# "-n": used for models training by parellel
-		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
-		# "--auc / --f1": referenece index to evaluate model performance
-		# "--pt": type of prediction, defult is 'prob' (probabilities), 'raw' is used for models without probabilities
+		# "-sf": list of selected feature list (comma separated, default: all)
+		# "-l": circBase circRNAs FIP list file
 
 		e.g.:
-		circscan --fs -t K562 -m rf -n 8 -l all --auc
-
-Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
+		circscan --exp -t K562 -m rf -n 8 -sf all/Alu,H3K36me3,... -l GM12878_circbase_FIP.list
 
 
 <br><br>
