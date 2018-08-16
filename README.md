@@ -525,9 +525,13 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 Output files:
 
 models and R data file `"K562_rf_FS_exp.RData", "K562_rf_train_pred_exp_allfea.RData"`
+
 log file `"K562_rf_FS_exp.out"` with model evaluation
+
 model performance of each resample `"K562_rf_cv_perf"` in cross-validation
+
 importance of features `"K562_rf_Imp_all", "K562_rf_sort_Imp"`
+
 observed and predited expression levels `"K562_rf_train_pred_exp"`
 
 
