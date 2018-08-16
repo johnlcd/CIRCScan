@@ -512,21 +512,20 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 
 - ### Complete process for predicting circRNAs expression levels 
 
-***a). Model training ( Used for obtaining rank of importance )***  
+***Mode 1). Model training and feature selection***  
 
 ***CMD:***  
 
-		circscan --train -t <cell_type> -m <model> -s <seed> -n <cores>
+		circscan --exp-fs -t <cell_type> -m <model> -n <cores>
 		# "-n": used for models training by parellel
-		# "-s": used for random sample training set ( multiple traning and reproducibility )
 
 		e.g.:
-		circscan --train -t K562 -m rf -s 111 -n 8
+		circscan --exp-fs -t K562 -m rf -n 8
 
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
 
-***b). Feature selection***  
+***Mode 2). Model training, feature selection, and validation (circBase known circRNAs)***  
 
 ***CMD:***  
 
@@ -543,19 +542,6 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 
 >***NOTE:***  
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
-
-
-***c). CircRNAs prediction and annotation***  
-
-***CMD:***  
-
-		circscan --pred -t <cell_type> -m <model> -n <cores>
-		# "-n": used for models training by parellel
-
-		e.g.:
-		circscan --pred -t K562 -m rf -n 8
-
-Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`  
 <br><br>
 
 
