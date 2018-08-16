@@ -464,7 +464,7 @@ OR:
 
 - ### Complete process for predicting circRNAs expression status 
 
-***a. Model training ( Used for obtaining rank of importance )***  
+***a). Model training ( Used for obtaining rank of importance )***  
 
 ***CMD:***  
 
@@ -478,7 +478,7 @@ OR:
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
 
-***b. Feature selection***  
+***b). Feature selection***  
 
 ***CMD:***  
 
@@ -497,7 +497,7 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***c. CircRNAs prediction and annotation***  
+***c). CircRNAs prediction and annotation***  
 
 ***CMD:***  
 
@@ -512,7 +512,7 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 
 - ### Complete process for predicting circRNAs expression levels 
 
-***a. Model training ( Used for obtaining rank of importance )***  
+***a). Model training ( Used for obtaining rank of importance )***  
 
 ***CMD:***  
 
@@ -526,7 +526,7 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
 
-***b. Feature selection***  
+***b). Feature selection***  
 
 ***CMD:***  
 
@@ -545,7 +545,7 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***c. CircRNAs prediction and annotation***  
+***c). CircRNAs prediction and annotation***  
 
 ***CMD:***  
 
