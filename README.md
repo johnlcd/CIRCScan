@@ -378,7 +378,9 @@ Generate `"K562_anno_comb"`, e.g.:
 ***CMD:***  
 
 		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [ --sl < list of intron pair length ( sum of 2 introns ) to do stratified random sampling (space seperated 3 number, defult: 20000 30000 40000 ) > ]
+		
 		or:
+		
 		prepare_train_set -t <cell_type> --circ <known_circ.bed (with expression (RPM) of 5 column)> ] --exp ( prepare data sets for expression prediction )
 
 		e.g.:
@@ -386,11 +388,13 @@ Generate `"K562_anno_comb"`, e.g.:
 		prepare_train_set -t K562 --circ human_K562_circRNA.bed --exp
 
 Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4"
+
 or:
+
 "K562_exptrain", "K562_exp_pred"
 
-`"K562_train"`, `"K562_pred"` used for modeling circRNAs expression status later  
-`"K562_exp_train"`, `"K562_exp_pred"` used for modeling circRNAs expression levels later
+`"K562_train"`, `"K562_pred"` used for modeling circRNAs expression status  
+`"K562_exp_train"`, `"K562_exp_pred"` used for modeling circRNAs expression levels
 
 > `"K562_train"` 
 
