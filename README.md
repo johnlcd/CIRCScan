@@ -462,20 +462,55 @@ or:
 
 ### 2. Model traing and prediction
 
-- ### Fast process for model training and prediction ( Train and predict with `SPECIFIC` features )
+- ### Complete process for predicting circRNAs expression status 
+
+***1. Model training ( Used for obtaining rank of importance )***  
 
 ***CMD:***  
 
-		fast_model -t <cell_type> -m <model> -n <cores>
+		circscan --train -t <cell_type> -m <model> -s <seed> -n <cores>
+		# "-n": used for models training by parellel
+		# "-s": used for random sample training set ( multiple traning and reproducibility )
+
+		e.g.:
+		circscan --train -t K562 -m rf -s 111 -n 8
+
+Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
+
+
+***2. Feature selection***  
+
+***CMD:***  
+
+		circscan --fs -t <cell_type> -m <model> -n <cores> -l <all/feature_number_list> < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ]	
+		# "-n": used for models training by parellel
+		# "-l": list of feature number for feature selection. If value is "all", then run feature selection with feature number from 1 to all, if is a list of feature number ( comma separsted ), for example: 1,2,3,4,5,10,15, then run feature selection with feature number you provide
+		# "--auc / --f1": referenece index to evaluate model performance
+		# "--pt": type of prediction, defult is 'prob' (probabilities), 'raw' is used for models without probabilities
+
+		e.g.:
+		circscan --fs -t K562 -m rf -n 8 -l all --auc
+
+Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
+
+>***NOTE:***  
+>> Feature selection is required to generate and select the best model for circRNAs prediction.  
+
+
+***3. CircRNAs prediction and annotation***  
+
+***CMD:***  
+
+		circscan --pred -t <cell_type> -m <model> -n <cores>
 		# "-n": used for models training by parellel
 
 		e.g.:
-		fast_model -t K562 -m rf -n 8
-	
-Generate models and R data and log file `"K562_rf_fast_model.RData"`, output file `"K562_rf_fast_model.out"` and predicted circRNAs `"K562_rf_pred_true.bed"`  
+		circscan --pred -t K562 -m rf -n 8
+
+Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`  
 
 
-- ### Complete process for circRNAs prediction ( model training, feature selestion, prediction )
+- ### Complete process for predicting circRNAs expression levels 
 
 ***1. Model training ( Used for obtaining rank of importance )***  
 
