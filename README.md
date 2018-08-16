@@ -95,6 +95,14 @@
 		- H1-hESC_circ.bed
 		- HeLa-S3_circ.bed
 		- HepG2_circ.bed
+		- human_A549_circRNA.bed
+		- human_GM12878_circRNA.bed
+		- human_H1-hESC_circRNA.bed
+		- human_HeLa-S3_circRNA.bed
+		- human_HepG2_circRNA.bed
+		- human_HUVEC_circRNA.bed
+		- human_K562_circRNA.bed
+		- human_NHEK_circRNA.bed
 		- HUVEC_circ.bed
 		- K562_circ.bed
 		- NHEK_circ.bed
@@ -370,13 +378,19 @@ Generate `"K562_anno_comb"`, e.g.:
 ***CMD:***  
 
 		prepare_train_set -t <cell_type> --circ <known_circ.bed> -R <ratio of negative VS positive> [ --sl < list of intron pair length ( sum of 2 introns ) to do stratified random sampling (space seperated 3 number, defult: 20000 30000 40000 ) > ]
+		or:
+		prepare_train_set -t <cell_type> --circ <known_circ.bed (with expression (RPM) of 5 column)> ] --exp ( prepare data sets for expression prediction )
 
 		e.g.:
 		prepare_train_set -t K562 --circ K562_circ.bed -R 1 --sl 30000 50000 70000
+		prepare_train_set -t K562 --circ human_K562_circRNA.bed --exp
 
-Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4" 
+Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4"
+or:
+"K562_exptrain", "K562_exp_pred"
 
-`"K562_train"`, `"K562_pred"` used for machine learning later  
+`"K562_train"`, `"K562_pred"` used for modeling circRNAs expression status later  
+`"K562_exp_train"`, `"K562_exp_pred"` used for modeling circRNAs expression levels later
 
 > `"K562_train"` 
 
@@ -404,11 +418,41 @@ Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "
 	chr19	58858718	58863053	A1BG-1-7_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
 	chr19	58858718	58862017	A1BG-1-7_5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	P
 	chr19	58858718	58859006	A1BG-1-7_6	-2.130	0.000	0.000	0.000	0.519	0.000	0.000	0.768	0.000	0.729	0.533	0.000	0.279	0.000	0.000	P
-	...  
+	... 
+
+> `"K562_exp_train"`
+
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	RPM
+	chr12	125558421	125576069	AACS-1-1_5	0.105	0.015	0.032	1.000	0.041	0.000	0.227	1.000	0.111	0.053	0.000	0.0000.000	0.000	1.000	0.00936076724592655
+	chr5	178199429	178203277	AACSP1-1-8_4	-6.708	0.000	0.000	0.000	0.000	0.000	0.000	0.454	0.000	0.000	0.000	0.0000.000	0.000	0.000	0.0561646034755593
+	chr5	178199429	178203277	AACSP1-2-8_4	-6.711	0.000	0.000	0.000	0.000	0.000	0.000	0.454	0.000	0.000	0.000	0.0000.000	0.000	0.000	0.0561646034755593
+	chr9	99413671	99413994	AAED1-1-4_2	0.000	0.000	0.000	1.000	0.000	0.000	0.000	1.000	0.330	0.000	0.000	0.0000.000	0.221	0.000	0.0280823017377796
+	chr15	67528316	67529158	AAGAB-1-4_1	-1.888	0.000	0.000	1.000	0.000	0.000	0.000	1.000	0.000	0.000	0.000	1.0000.000	0.996	0.749	0.0374430689837062
+	chr15	67524151	67529158	AAGAB-1-5_1	0.606	0.000	0.000	1.000	0.000	0.000	0.000	1.000	0.154	0.000	0.000	1.0000.242	0.938	0.492	0.636532172723005
+	chr15	67500899	67501882	AAGAB-1-7_5	-1.614	0.000	0.000	1.000	0.000	0.000	0.000	1.000	0.168	0.000	0.000	0.9690.562	0.941	0.657	0.0187215344918531
+	chr15	67528316	67529158	AAGAB-2-4_1	-1.851	0.000	0.000	1.000	0.000	0.000	0.000	1.000	0.000	0.000	0.000	1.0000.000	0.996	0.738	0.0374430689837062
+	chr15	67524151	67529158	AAGAB-2-5_1	0.594	0.000	0.000	1.000	0.000	0.000	0.000	1.000	0.153	0.000	0.000	1.0000.262	0.938	0.485	0.636532172723005
+	... 
+
+> `"K562_exp_pred"`
+
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	RPM
+	chr19	58863648	58863921	A1BG-1-4_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58862756	58863921	A1BG-1-5_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58862756	58863053	A1BG-1-5_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58861735	58863921	A1BG-1-6_3	-1.985	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58861735	58863053	A1BG-1-6_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58861735	58862017	A1BG-1-6_5	-1.408	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58858718	58863921	A1BG-1-7_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58858718	58863053	A1BG-1-7_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	chr19	58858718	58862017	A1BG-1-7_5	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
+	... 
+
 
 >***NOTE:***   
 >> `known_circ.bed`: reported circRNAs from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
 **`CIRCpedia`** \( [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) \)  
+>> `human_circRNA.bed`: reported circRNAs from **`CIRCpedia`** with expression levels (RPM)
 <br>
 
 
