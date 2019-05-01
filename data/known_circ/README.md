@@ -35,7 +35,7 @@ bwa mem –t 10 -T 30 <hg19.fa> <R1.fastq> <R2.fastq> > <SAM>
 > The BWA output SAM file is then analyzed by [`CIRI`](https://sourceforge.net/projects/ciri/) version 2.0.2 using:  
 
 ```Bash
-perl CIRI2.pl -I <SAM> -O < outfile > -F <hg19.fa> -A < GRCh37.75.gtf > -T 10
+perl CIRI2.pl -I <SAM> -O <outfile> -F <hg19.fa> -A <GRCh37.75.gtf> -T 10
 ```
 
 > Results of detected circRNA junctions are stored in CIRI outfile.  
