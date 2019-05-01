@@ -25,11 +25,11 @@ file <- paste(cell, 'exp_train', sep = '_')
 data_train_all <- read.table(file, head = T)
 data_train_all <- data.frame(data_train_all)
 data_train_raw <- data_train_all
-data_train_all$RPM <- log2(data_train_all$RPM)
-#data_train <- data_train_all[(2^(data_train_all$RPM)>0.01),] # remove low expression circRNAs (RPM > -6)
+data_train_all$SRPBM <- log2(data_train_all$SRPBM)
+#data_train <- data_train_all[(2^(data_train_all$SRPBM)>0.01),] # remove low expression circRNAs (SRPBM > -6)
 data_train <- data_train_all
 if (PM == 'glm') {
-	data_train$RPM <- data_train$RPM/10 # value = log2(RPM)/10
+	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
 summary(data_train)
 set.seed(seed)
@@ -66,28 +66,25 @@ sessionInfo()
 # register parallel front-end
 cl <- makeCluster(cores); registerDoParallel(cl)
 
-print('>>> [1] Train model with circRNAs expression (RPM) of CIRCPedia ... ... ')
+print('>>> [1] Train model with circRNAs expression (SRPBM) of ENCODE Long Non-Poly(A) RNA-seq data ... ... ')
 ctrl <- trainControl(method = 'cv', number = 10 , savePredictions = "all", returnData = T, returnResamp = 'all', 
 					 verboseIter = T, allowParallel = T)
-#Model_all <- train(y = data_train$RPM, x = data_train_mat, method = PM, trControl = ctrl, preProc = c("center", "scale"))
-#Model <- train(y = data_train$RPM, x = data_train_mat[,c('Alu', 'H3K36me3', 'H3K79me2')], 
-Model <- train(y = data_train$RPM, 
-#			   x = data_train_mat[,c('Alu', 'DNaseI_HS', 'H3K27ac', 'H3K36me3', 'H3K4me1', 'H3K4me2', 'H3K4me3', 'H3K79me2')], 
+Model <- train(y = data_train$SRPBM, 
 			   x = data_train_mat, 
 			   method = PM, trControl = ctrl, metric = "RMSE", importance = T, preProc = c("center", "scale"))
 
 ## write the observed and predicted expression to file
-obs_pred_exp <- data.frame(cbind(levels(data_train$Intron_pair), data_train$RPM, Model$finalModel$predicted))
+obs_pred_exp <- data.frame(cbind(levels(data_train$Intron_pair), data_train$SRPBM, Model$finalModel$predicted))
 colnames(obs_pred_exp) <- c('Intron_pair','true_exp', 'pred_exp')
 write.table(obs_pred_exp, paste(cell, PM, 'train_pred_exp', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
 
 ## model performance (RMSE, R2)
-mse <- mse(data_train$RPM, Model$finalModel$predicted)
+mse <- mse(data_train$SRPBM, Model$finalModel$predicted)
 rmse <- sqrt(mse)
-SSE <- sum((Model$finalModel$predicted - data_train$RPM)^2)
-SST <- sum((data_train$RPM - mean(data_train$RPM)) ^ 2)
+SSE <- sum((Model$finalModel$predicted - data_train$SRPBM)^2)
+SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 R2 <- 1- SSE/SST
-PCC <- cor.test(Model$finalModel$predicted, data_train$RPM, method = "pearson")
+PCC <- cor.test(Model$finalModel$predicted, data_train$SRPBM, method = "pearson")
 print('    Model performance ==> ')
 print(paste('    Total RMSE: ', rmse, sep = ''))
 print(paste('    Total R2: ', R2, sep = ''))
@@ -130,13 +127,10 @@ print(Model)
 stopCluster(cl); registerDoSEQ()
 
 # load pred data
-#load(paste('CELL', 'train_pred_exp.RData', sep = '_'))
-print('>>> [2] Predict circRNAs expression (RPM) with final model ... ... ')
+print('>>> [2] Predict circRNAs expression (SRPBM) with final model ... ... ')
 data_pred <- read.table(paste(cell, 'exp_pred', sep = '_'), head = T)
 data_pred.bed <- data_pred[1:4]
 all_pred_mat <- data_pred[-(1:3)]
-#sel_pred_mat <- all_pred_mat[,c('Alu','H3K36me3','H3K79me2')]
-#sel_pred_mat <- all_pred_mat[,c('Alu','DNaseI_HS','H3K27ac','H3K36me3','H3K4me1','H3K4me2','H3K4me3','H3K79me2')]
 sel_pred_mat <- all_pred_mat[,fea_sel]
 rownames(sel_pred_mat) <- data_pred$Intron_pair
 print('>>> Number of intron pairs and all feature:')
@@ -147,41 +141,29 @@ circ_pred <- predict(Model, sel_pred_mat)
 circ_pred <- 2^circ_pred
 circ_pred_df <- data.frame(circ_pred)
 circ_pred_bed <- data.frame(cbind(data_pred.bed, circ_pred_df))
-colnames(circ_pred_bed) <- c('Chr','Start','End','Intron_pair','RPM')
-#circ_pred_bed$RPM <- 2^(circ_pred_bed$RPM)
-#circ_pred_all <- predict(Model_all, all_pred_mat[fea_all])
-#circ_pred_all <- 2^circ_pred_all
-#circ_pred_all_df <- data.frame(circ_pred_all)
-#circ_pred_all_bed <- data.frame(cbind(data_pred.bed, circ_pred_all_df))
-#colnames(circ_pred_all_bed) <- c('Chr','Start','End','Intron_pair','RPM')
+colnames(circ_pred_bed) <- c('Chr','Start','End','Intron_pair','SRPBM')
 max_exp <- max(circ_pred_df)
 min_exp <- min(circ_pred_df)
 max_exp_bed <- circ_pred_bed[c(which(circ_pred_df == max_exp)),]
 min_exp_bed <- circ_pred_bed[c(which(circ_pred_df == min_exp)),]
-#max_exp_df <- data.frame(cbind(max_exp_bed,data.frame(circ_pred[c(which(circ_pred_df == max_exp))])))
-#colnames(max_exp_df) <- c('Chr','Start','End','Intron_pair','RPM')
-#min_exp_df <- data.frame(cbind(min_exp_bed,data.frame(circ_pred[c(which(circ_pred_df == min_exp))])))
-#colnames(min_exp_df) <- c('Chr','Start','End','Intron_pair','RPM')
 print('    The max expressed circRNA:')
 print(max_exp_bed)
 print('    The min expressed circRNA:')
 print(min_exp_bed)
 
 write.table(circ_pred_bed, paste(cell, PM, 'pred_exp.bed', sep = '_'), row.names = F, col.names = F, quote = F, sep = '\t')
-#write.table(cbind(data_pred.bed[,1:4], circ_pred_all_df), paste(cell, PM, 'pred_exp_all.bed', sep = '_'), row.names = F, col.names = F, quote = F, append = T, sep = '\t')
 
 # save R data
 save(list = objects(), file=paste(cell, PM, 'train_pred_exp.RData', sep = '_'))
 
-# validate and evaluate the results by circBase data
-## read circBase circRNA FIP list
+# validate and evaluate the results by known circRNA data
+## read known circRNA FIP list
 print('>>> [3] Validate and evaluate the expression level of circRNAs ... ... ')
 CB_fip_list <- read.table(FIP_list, col.names='Intron_pair')
 CB_fip_list <- CB_fip_list$Intron_pair
 train_fip_list <- data_train_all$Intron_pair
 report_fip_list <- union(train_fip_list, CB_fip_list)
-col_name <- c('Chr', 'Start', 'End', 'Intron_pair', 'RPM')
-#colnames(circ_pred_all_bed) <- col_name
+col_name <- c('Chr', 'Start', 'End', 'Intron_pair', 'SRPBM')
 all_exp_df <- data.frame(rbind(data_train_raw[,col_name], circ_pred_bed))
 all_fip_list <- all_exp_df$Intron_pair
 diff_fip_list <- setdiff(all_fip_list, report_fip_list) # un-reported circRNAs list
@@ -194,16 +176,16 @@ write.table(diff_exp, paste(cell, PM, 'unreported_pred_exp', sep = '_'), row.nam
 
 ## T-test of circBase expression level and others value
 print('>>> [4] T-test of circRNAs expression level between reported and un-reported groups ... ... ')
-print(paste('    Mean expression level of all genome:', mean(all_exp_df$RPM), sep = ' '))
-print(paste('    Mean value of reported and un-reported groups:', mean(CB_exp$RPM), ";", mean(diff_exp$RPM), sep = ' '))
-CB_RPM <- CB_exp$RPM
-diff_RPM <- diff_exp$RPM
-tt_RPM <- t.test(CB_RPM, diff_RPM, paired = F)
+print(paste('    Mean expression level of all genome:', mean(all_exp_df$SRPBM), sep = ' '))
+print(paste('    Mean value of reported and un-reported groups:', mean(CB_exp$SRPBM), ";", mean(diff_exp$SRPBM), sep = ' '))
+CB_SRPBM <- CB_exp$SRPBM
+diff_SRPBM <- diff_exp$SRPBM
+tt_SRPBM <- t.test(CB_SRPBM, diff_SRPBM, paired = F)
 print('    Summary of T-test: ')
-print(tt_RPM)
+print(tt_SRPBM)
 print('    P-value: ')
-print(tt_RPM$p.value)
-if (tt_RPM$p.value < 0.05) {
+print(tt_SRPBM$p.value)
+if (tt_SRPBM$p.value < 0.05) {
 	print('    Significant !!!')
 } else {
 	print('    Not significant.')

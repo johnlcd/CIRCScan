@@ -25,10 +25,10 @@ file <- paste(cell, 'exp_train', sep = '_')
 data_train_all <- read.table(file, head = T)
 data_train_all <- data.frame(data_train_all)
 data_train_raw <- data_train_all
-data_train_all$RPM <- log2(data_train_all$RPM)
+data_train_all$SRPBM <- log2(data_train_all$SRPBM)
 data_train <- data_train_all
 if (PM == 'glm') {
-	data_train$RPM <- data_train$RPM/10 # value = log2(RPM)/10
+	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
 summary(data_train)
 set.seed(seed)
@@ -38,15 +38,6 @@ n <- dim(data_train)[1]
 FN <- dim(data_train)[2] - 5
 col_name <- names(data_train)
 fea_all <- col_name[5:(FN+4)]
-#if (args[4] != 'all'){
-#		fn_list <- as.numeric(strsplit(args[4], ',')[[1]])
-#}
-# sort and reverse fn_list (decrease)
-#fn_list <- rev(sort(fn_list))
-#print('>>> Feature number list:')
-#print(fn_list) 
-#len_fn_list <- length(fn_list)
-#max_fn <- fn_list[1]
 data_train_mat <- data_train[,5:(FN+4)]
 
 # show which libraries were loaded  
@@ -71,8 +62,6 @@ feature_sel <- function(fn) {
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		print('Temp feature number EQUAL to sorted feature number, PASS ==>> ')
-#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
-#		print(sort_fea)
 	} else {
 		print('    Incoordinate temp feature number and sorted feature number ! ! ! ')
 	}
@@ -81,7 +70,7 @@ feature_sel <- function(fn) {
 	
 	data_train_mat_tmp <- data_train_mat[, new_fea_list]
 	## train model
-	Model_tmp <- train(y = data_train$RPM, x = data_train_mat_tmp, 
+	Model_tmp <- train(y = data_train$SRPBM, x = data_train_mat_tmp, 
 				   method = PM, trControl = ctrl, metric = "RMSE", importance = T, preProc = c("center", "scale"))
 	
 	# Get results of resample
@@ -115,12 +104,12 @@ feature_sel <- function(fn) {
 	
 	## model performance (RMSE, R2)
 	if (PM == 'rf') {
-		mse_tmp <- mse(data_train$RPM, Model_tmp$finalModel$predicted)
+		mse_tmp <- mse(data_train$SRPBM, Model_tmp$finalModel$predicted)
 		rmse_tmp <- sqrt(mse_tmp)
-		SSE_tmp <- sum((Model_tmp$finalModel$predictedi - data_train$RPM)^2)
-		SST_tmp <- sum((data_train$RPM - mean(data_train$RPM)) ^ 2)
+		SSE_tmp <- sum((Model_tmp$finalModel$predictedi - data_train$SRPBM)^2)
+		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1- SSE_tmp/SST_tmp
-		PCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$RPM,method = "pearson")
+		PCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$SRPBM,method = "pearson")
 		print('    Pearson\'s r (PCC): ')
 		print(PCC_tmp)
 	} else {
@@ -136,7 +125,7 @@ feature_sel <- function(fn) {
 		mse_tmp <- mse(obs_tmp, pred_tmp)
 		rmse_tmp <- sqrt(mse_tmp)
 		SSE_tmp <- sum((pred_tmp - obs_tmp) ^ 2)
-		SST_tmp <- sum((data_train$RPM - mean(data_train$RPM)) ^ 2)
+		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1 - SSE_tmp/SST_tmp
 	}
 	print('    Model performance ==> ')
@@ -186,7 +175,7 @@ feature_sel <- function(fn) {
 
 
 print('>>> [1] Train model with all features ==> ')
-Model_all <- train(y = data_train$RPM, x = data_train_mat, 
+Model_all <- train(y = data_train$SRPBM, x = data_train_mat, 
 			   method = PM, trControl = ctrl, metric = "RMSE", importance = T, preProc = c("center", "scale"))
 Model_best <- Model_all
 
@@ -218,12 +207,12 @@ write.table(cv_perf_df, paste(cell, PM, 'cv_perf', sep = '_'), row.names = F, co
 
 ## model performance of all feature (RMSE, R2)
 if (PM == 'rf') {
-	mmse <- mse(data_train$RPM, Model_all$finalModel$predicted)
+	mmse <- mse(data_train$SRPBM, Model_all$finalModel$predicted)
 	rmse <- sqrt(mmse)
-	SSE <- sum((Model_all$finalModel$predicted - data_train$RPM)^2)
-	SST <- sum((data_train$RPM - mean(data_train$RPM)) ^ 2)
+	SSE <- sum((Model_all$finalModel$predicted - data_train$SRPBM)^2)
+	SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 	R2 <- 1- SSE/SST
-	PCC <- cor.test(Model_all$finalModel$predicted, data_train$RPM,method = "pearson")
+	PCC <- cor.test(Model_all$finalModel$predicted, data_train$SRPBM,method = "pearson")
 	PCC_best <- PCC
 	print('    Pearson\'s r (PCC): ')
 	print(PCC)
@@ -239,7 +228,7 @@ if (PM == 'rf') {
 	mmse <- mse(obs_all, pred_all)
 	rmse <- sqrt(mmse)
 	SSE <- sum((pred_all - obs_all) ^ 2)
-	SST <- sum((data_train$RPM - mean(data_train$RPM)) ^ 2)
+	SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 	R2 <- 1 - SSE/SST
 }
 rmse_best <- rmse
@@ -306,7 +295,7 @@ print(tune_best)
 
 ## write the observed and predicted expression to file
 if (PM == 'rf') {
-	obs_pred_exp <- data.frame(cbind(levels(data_train$Intron_pair), data_train$RPM, Model_best$finalModel$predicted))
+	obs_pred_exp <- data.frame(cbind(levels(data_train$Intron_pair), data_train$SRPBM, Model_best$finalModel$predicted))
 	colnames(obs_pred_exp) <- c('Intron_pair','true_exp', 'pred_exp')
 } else {
 	best_pred <- Model_best$pred

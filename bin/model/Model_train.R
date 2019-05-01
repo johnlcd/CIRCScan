@@ -31,19 +31,6 @@ col_name <- names(data_train)
 fea_all <- col_name[5:(FN+4)]
 data_train_mat <- data_train[,5:(FN+4)]
 data_train$Type <- factor(as.character(data_train$Type))
-sel_out <- 1:n
-for (i in 1:4)
-{
-	assign(paste('indextest', i, sep = ''), sort(sample(sel_out, n*0.2)))
-	assign(paste('indextrain', i, sep = ''), setdiff(1:n, get(paste('indextest', i, sep = ''))))
-	sel_out <- setdiff(sel_out, get(paste('indextest', i, sep = '')))
-	assign(paste('train', i, sep = ''), data.frame(data_train[get(paste('indextrain', i, sep = '')), ]))
-	assign(paste('test', i, sep = ''), data.frame(data_train[get(paste('indextest', i, sep = '')), ]))
-}
-indextest5 <- sel_out
-indextrain5 <- setdiff(1:n, indextest5)
-train5 <- data.frame(data_train[indextrain5, ])
-test5 <- data.frame(data_train[indextest5, ])
 
 # show which libraries were loaded  
 print('>>> Session Info: ')
@@ -54,7 +41,8 @@ cl <- makeCluster(cores); registerDoParallel(cl)
 
 # Get feature importance
 print('>>> Start to sort importance ... ...')
-ctrl <- trainControl(method = 'cv', number = 10 , allowParallel = T)
+ctrl <- trainControl(method = 'cv', number = 10 , savePredictions = "all", returnData = T, returnResamp = 'all', 
+					 verboseIter = T,allowParallel = T)
 Model_fea_all <- train(y = data_train$Type, x = data_train_mat, method = PM, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale"))
 imp_all_fea <- varImp(Model_fea_all, scale = T)
 sort_imp_all_fea <- data.frame(sortImp(imp_all_fea, FN))
@@ -97,6 +85,7 @@ write.table(sort_fea_final, paste('Imp', cell, PM, sep = '_'), sep = '\n', col.n
 stopCluster(cl); registerDoSEQ()
 
 # save R data
+rm(list = 'args')
 save(list = objects(), file=paste(cell, PM, 'train.RData', sep = '_'))
 
 

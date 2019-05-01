@@ -17,8 +17,7 @@ PM <- args[2]
 
 ## load data
 load(paste(cell, PM, 'train.RData', sep = '_'))
-FN_list <- c(as.numeric(seq(1,FN)))
-
+FN_list <- c(as.numeric(seq(2,FN-1)))
 args <- commandArgs(T)
 if (args[4] != 'all'){
 	FN_list <- as.numeric(strsplit(args[4], ',')[[1]])
@@ -56,168 +55,190 @@ sessionInfo()
 cores <- as.numeric(args[3])
 cl <- makeCluster(cores); registerDoParallel(cl)
 
-# model traning with different feature number
-ctrl_cv <- trainControl(method = 'cv', number = 10, allowParallel = T)
+## function get_result
+train_cv <- function(fd) {
 
-print('############################################')
-print(paste('>>> Top', max_FN, 'Features are:', sep = ' '))
-print(max_fea)
-
-for (gp in 1:5)
-{
 	print('=====================================================')
-	print(paste('>>> Group', gp, ':'))
-	train <- get(paste('train', gp, sep = ''))
-	test <- get(paste('test', gp, sep = ''))
-	test$Type <- factor(as.character(test$Type))
-	print('>>> Structrue and dimension of training matrix: ')
-	X <- data.frame(train[max_fea])
-	str(X)
-	print(dim(X))
-	Y <- factor(as.character(train$Type))
-	print('>>> Lenght of training set labels: ')
-	print(length(Y))
+	print(paste('>>> Fold ', fd, " : ", sep = ''))
+	if (fd %in% 1:9) {
+		fd <- paste('Fold0', fd, sep = '')
+	} else if (fd == 10) {
+		fd <- paste('Fold', fd, sep = '')
+	}
+	pred_fd <<- pred_tune[pred_tune$Resample==fd,]
+	ind_fd <<- pred_fd$rowIndex
+	train_fd_mat <<- data_train_sel_mat[-ind_fd,]
+	test_fd_mat <<- data_train_sel_mat[ind_fd,]
+	#Model_fd <<- train(y = data_train$Type[-ind_fd], x = train_fd_mat, method = PM, tuneGrid = tunegrid, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale"))
+	Model_fd <<- Model_tmp
+	Pred_fd <<- predict(Model_fd, test_fd_mat)
+	if (Pred_type == 'prob') {
+		Prob_fd <<- predict(Model_fd, test_fd_mat, type = 'prob')
+		pp_fd <<- Prob_fd[, 2]
+		Prediction_fd <<- prediction(predictions = pp_fd, labels = data_train$Type[ind_fd])
+		Perf.auc_fd <<- performance(Prediction_fd, measure = 'auc')
+	}
+	results_fd <<- confusionMatrix(Pred_fd, data_train$Type[ind_fd], positive = 'TRUE')
+	print('>>> Confusion matrix:')
+	print(results_fd)
+	ACC_fd <<- as.numeric(results_fd$byClass['Balanced Accuracy'])
+	Pre_fd <<- as.numeric(results_fd$byClass['Precision'])
+	Rec_fd <<- as.numeric(results_fd$byClass['Recall']) # Sensitivity
+	Spe_fd <<- as.numeric(results_fd$byClass['Specificity'])
+	if (Pred_type == 'prob') {
+		AUC_fd <<- unlist(Perf.auc_fd@y.values)
+		AUC_list <<- c(AUC_list, AUC_fd)
+		if (fd == 'Fold01') {
+			AUC_list <<- AUC_list[-1]
+		}        
+	}
+	F1_fd <<- as.numeric(results_fd$byClass['F1'])
+	ACC_list <<- c(ACC_list, ACC_fd)
+	Pre_list <<- c(Pre_list, Pre_fd)
+	Rec_list <<- c(Rec_list, Rec_fd)
+	Spe_list <<- c(Spe_list, Spe_fd)
+	F1_list <<- c(F1_list, F1_fd)
+	if (fd == 'Fold01') {
+		ACC_list <<- ACC_list[-1]
+		Pre_list <<- Pre_list[-1]
+		Rec_list <<- Rec_list[-1]
+		Spe_list <<- Spe_list[-1]
+		F1_list <<- F1_list[-1]
+	}
+	print('>>> Precision is: ')
+	print(Pre_fd)
+	print('==> New Precision list: ')
+	print(Pre_list)
+	print('>>> Sensitivity is: ')
+	print(Rec_fd)
+	print('==> New Sensitivity list: ')
+	print(Rec_list)
+	print('>>> Specificity is: ')
+	print(Spe_fd)
+	print('==> New Specificity list: ')
+	print(Spe_list)
+	print('>>> ACC is: ')
+	print(ACC_fd)
+	print('==> New ACC list: ')
+	print(ACC_list)
+	if (Pred_type == 'prob') {
+		print('>>> AUC is: ')
+		print(AUC_fd)
+		print('==> New AUC list: ')
+		print(AUC_list)
+	}
+	print('>>> F1 score is: ')
+	print(F1_fd)
+	print('==> New F1 list: ')
+	print(F1_list)
 
-	assign(paste('Model_fea', max_FN, 'gp', gp, sep = '_'), train(y = Y, x = X, method = PM, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale")))
-	Model_tmp <- get(paste('Model_fea', max_FN, 'gp', gp, sep = '_'))
-	test_mat_tmp <- test[max_fea]
-	Pred_tmp <- predict(Model_tmp, test_mat_tmp)
-	assign(paste('Pred_fea', max_FN, 'gp', gp, sep = '_'), Pred_tmp)
-	if (Pred_type == 'prob') {
-		Prob_tmp <- predict(Model_tmp, test_mat_tmp, type = 'prob')
-		Pred_prob_tmp <- Prob_tmp[, 2]
-		print('>>> Length of predicted prob:')
-		print(length(Pred_prob_tmp))
-		print('>>> Length of testing set labels:')
-		print(length(test$Type))
-		Prediction_tmp <- prediction(predictions = Pred_prob_tmp, labels = test$Type)
-		Perf.roc_tmp <- performance(Prediction_tmp, measure = 'tpr', x.measure = 'fpr')
-		Perf.auc_tmp <- performance(Prediction_tmp, measure = 'auc')
-	}
-# confusion matrix
-	results_tmp <- confusionMatrix(Pred_tmp, test$Type, positive = 'TRUE')
-	print('>>> Confusion matrix: ')
-	print(results_tmp)
-
-	ACC_tmp <- as.numeric(results_tmp$byClass['Balanced Accuracy'])
-	Precision_tmp <- as.numeric(results_tmp$byClass['Precision'])
-	Recall_tmp <- as.numeric(results_tmp$byClass['Recall']) # Sensitivity
-	Spe_tmp <- as.numeric(results_tmp$byClass['Specificity'])
-	if (Pred_type == 'prob') {
-		AUC_tmp <- unlist(Perf.auc_tmp@y.values)
-	}
-	F1_tmp <- as.numeric(results_tmp$byClass['F1'])
-	print('>>> Precision is:')
-	print(Precision_tmp)
-	print('>>> Sensitivity is:')
-	print(Recall_tmp)
-	print('>>> Specificity is:')
-	print(Spe_tmp)
-	print('>>> ACC is:')
-	print(ACC_tmp)
-	if (Pred_type == 'prob') {
-		print('>>> AUC is:')
-		print(AUC_tmp)
-	}
-	print('>>> F1 score is:')
-	print(F1_tmp)
-
-	if (Pred_type == 'prob') {
-		if (gp == 1) {
-			AUC_list_tmp <- c(AUC_tmp)
-		} else {
-			AUC_list_tmp <- c(AUC_list_tmp, AUC_tmp)
-		}
-	}
-	if (gp == 1) {
-		F1_list_tmp <- c(F1_tmp)
-		ACC_list_tmp <- c(ACC_tmp)
-		Precision_list_tmp <- c(Precision_tmp)
-		Recall_list_tmp <- Recall_tmp
-		Spe_list_tmp <- Spe_tmp
-	} else {
-		F1_list_tmp <- c(F1_list_tmp, F1_tmp)
-		ACC_list_tmp <- c(ACC_list_tmp, ACC_tmp)
-		Precision_list_tmp <- c(Precision_list_tmp, Precision_tmp)
-		Recall_list_tmp <- c(Recall_list_tmp, Recall_tmp)
-		Spe_list_tmp <- c(Spe_list_tmp, Spe_tmp)
-	}
-	
 # running time
 	print(difftime(Sys.time(), t1, units = 'sec'))
 	print('=====================================================')
 
-	if (Pred_type == 'prob') {
-		assign(paste('AUC_list_fea', max_FN, sep = ''), AUC_list_tmp)
-	}
-	assign(paste('F1_list_fea', max_FN, sep = ''), F1_list_tmp)
-	assign(paste('ACC_list_fea', max_FN, sep = ''), ACC_list_tmp)
-	assign(paste('Precision_list_fea', max_FN, sep = ''), Precision_list_tmp)
-	assign(paste('Recall_list_fea', max_FN, sep = ''), Recall_list_tmp)
-	assign(paste('Spe_list_fea', max_FN, sep = ''), Spe_list_tmp)
-
 }
 
+# model traning with different feature number
+ctrl <- trainControl(method = "none", savePredictions = "all", returnData = T, verboseIter = T, allowParallel = T)
+ctrl_cv <- trainControl(method = 'cv', number = 10, savePredictions = "all", returnData = T, returnResamp = 'all', 
+						verboseIter = T, allowParallel = T)
 
-if (Pred_type == 'prob') {
-	assign(paste('AUC_sum_fea', max_FN, sep = ''), sum(get(paste('AUC_list_fea', max_FN, sep = ''))))
-	assign(paste('AUC_mean_fea', max_FN, sep = ''), mean(get(paste('AUC_list_fea', max_FN, sep = ''))))
-}
-assign(paste('F1_sum_fea', max_FN, sep = ''), sum(get(paste('F1_list_fea', max_FN, sep = ''))))
-assign(paste('F1_mean_fea', max_FN, sep = ''), mean(get(paste('F1_list_fea', max_FN, sep = ''))))
-assign(paste('ACC_sum_fea', max_FN, sep = ''), sum(get(paste('ACC_list_fea', max_FN, sep = ''))))
-assign(paste('ACC_mean_fea', max_FN, sep = ''), mean(get(paste('ACC_list_fea', max_FN, sep = ''))))
-assign(paste('Precision_sum_fea', max_FN, sep = ''), sum(get(paste('Precision_list_fea', max_FN, sep = ''))))
-assign(paste('Precision_mean_fea', max_FN, sep = ''), mean(get(paste('Precision_list_fea', max_FN, sep = ''))))
-assign(paste('Recall_sum_fea', max_FN, sep = ''), sum(get(paste('Recall_list_fea', max_FN, sep = ''))))
-assign(paste('Recall_mean_fea', max_FN, sep = ''), mean(get(paste('Recall_list_fea', max_FN, sep = ''))))
-assign(paste('Spe_sum_fea', max_FN, sep = ''), sum(get(paste('Spe_list_fea', max_FN, sep = ''))))
-assign(paste('Spe_mean_fea', max_FN, sep = ''), mean(get(paste('Spe_list_fea', max_FN, sep = ''))))
-
-if (Pred_type == 'prob') {
-	print('>>> AUC of 5 groups: ')
-	print(get(paste('AUC_list_fea', max_FN, sep = '')))
-	print('>>> Mean value of AUC: ')
-	print(get(paste('AUC_mean_fea', max_FN, sep = '')))
-}
-print('>>> F1 of 5 groups: ')
-print(get(paste('F1_list_fea', max_FN, sep = '')))
-print('>>> Mean value of F1: ')
-print(get(paste('F1_mean_fea', max_FN, sep = '')))
-print('>>> ACC of 5 groups: ')
-print(get(paste('ACC_list_fea', max_FN, sep = '')))
-print('>>> Mean value of ACC: ')
-print(get(paste('ACC_mean_fea', max_FN, sep = '')))
-print('>>> Precision of 5 groups: ')
-print(get(paste('Precision_list_fea', max_FN, sep = '')))
-print('>>> Mean value of precision: ')
-print(get(paste('Precision_mean_fea', max_FN, sep = '')))
-print('>>> Sensitivity (Recall) of 5 groups: ')
-print(get(paste('Recall_list_fea', max_FN, sep = '')))
-print('>>> Mean value of Sensitivity (Recall): ')
-print(get(paste('Recall_mean_fea', max_FN, sep = '')))
-print('>>> Specificity of 5 groups: ')
-print(get(paste('Spe_list_fea', max_FN, sep = '')))
-print('>>> Mean value of Specificity: ')
-print(get(paste('Spe_mean_fea', max_FN, sep = '')))
-
-print(paste('>>> Summary of ', max_FN, ' features finished.', sep = ''))
+print(paste('>>> Start the feature selection (cross validition) of all ', FN, ' features ... ... ', sep = ''))
+print(paste('>>> All', FN, 'Features are: ', sep = ' '))
+print(fea_all)
 print('############################################')
+print(paste('>>> Top ', FN, ' features: ', sep = ''))
+print(fea_all)
+#data_train_all_mat <- data_train[, fea_all]
+assign(paste('Model_FN', FN, sep = ''), Model_fea_all)
+print('>>> Model summary: ')
+print(Model_fea_all)
 
-FN_best <- max_FN
-fea_best <- max_fea
-if (Pred_type == 'prob') {
-	AUC_mean_best <<- get(paste('AUC_mean_fea', max_FN, sep = ''))
+# Get results of resample
+all_best_tune <- Model_fea_all$bestTune
+tunegrid <- expand.grid(all_best_tune)
+tune_met_all <- colnames(all_best_tune)
+print('>>> Best tune: ')
+print(all_best_tune)
+# tuned pred 
+pred_tune <- Model_fea_all$pred
+for (i in 1:length(tune_met_all)) {
+	met <- tune_met_all[i]
+	met_val <- all_best_tune[,met]
+	pred_tune <- pred_tune[pred_tune[,met]==met_val,]
 }
-F1_mean_best <- get(paste('F1_mean_fea', max_FN, sep = ''))
-ACC_mean_best <- get(paste('ACC_mean_fea', max_FN, sep = ''))
-Precision_mean_best <- get(paste('Precision_mean_fea', max_FN, sep = ''))
-Recall_mean_best <- get(paste('Recall_mean_fea', max_FN, sep = ''))
-Spe_mean_best <- get(paste('Spe_mean_fea', max_FN, sep = ''))
+print('>>> Head of tune predict results: ')
+print(head(pred_tune))
+# initialize the performance list
+ACC_list <- c(0)
+Pre_list <- c(0)
+Rec_list <- c(0)
+Spe_list <- c(0)
+F1_list <- c(0)
+if (Pred_type == 'prob') {
+	AUC_list <- c(0)
+}
+
+data_train_all_mat <- data_train_mat
+data_train_sel_mat <- data_train_all_mat
+for (fold in 1:10) {
+	Model_tmp <- Model_fea_all
+	train_cv(fold)
+}
+
+fold_list <- paste('Fold0', seq(1,9), sep = '')
+fold_list <- c(fold_list, 'Fold10')
+cell_list <- rep(cell, 10)
+model_list <- rep(PM, 10)
+fn_list <- rep(FN, 10)
+if (Pred_type == 'prob') {
+	AUC_result_df <- data.frame(cbind(AUC_list, cell_list, model_list, fn_list, fold_list))
+	colnames(AUC_result_df) <- c('AUC', 'Cell_type', 'Model', 'Feature_num', 'Fold')
+	write.table(AUC_result_df, paste(cell, PM, 'AUC_cv.txt', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
+}
+F1_result_df <- data.frame(cbind(F1_list, cell_list, model_list, fn_list, fold_list))
+colnames(F1_result_df) <- c('F1', 'Cell_type', 'Model', 'Feature_num', 'Fold')
+write.table(F1_result_df, paste(cell, PM, 'F1_cv.txt', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
+
+ACC_list_best <- ACC_list
+Pre_list_best <- Pre_list
+Rec_list_best <- Rec_list
+Spe_list_best <- Spe_list
+F1_list_best <- F1_list
+ACC_mean <- mean(ACC_list)
+Pre_mean <- mean(Pre_list)
+Rec_mean <- mean(Rec_list)
+Spe_mean <- mean(Spe_list)
+F1_mean <- mean(F1_list)
+ACC_mean_best <- ACC_mean
+Pre_mean_best <- Pre_mean
+Rec_mean_best <- Spe_mean
+Spe_mean_best <- Spe_mean
+F1_mean_best <- F1_mean
+FN_best <- FN
+fea_best<- fea_all
+
+assign(paste('ACC_list_fea', FN, sep = '_'), ACC_list)
+assign(paste('Pre_list_fea', FN, sep = '_'), Pre_list)
+assign(paste('Rec_list_fea', FN, sep = '_'), Rec_list)
+assign(paste('Spe_list_fea', FN, sep = '_'), Spe_list)
+assign(paste('F1_list_fea', FN, sep = '_'), F1_list)
+assign(paste('ACC_mean_fea', FN, sep = '_'), ACC_mean)
+assign(paste('Pre_mean_fea', FN, sep = '_'), Pre_mean)
+assign(paste('Rec_mean_fea', FN, sep = '_'), Rec_mean)
+assign(paste('Spe_mean_fea', FN, sep = '_'), Spe_mean)
+assign(paste('F1_mean_fea', FN, sep = '_'), F1_mean)
+if (Pred_type == 'prob') {
+	AUC_list_best <- AUC_list
+	AUC_mean <- mean(AUC_list)
+	AUC_mean_best <- AUC_mean
+	assign(paste('AUC_list_fea', FN, sep = '_'), AUC_list)
+	assign(paste('AUC_mean_fea', FN, sep = '_'), AUC_mean)
+}
 
 
 ## Summary of feature groups with different numbers ( in FN_list) 
-for (fn in FN_list[2:len_FN_list]) {
+for (fn in FN_list[1:len_FN_list]) {
 
 #	assign(paste('fea_', fn, sep = ''), sort_fea_final[1:fn])
 	fea_tmp <- get(paste('sort_fea', fn, sep = ''))
@@ -225,184 +246,104 @@ for (fn in FN_list[2:len_FN_list]) {
 	print('############################################')
 	print(paste('>>> Top', fn, 'Features are:', sep = ' '))
 	print(fea_tmp)
+	print('>>> Model summary: ')
+	Model_tmp <- get(paste('Model_FN', fn, sep = ''))
+	print(Model_tmp)
 
-	for (gp in 1:5)
-	{
-		print('=====================================================')
-		print(paste('>>> Group', gp, ':'))
-		train <- get(paste('train', gp, sep = ''))
-		test <- get(paste('test', gp, sep = ''))
-		test$Type <- factor(as.character(test$Type))
-		X <- data.frame(train[fea_tmp])
-		print('>>> Structrue and dimension of training matrix: ')
-		str(X)
-		print(dim(X))
-		Y <- factor(as.character(train$Type))
-		print('>>> Lenght of training set labels: ')
-		print(length(Y))
-	
-		assign(paste('Model_fea', fn, 'gp', gp, sep = '_'), train(y = Y, x = X, method = PM, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale")))
-		Model_tmp <- get(paste('Model_fea', fn, 'gp', gp, sep = '_'))
-		test_mat_tmp <- test[fea_tmp]
-		Pred_tmp <- predict(Model_tmp, test_mat_tmp)
-		assign(paste('Pred_fea', fn, 'gp', gp, sep = '_'), Pred_tmp)
-		if (Pred_type == 'prob') {
-			Prob_tmp <- predict(Model_tmp, test_mat_tmp, type = 'prob')
-			Pred_prob_tmp <- Prob_tmp[, 2]
-			print('>>> Length of predicted prob:')
-			print(length(Pred_prob_tmp))
-			print('>>> Length of testing set labels:')
-			print(length(test$Type))
-			Prediction_tmp <- prediction(predictions = Pred_prob_tmp, labels = test$Type)
-			Perf.roc_tmp <- performance(Prediction_tmp, measure = 'tpr', x.measure = 'fpr')
-			Perf.auc_tmp <- performance(Prediction_tmp, measure = 'auc')
-		}
-# confusion matrix
-		results_tmp <- confusionMatrix(Pred_tmp, test$Type, positive = 'TRUE')
-		print('>>> Confusion matrix: ')
-		print(confusionMatrix(Pred_tmp, test$Type, positive = 'TRUE'))
+	# Get results of resample
+	best_tune <- Model_tmp$bestTune
+	tunegrid <- expand.grid(best_tune)
+	tune_met <- colnames(best_tune)
+	print('>>> Best tune: ')
+	print(best_tune)
 
-		ACC_tmp <- as.numeric(results_tmp$byClass['Balanced Accuracy'])
-		Precision_tmp <- as.numeric(results_tmp$byClass['Precision'])
-		Recall_tmp <- as.numeric(results_tmp$byClass['Recall']) # Sensitivity
-		Spe_tmp <- as.numeric(results_tmp$byClass['Specificity'])
-		if (Pred_type == 'prob') {
-			AUC_tmp <- unlist(Perf.auc_tmp@y.values)
-		}
-		F1_tmp <- as.numeric(results_tmp$byClass['F1'])
-		print('>>> Precision is:')
-		print(Precision_tmp)
-		print('>>> Sensitivity is:')
-		print(Recall_tmp)
-		print('>>> Specificity is:')
-		print(Spe_tmp)
-		print('>>> ACC is:')
-		print(ACC_tmp)
-		if (Pred_type == 'prob') {
-			print('>>> AUC is:')
-			print(AUC_tmp)
-		}
-		print('>>> F1 score is:')
-		print(F1_tmp)
-
-		if (Pred_type == 'prob') {
-			if (gp == 1) {
-				AUC_list_tmp <- c(AUC_tmp)
-			} else {
-				AUC_list_tmp <- c(AUC_list_tmp, AUC_tmp)
-			}
-		}
-		if (gp == 1) {
-			F1_list_tmp <- c(F1_tmp)
-			ACC_list_tmp <- c(ACC_tmp)
-			Precision_list_tmp <- c(Precision_tmp)
-			Recall_list_tmp <- Recall_tmp
-			Spe_list_tmp <- Spe_tmp
-		} else {
-			F1_list_tmp <- c(F1_list_tmp, F1_tmp)
-			ACC_list_tmp <- c(ACC_list_tmp, ACC_tmp)
-			Precision_list_tmp <- c(Precision_list_tmp, Precision_tmp)
-			Recall_list_tmp <- c(Recall_list_tmp, Recall_tmp)
-			Spe_list_tmp <- c(Spe_list_tmp, Spe_tmp)
-		}
-# running time
-		print(difftime(Sys.time(), t1, units = 'sec'))
-		print('=====================================================')
-		
-		if (Pred_type == 'prob') {
-			assign(paste('AUC_list_fea', fn, sep = ''), AUC_list_tmp)
-		}
-		assign(paste('F1_list_fea', fn, sep = ''), F1_list_tmp)
-		assign(paste('ACC_list_fea', fn, sep = ''), ACC_list_tmp)
-		assign(paste('Precision_list_fea', fn, sep = ''), Precision_list_tmp)
-		assign(paste('Recall_list_fea', fn, sep = ''), Recall_list_tmp)
-		assign(paste('Spe_list_fea', fn, sep = ''), Spe_list_tmp)
-	
+	# tuned pred 
+	pred_tune <- Model_tmp$pred
+	for (i in 1:length(tune_met)) {
+			met <- tune_met[i]
+		met_val <- best_tune[,met]
+			pred_tune <- pred_tune[pred_tune[,met]==met_val,]
 	}
-	
-	
+	print('>>> Head of tune predict results: ')
+	print(head(pred_tune))
+	# initialize the performance list
+	ACC_list <- c(0)
+	Pre_list <- c(0)
+	Rec_list <- c(0)
+	Spe_list <- c(0)
+	F1_list <- c(0)
 	if (Pred_type == 'prob') {
-		assign(paste('AUC_sum_fea', fn, sep = ''), sum(get(paste('AUC_list_fea', fn, sep = ''))))
-		assign(paste('AUC_mean_fea', fn, sep = ''), mean(get(paste('AUC_list_fea', fn, sep = ''))))
+		AUC_list <- c(0)
 	}
-	assign(paste('F1_sum_fea', fn, sep = ''), sum(get(paste('F1_list_fea', fn, sep = ''))))
-	assign(paste('F1_mean_fea', fn, sep = ''), mean(get(paste('F1_list_fea', fn, sep = ''))))
-	assign(paste('ACC_sum_fea', fn, sep = ''), sum(get(paste('ACC_list_fea', fn, sep = ''))))
-	assign(paste('ACC_mean_fea', fn, sep = ''), mean(get(paste('ACC_list_fea', fn, sep = ''))))
-	assign(paste('Precision_sum_fea', fn, sep = ''), sum(get(paste('Precision_list_fea', fn, sep = ''))))
-	assign(paste('Precision_mean_fea', fn, sep = ''), mean(get(paste('Precision_list_fea', fn, sep = ''))))
-	assign(paste('Recall_sum_fea', fn, sep = ''), sum(get(paste('Recall_list_fea', fn, sep = ''))))
-	assign(paste('Recall_mean_fea', fn, sep = ''), mean(get(paste('Recall_list_fea', fn, sep = ''))))
-	assign(paste('Spe_sum_fea', fn, sep = ''), sum(get(paste('Spe_list_fea', fn, sep = ''))))
-	assign(paste('Spe_mean_fea', fn, sep = ''), mean(get(paste('Spe_list_fea', fn, sep = ''))))
-	
-	if (Pred_type == 'prob') {
-		print('>>> AUC of 5 groups: ')
-		print(get(paste('AUC_list_fea', fn, sep = '')))
-		print('>>> Mean value of AUC: ')
-		print(get(paste('AUC_mean_fea', fn, sep = '')))
-	}
-	print('>>> F1 of 5 groups: ')
-	print(get(paste('F1_list_fea', fn, sep = '')))
-	print('>>> Mean value of F1: ')
-	print(get(paste('F1_mean_fea', fn, sep = '')))
-	print('>>> ACC of 5 groups: ')
-	print(get(paste('ACC_list_fea', fn, sep = '')))
-	print('>>> Mean value of ACC: ')
-	print(get(paste('ACC_mean_fea', fn, sep = '')))
-	print('>>> Precision of 5 groups: ')
-	print(get(paste('Precision_list_fea', fn, sep = '')))
-	print('>>> Mean value of precision: ')
-	print(get(paste('Precision_mean_fea', fn, sep = '')))
-	print('>>> Sensitivity (Recall) of 5 groups: ')
-	print(get(paste('Recall_list_fea', fn, sep = '')))
-	print('>>> Mean value of Sensitivity (Recall): ')
-	print(get(paste('Recall_mean_fea', fn, sep = '')))
-	print('>>> Specificity of 5 groups: ')
-	print(get(paste('Spe_list_fea', fn, sep = '')))
-	print('>>> Mean value of Specificity: ')
-	print(get(paste('Spe_mean_fea', fn, sep = '')))
-	
-	print(paste('>>> Summary of ', fn, ' features finished.', sep = ''))
-	print('############################################')
 
-	print(paste('>>> Compare the performance of ', fn, ' features by index of ', ref_index, ' ... ... ', sep = ''))
+	data_train_mat_tmp <- data_train[, fea_tmp]
+	data_train_sel_mat <- data_train_mat_tmp
+	for (fold in 1:10) {
+		train_cv(fold)
+	}
+	fn_list <- rep(fn, 10)
+	if (Pred_type == 'prob') {
+		AUC_result_df <- data.frame(cbind(AUC_list, cell_list, model_list, fn_list, fold_list))
+		write.table(AUC_result_df, paste(cell, PM, 'AUC_cv.txt', sep = '_'), row.names = F, col.names = F, append = T, quote = F, sep = '\t')
+	}
+	F1_result_df <- data.frame(cbind(F1_list, cell_list, model_list, fn_list, fold_list))
+	write.table(F1_result_df, paste(cell, PM, 'F1_cv.txt', sep = '_'), row.names = F, col.names = F, append = T, quote = F, sep = '\t')
+
+	ACC_mean <- mean(ACC_list)
+	Pre_mean <- mean(Pre_list)
+	Rec_mean <- mean(Rec_list)
+	Spe_mean <- mean(Spe_list)
+	F1_mean <- mean(F1_list)
+	
+	assign(paste('ACC_list_fea', fn, sep = '_'), ACC_list)
+	assign(paste('Pre_list_fea', fn, sep = '_'), Pre_list)
+	assign(paste('Rec_list_fea', fn, sep = '_'), Rec_list)
+	assign(paste('Spe_list_fea', fn, sep = '_'), Spe_list)
+	assign(paste('F1_list_fea', fn, sep = '_'), F1_list)
+	assign(paste('ACC_mean_fea', fn, sep = '_'), ACC_mean)
+	assign(paste('Pre_mean_fea', fn, sep = '_'), Pre_mean)
+	assign(paste('Rec_mean_fea', fn, sep = '_'), Rec_mean)
+	assign(paste('Spe_mean_fea', fn, sep = '_'), Spe_mean)
+	assign(paste('F1_mean_fea', fn, sep = '_'), F1_mean)
+	if (Pred_type == 'prob') {
+		AUC_mean <- mean(AUC_list)
+		assign(paste('AUC_list_fea', fn, sep = '_'), AUC_list)
+		assign(paste('AUC_mean_fea', fn, sep = '_'), AUC_mean)
+	}
 
 	if (Pred_type == 'prob') {
 		if (ref_index == 'AUC') {
-			if (get(paste('AUC_mean_fea', fn, sep = '')) > AUC_mean_best) {
+			if (AUC_mean > AUC_mean_best) {
 				FN_best <<- fn
 				fea_best <<- fea_tmp
-				AUC_mean_best <<- get(paste('AUC_mean_fea', fn, sep = ''))
-				F1_mean_best <<- get(paste('F1_mean_fea', fn, sep = ''))
-				ACC_mean_best <<- get(paste('ACC_mean_fea', fn, sep = ''))
-				Precision_mean_best <<- get(paste('Precision_mean_fea', fn, sep = ''))
-				Recall_mean_best <<- get(paste('Recall_mean_fea', fn, sep = ''))
-				Spe_mean_best <<- get(paste('Spe_mean_fea', fn, sep = ''))
+				AUC_mean_best <<- AUC_mean
+				F1_mean_best <<- F1_mean
+				ACC_mean_best <<- ACC_mean
+				Pre_mean_best <<- Pre_mean
+				Rec_mean_best <<- Rec_mean
+				Spe_mean_best <<- Spe_mean
 			}
-		}
-		if (ref_index == 'F1') {
-			if (get(paste('F1_mean_fea', fn, sep = '')) > F1_mean_best) {
+		} else if (ref_index == 'F1') {
+			if (F1_mean > F1_mean_best) {
 				FN_best <<- fn
 				fea_best <<- fea_tmp
-				AUC_mean_best <<- get(paste('AUC_mean_fea', fn, sep = ''))
-				F1_mean_best <<- get(paste('F1_mean_fea', fn, sep = ''))
-				ACC_mean_best <<- get(paste('ACC_mean_fea', fn, sep = ''))
-				Precision_mean_best <<- get(paste('Precision_mean_fea', fn, sep = ''))
-				Recall_mean_best <<- get(paste('Recall_mean_fea', fn, sep = ''))
-				Spe_mean_best <<- get(paste('Spe_mean_fea', fn, sep = ''))
+				AUC_mean_best <<- AUC_mean
+				F1_mean_best <<- F1_mean
+				ACC_mean_best <<- ACC_mean
+				Pre_mean_best <<- Pre_mean
+				Rec_mean_best <<- Rec_mean
+				Spe_mean_best <<- Spe_mean
 			}
 		}
-	}
-	if (Pred_type == 'raw') {
-		if (get(paste('F1_mean_fea', fn, sep = '')) > F1_mean_best) { 
+	} else if (Pred_type == 'raw') {
+		if (F1_mean > F1_mean_best) { 
 			FN_best <<- fn
 			fea_best <<- fea_tmp
-			F1_mean_best <<- get(paste('F1_mean_fea', fn, sep = ''))
-			ACC_mean_best <<- get(paste('ACC_mean_fea', fn, sep = ''))
-			Precision_mean_best <<- get(paste('Precision_mean_fea', fn, sep = ''))
-			Recall_mean_best <<- get(paste('Recall_mean_fea', fn, sep = ''))
-			Spe_mean_best <<- get(paste('Spe_mean_fea', fn, sep = ''))
+			F1_mean_best <<- F1_mean
+			ACC_mean_best <<- ACC_mean
+			Pre_mean_best <<- Pre_mean
+			Rec_mean_best <<- Rec_mean
+			Spe_mean_best <<- Spe_mean
 		}
 	}
 
@@ -410,6 +351,9 @@ for (fn in FN_list[2:len_FN_list]) {
 	print(FN_best)
 	print('>>> Best features: ')
 	print(fea_best)
+	Model_best <<- get(paste('Model_FN', FN_best, sep = ''))
+	print('>>> Best model: ')
+	print(Model_best)
 	print(paste('>>> Finish the comparation of ', fn, ' features. ', sep = ''))
 
 }
@@ -423,9 +367,9 @@ print(fea_best)
 print('>>> Best feature number is: ')
 print(paste('    ', FN_best, sep = ''))
 print('>>> Mean value of precision is:')
-print(Precision_mean_best)
+print(Pre_mean_best)
 print('>>> Mean value of sensitivity is:')
-print(Recall_mean_best)
+print(Rec_mean_best)
 print('>>> Mean value of specificity is:')
 print(Spe_mean_best)
 print('>>> Mean value of ACC is:')
@@ -436,6 +380,8 @@ if (Pred_type == 'prob') {
 }
 print('>>> Mean value of F1 score is:')
 print(F1_mean_best)
+print('>>> Summary of best model: ')
+print('Model_best')
 print('#END')
 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
@@ -444,7 +390,9 @@ print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
 stopCluster(cl); registerDoSEQ();
 
 # save R data
+rm(list = 'args')
 save(list = objects(), file = paste(cell, PM, 'FS.RData', sep = '_'))
 
 
 ### END
+

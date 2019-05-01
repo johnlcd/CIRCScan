@@ -228,7 +228,7 @@ def make_set():
 														print '    The %d intron pairs for prediction.\n' % npr
 											
 											print '>>> Total of %d intron pairs.\n' % nip
-											print '    Number of intron pairs for traning: %d (%d positive, %d negative),\nand intron pairs for prediction is: %d.\n' % (mnpo + nne, npo, nne, npr)
+											print '    Number of intron pairs for traning: %d (%d positive, %d negative),\nand intron pairs for prediction is: %d.\n' % (npo + nne, npo, nne, npr)
 
 
 if __name__ == '__main__':
