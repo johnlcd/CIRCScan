@@ -1,6 +1,6 @@
 
 # Data source  
-> Poly(A)- long RNA-seq data from ENCODE/Cold Spring Harbor Lab were downloaded from Encyclopedia of DNA Elements [**`ENCODE`**](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeCshlLongRnaSeq/) Project Consortium 
+> Poly(A)- long RNA-seq data from ENCODE/Cold Spring Harbor Lab were downloaded from Encyclopedia of DNA Elements (`[ENCODE]`)(ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeCshlLongRnaSeq/) Project Consortium 
 <br>
 
 ## Introduction  
