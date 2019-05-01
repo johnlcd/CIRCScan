@@ -5,11 +5,10 @@
 
 # CircRNA identification and analysis  
 
-> Circular RNAs ( circRNAs ) are an abundant class of noncoding RNAs with the widespread, cell/tissue specific pattern.  
-> This tool, `CIRCScan`, is used for predicting circRNAs expression in a cell/tissue specific manner by machine learning based on epigenetic features.  
+> CircRNA is relative low expressed and the strategies for the circRNA detection tools also vary a lot, resulting differences in predicted output. To reduce the false-positives of circRNA detection, several widely tools to get circRNA candidates.  
 <br>
   
-## License
+## `***CIRCexplorer*** pipeline` 
 > This software is distributed under the terms of GPL 2.0  
 <br>
 
