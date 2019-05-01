@@ -529,17 +529,17 @@ observed and predited expression levels `"K562_rf_train_pred_exp"`
 
 <br>
 
-***Mode 2). Model training, feature selection, and validation (circBase known circRNAs) (Optional)***  
+***Mode 2). Model training, feature selection, and validation (known circRNAs) (Optional)***  
 
 ***CMD:***  
 
-		circscan --exp -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> -l <reported_intron_FIP_list (circBase)>	
+		circscan --exp -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> -l <known circRNA_intron_FIP_list>	
 		# "-n": used for models training by parellel
 		# "-sf": list of selected feature list (comma separated, default: all)
 		# "-l": circBase circRNAs FIP list file
 
 		e.g.:
-		circscan --exp -t K562 -m rf -n 8 -sf all/Alu,H3K36me3,... -l GM12878_circbase_FIP.list
+		circscan --exp -t K562 -m rf -n 8 -sf all/Alu,H3K36me3,... -l GM12878_circ_FIP.list
 
 
 <br><br>
