@@ -88,12 +88,20 @@
 		- K562_his.bed
 		- NHEK_his.bed
 	- **known_circ**
+		- A549_circ_overlap.bed
 		- GM12878_circ_overlap.bed
 		- H1-hESC_circ_overlap.bed
 		- HeLa-S3_circ_overlap.bed
 		- HepG2_circ_overlap.bed
+		- HMEC_circ_overlap.bed
+		- HOB_circ_overlap.bed
+		- HSMM_circ_overlap.bed
+		- HUVEC_circ_overlap.bed
 		- K562_circ_overlap.bed
+		- NHA_circ_overlap.bed
+		- NHDF_circ_overlap.bed
 		- NHEK_circ_overlap.bed
+		- NHLF_circ_overlap.bed
 	- **pred_circ_bycell**
 		- A549_pred_circ.bed.gz
 		- GM12878_pred_circ.bed.gz
@@ -413,7 +421,7 @@ OR:
 
 > `"K562_exp_train"`
 
-	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	RPM
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	SRPBM
 	chr12	125558421	125576069	AACS-1-1_5	0.105	0.015	0.032	1.000	0.041	0.000	0.227	1.000	0.111	0.053	0.000	0.0000.000	0.000	1.000	0.00936076724592655
 	chr5	178199429	178203277	AACSP1-1-8_4	-6.708	0.000	0.000	0.000	0.000	0.000	0.000	0.454	0.000	0.000	0.000	0.0000.000	0.000	0.000	0.0561646034755593
 	chr5	178199429	178203277	AACSP1-2-8_4	-6.711	0.000	0.000	0.000	0.000	0.000	0.000	0.454	0.000	0.000	0.000	0.0000.000	0.000	0.000	0.0561646034755593
@@ -427,7 +435,7 @@ OR:
 
 > `"K562_exp_pred"`
 
-	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	RPM
+	Chr	Start	End	Intron_pair	Alu	DNaseI_HS	CTCF	EZH2_(39875)	H2A.Z	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me2	H3K4me3	H3K79me2	H3K9ac	H3K9me3	H4K20me1	SRPBM
 	chr19	58863648	58863921	A1BG-1-4_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
 	chr19	58862756	58863921	A1BG-1-5_3	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
 	chr19	58862756	58863053	A1BG-1-5_4	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.0000.000	0.000	0.000	EP
