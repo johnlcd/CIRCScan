@@ -57,7 +57,7 @@ perl CIRI2.pl -I <SAM> -O < outfile > -F <hg19.fa> -A < GRCh37.75.gtf > -T 10
 
 CircRNAs with at least 2 junction reads find in at least one sample are regarded as high confidence detection.  
   
-Junction read counts are normalized to Spliced Reads per Billion Mapped Reads (SRPBM).  
+Junction read counts are normalized to Spliced Reads Per Billion Mapped Reads (SRPBM).  
 
 <br><br>
 
