@@ -1,9 +1,9 @@
 
 # Data source  
-> Poly(A)- long RNA-seq data from ENCODE/Cold Spring Harbor Lab were downloaded from Encyclopedia of DNA Elements ([`ENCODE`](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeCshlLongRnaSeq/)) Project Consortium 
+	Poly(A)-/Total long RNA-seq data from ENCODE/Cold Spring Harbor Lab were downloaded from Encyclopedia of DNA Elements ([`ENCODE`](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeCshlLongRnaSeq/)) Project Consortium 
 <br>
 
-## Introduction  
+# CircRNA identification and analysis  
 
 > Circular RNAs ( circRNAs ) are an abundant class of noncoding RNAs with the widespread, cell/tissue specific pattern.  
 > This tool, `CIRCScan`, is used for predicting circRNAs expression in a cell/tissue specific manner by machine learning based on epigenetic features.  
@@ -15,6 +15,7 @@
 
 ## Source
 > [https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
+> [Known circRNAs](https://github.com/johnlcd/CIRCScan/tree/master/data/known_circ) from RNA-seq data by overlapping the detection of [CIRCexplorer](https://github.com/YangLab/CIRCexplorer) and [CIRI](https://sourceforge.net/projects/ciri) ([KNIFE](https://github.com/lindaszabo/KNIFE))
 <br>
 
 ## Contact
