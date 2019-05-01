@@ -53,11 +53,11 @@ perl CIRI2.pl -I <SAM> -O < outfile > -F <hg19.fa> -A < GRCh37.75.gtf > -T 10
 <br>
 
 # Note  
-`CIRCerxplorer` and `CIRI` are recommended for their high sensitivity and decent performance in detecting circRNA candidates from RNA-seq data without poly(A)- or RNase R treatment according to paper of *Zeng, X.* et al. \[PMID: [28594838](https://www.ncbi.nlm.nih.gov/pubmed/?term=A+comprehensive+overview+and+evaluation+of+circular+RNA+detection+tools)\]  
+* `CIRCerxplorer` and `CIRI` are recommended for their high sensitivity and decent performance in detecting circRNA candidates from RNA-seq data without poly(A)- or RNase R treatment according to paper of *Zeng, X.* et al. \[PMID: [28594838](https://www.ncbi.nlm.nih.gov/pubmed/?term=A+comprehensive+overview+and+evaluation+of+circular+RNA+detection+tools)\]  
 
-CircRNAs with at least 2 junction reads find in at least one sample are regarded as high confidence detection.  
+* CircRNAs with at least 2 junction reads find in at least one sample are regarded as high confidence detection.  
   
-Junction read counts are normalized to Spliced Reads Per Billion Mapped Reads (SRPBM).  
+* Junction read counts are normalized to Spliced Reads Per Billion Mapped Reads (SRPBM).  
 
 <br><br>
 
