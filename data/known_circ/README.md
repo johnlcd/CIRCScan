@@ -13,13 +13,14 @@
 <br>
 
 ```Bash
-*STAR --chimSegmentMin 10 --runThreadN 5 --genomeDir <hg19_STAR_index> --readFilesIn <R1.fastq> <R2.fastq>*  
+STAR --chimSegmentMin 10 --runThreadN 5 --genomeDir <hg19_STAR_index> --readFilesIn <R1.fastq> <R2.fastq>  
 ```
 > The STAR output file `"Chimeric.out.junction"` was then covert and analyzed by CIRCexplorer version 1.1.10 using:  
 
 ```Bash
-*star_parse.py Chimeric.out.junction fusion_junction.txt*  
-*CIRCexplorer.py -j fusion_junction.txt -g <hg19.fa> -r <ref.txt>*  
+star_parse.py Chimeric.out.junction fusion_junction.txt
+  
+CIRCexplorer.py -j fusion_junction.txt -g <hg19.fa> -r <ref.txt>  
 ```
 > The output file of circRNA junction was `"CIRCexplorer_circ.txt"`  
 <br>
