@@ -1,11 +1,11 @@
 
 # Data source  
-> Poly(A)-/Total long RNA-seq data from ENCODE/Cold Spring Harbor Lab were downloaded from Encyclopedia of DNA Elements ([`ENCODE`](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeCshlLongRnaSeq/)) Project Consortium 
+Poly(A)-/Total long RNA-seq data from ENCODE/Cold Spring Harbor Lab were downloaded from Encyclopedia of DNA Elements ([`ENCODE`](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeCshlLongRnaSeq/)) Project Consortium 
 <br>
 
 # CircRNA identification and analysis  
 
-> CircRNA is relative low expressed and the strategies for the circRNA detection tools also vary a lot, resulting differences in predicted output. To reduce the false-positives of circRNA detection, several widely tools to get circRNA candidates.  
+CircRNA is relative low expressed and the strategies for the circRNA detection tools also vary a lot, resulting differences in predicted output. To reduce the false-positives of circRNA detection, several widely tools to get circRNA candidates.  
 <br>
   
 ## `CIRCexplorer` pipeline 
@@ -52,12 +52,12 @@ perl CIRI2.pl -I <SAM> -O < outfile > -F <hg19.fa> -A < GRCh37.75.gtf > -T 10
 > Results of detected circRNA junctions was stored in <alignment_parent_directory>/<dataset_name>/circReads/combinedReports/circleJuncProbs.txt  
 <br>
 
-# Note
-> `CIRCerxplorer` and `CIRI` are recommended for their high sensitivity and decent performance in detecting circRNA candidates from RNA-seq data without poly(A)- or RNase R treatment according to paper of *Zeng, X.* et al\[PMID: [28594838](https://www.ncbi.nlm.nih.gov/pubmed/?term=A+comprehensive+overview+and+evaluation+of+circular+RNA+detection+tools)\].  
+# Note  
+`CIRCerxplorer` and `CIRI` are recommended for their high sensitivity and decent performance in detecting circRNA candidates from RNA-seq data without poly(A)- or RNase R treatment according to paper of *Zeng, X.* et al\[PMID: [28594838](https://www.ncbi.nlm.nih.gov/pubmed/?term=A+comprehensive+overview+and+evaluation+of+circular+RNA+detection+tools)\].  
 
-> CircRNAs with at least 2 junction reads found in at least one sample were regarded as high confidence detection.  
+CircRNAs with at least 2 junction reads found in at least one sample were regarded as high confidence detection.  
   
-> Junction read counts were normalized to Spliced Reads per Billion Mapped Reads (SRPBM).  
+Junction read counts were normalized to Spliced Reads per Billion Mapped Reads (SRPBM).  
 
 <br><br>
 
