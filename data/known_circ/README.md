@@ -13,11 +13,17 @@
 <br>
 
 ```Bash
-STAR --chimSegmentMin 10 --runThreadN 5 --genomeDir <hg19_STAR_index> --readFilesIn <R1.fastq> <R2.fastq>
+*STAR --chimSegmentMin 10 --runThreadN 5 --genomeDir <hg19_STAR_index> --readFilesIn <R1.fastq> <R2.fastq>*  
 ```
+> The STAR output file `"Chimeric.out.junction"` was then covert and analyzed by CIRCexplorer version 1.1.10 using:  
 
-## Source
-> [https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
+```Bash
+*star_parse.py Chimeric.out.junction fusion_junction.txt*  
+*CIRCexplorer.py -j fusion_junction.txt -g <hg19.fa> -r <ref.txt>*  
+```
+> The output file of circRNA junction was `"CIRCexplorer_circ.txt"`  
+<br>
+
 > [Known circRNAs](https://github.com/johnlcd/CIRCScan/tree/master/data/known_circ) from RNA-seq data by overlapping the detection of [CIRCexplorer](https://github.com/YangLab/CIRCexplorer) and [CIRI](https://sourceforge.net/projects/ciri) ([KNIFE](https://github.com/lindaszabo/KNIFE))
 <br>
 
