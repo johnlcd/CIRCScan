@@ -12,9 +12,9 @@
 > The raw RNA-seq data were first aligned to human genome GRCh37/hg19-release75 using [STAR](https://github.com/alexdobin/STAR) version 2.5.1b for chimeric detection using:  
 <br>
 
-'''Bash
+```Bash
 STAR --chimSegmentMin 10 --runThreadN 5 --genomeDir <hg19_STAR_index> --readFilesIn <R1.fastq> <R2.fastq>
-'''
+```
 
 ## Source
 > [https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
