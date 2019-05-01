@@ -88,22 +88,12 @@
 		- K562_his.bed
 		- NHEK_his.bed
 	- **known_circ**
-		- A549_circ.bed
-		- GM12878_circ.bed
-		- H1-hESC_circ.bed
-		- HeLa-S3_circ.bed
-		- HepG2_circ.bed
-		- human_A549_circRNA.bed
-		- human_GM12878_circRNA.bed
-		- human_H1-hESC_circRNA.bed
-		- human_HeLa-S3_circRNA.bed
-		- human_HepG2_circRNA.bed
-		- human_HUVEC_circRNA.bed
-		- human_K562_circRNA.bed
-		- human_NHEK_circRNA.bed
-		- HUVEC_circ.bed
-		- K562_circ.bed
-		- NHEK_circ.bed
+		- GM12878_circ_overlap.bed
+		- H1-hESC_circ_overlap.bed
+		- HeLa-S3_circ_overlap.bed
+		- HepG2_circ_overlap.bed
+		- K562_circ_overlap.bed
+		- NHEK_circ_overlap.bed
 	- **pred_circ_bycell**
 		- A549_pred_circ.bed.gz
 		- GM12878_pred_circ.bed.gz
@@ -378,7 +368,7 @@ Generate `"K562_anno_comb"`, e.g.:
 		
 		OR:
 		
-		prepare_train_set -t <cell_type> --circ <known_circ.bed (with expression (RPM) of 5 column)> ] --exp ( prepare data sets for expression prediction )
+		prepare_train_set -t <cell_type> --circ <known_circ.bed (with expression (SRPBM) of 6 column)> ] --exp ( prepare data sets for expression prediction )
 
 		e.g.:
 		prepare_train_set -t K562 --circ K562_circ.bed -R 1 --sl 30000 50000 70000
@@ -451,9 +441,7 @@ OR:
 
 
 >***NOTE:***   
->> `known_circ.bed`: reported circRNAs from **`circBase`** \( [http://circbase.org/](http://circbase.org/) \) and
-**`CIRCpedia`** \( [http://www.picb.ac.cn/rnomics/circpedia/](http://www.picb.ac.cn/rnomics/circpedia/) \)  
->> `human_circRNA.bed`: reported circRNAs from **`CIRCpedia`** with expression levels (RPM)
+>> `known_circ_overlap.bed`: [Known circRNAs](https://github.com/johnlcd/CIRCScan/tree/master/data/known_circ) from RNA-seq data by overlapping the detection of multiple tools
 <br>
 
 
