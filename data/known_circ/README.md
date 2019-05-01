@@ -8,117 +8,17 @@
 > CircRNA is relative low expressed and the strategies for the circRNA detection tools also vary a lot, resulting differences in predicted output. To reduce the false-positives of circRNA detection, several widely tools to get circRNA candidates.  
 <br>
   
-## `***CIRCexplorer*** pipeline` 
-> This software is distributed under the terms of GPL 2.0  
+## `CIRCexplorer` pipeline 
+> The raw RNA-seq data were first aligned to human genome GRCh37/hg19-release75 using [STAR](https://github.com/alexdobin/STAR) version 2.5.1b for chimeric detection using:  
 <br>
+
+'''Bash
+STAR --chimSegmentMin 10 --runThreadN 5 --genomeDir <hg19_STAR_index> --readFilesIn <R1.fastq> <R2.fastq>
+'''
 
 ## Source
 > [https://github.com/johnlcd/CIRCScan](https://github.com/johnlcd/CIRCScan)  
 > [Known circRNAs](https://github.com/johnlcd/CIRCScan/tree/master/data/known_circ) from RNA-seq data by overlapping the detection of [CIRCexplorer](https://github.com/YangLab/CIRCexplorer) and [CIRI](https://sourceforge.net/projects/ciri) ([KNIFE](https://github.com/lindaszabo/KNIFE))
-<br>
-
-## Contact
-### Author
-> **Jia-Bin Chen**, **Shan-Shan Dong**, **Shi Yao**, **Yan Guo**, **Tie-Lin Yang**  
-> Key Laboratory of Biomedical Information Engineering of Ministry of Education, School of Life Science and Technology, Xi'an Jiaotong University, Xi'an, Shaanxi Province, 710049, P. R. China  
-> [yangtielin@mail.xjtu.edu.cn](yangtielin@mail.xjtu.edu.cn)  
-<br>
-
-## Maintainer
-> **Jia-Bin Chen**  
-> You can contact [johnlcd@stu.xjtu.edu.cn](johnlcd@stu.xjtu.edu.cn) when you have any questions, suggestions, comments, etc.  
-> Please describe in details, and attach your command line and log messages if possible.  
-<br>
-
-## Requiremnets
-- **bedtools** \( v2.25.0 \)
-- **Python** \( recommended: python2.7 \)
-- **R** \( >= 3.2.4 \)
-	- R packages: caret (6.0-73), ggplot2 (2.2.0), doParallel (3.2.4), ROCR (1.0-7), etc. ( Dependent packages for different models ) 
-		
-> Check the log file ".out" to validate which package is required if get an error info
-<br>
-
-## Building `CIRCscan`
-
-***CMD:***  
-
-		git clone https://github.com/johnlcd/CIRCScan.git
-
-<br>
-
-## Directory catalog
-
-- **bin**  	
-	- **anno**  
-		- alu_anno_IP.py
-		- anno_bedpe.py  
-		- anno_intron.py
-		- bt_intersect_alu_intron.sh
-		- bt_overlap
-		- comb_pair_anno.py
-	- anno_pair
-	- circscan
-	- merge_feature
-	- **model**
-		- Circ_pred.R
-		- feature_selection.R
-		- make_set.py
-		- Model_train.R
-	- prepare_train_set
-- **data**
-	- **Alu**
-		- alu_hg19.bed
-		- pair_anno_alu
-	- **DNaseI**
-		- GM12878_dnase.bed
-		- H1-hESC_dnase.bed
-		- HeLa-S3_dnase.bed
-		- HepG2_dnase.bed
-		- HUVEC_dnase.bed
-		- K562_dnase.bed
-		- NHEK_dnase.bed
-	- **histone**
-		- A549_his.bed
-		- GM12878_his.bed
-		- H1-hESC_his.bed
-		- HeLa-S3_his.bed
-		- HepG2_his.bed
-		- HUVEC_his.bed
-		- K562_his.bed
-		- NHEK_his.bed
-	- **known_circ**
-		- GM12878_circ_overlap.bed
-		- H1-hESC_circ_overlap.bed
-		- HeLa-S3_circ_overlap.bed
-		- HepG2_circ_overlap.bed
-		- K562_circ_overlap.bed
-		- NHEK_circ_overlap.bed
-	- **pred_circ_bycell**
-		- A549_pred_circ.bed.gz
-		- GM12878_pred_circ.bed.gz
-		- H1-hESC_pred_circ.bed.gz
-		- HeLa-S3_pred_circ.bed.gz
-		- HepG2_pred_circ.bed.gz
-		- HUVEC_pred_circ.bed.gz
-		- K562_pred_circ.bed.gz
-		- NHEK_pred_circ.bed.gz
-	- **raw_data**
-		- DNaseI.txt.gz
-		- Histone_part1.txt.gz
-		- Histone_part2.txt.gz
-		- select_cell.list
-		- select_his.list
-- **info**
-	- models_ALL.txt
-	- models_classification.list
-	- models_test.list
-	- models_test.txt
-- README.md
-- **sample**
-	- **anno**
-	- **feature**
-	- **model**
 <br>
 
 
