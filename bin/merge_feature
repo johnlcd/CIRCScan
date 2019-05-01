@@ -36,7 +36,7 @@ if [ $# == "2" ] && [ $1 == "-t" ]; then
 		echo "Alu" > _tmp/pair_anno_$2_alu.tmp
 		sed '1d' $PKG_DIR/data/Alu/pair_anno_alu | join $PKG_DIR/data/intron_pairs.list - | cut -d" " -f2 >> _tmp/pair_anno_$2_alu.tmp
 		paste $PKG_DIR/data/intron_pairs_interval.txt _tmp/pair_anno_$2* > $2_anno_comb
-		rm -rf _tmp/
+#		rm -rf _tmp/
 		echo '    All features have merged. '
 		echo " "
 		echo '### Task finished. '

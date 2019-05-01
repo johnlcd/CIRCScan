@@ -5,7 +5,7 @@ echo ======================================
 echo " "
 echo USAGE:
 echo " "
-echo " $0 -t <cell_type> --circ <known_circ.bed (with expression (RPM) of 5 column)> ] --exp ( prepare data sets for expression prediction ) "
+echo " $0 -t <cell_type> --circ <known_circ.bed (with expression (SRPBM) of 6 column)> ] --exp ( prepare data sets for expression prediction ) "
 echo " "
 echo " OR ==> "
 echo " "
@@ -17,11 +17,11 @@ echo --------------------------------------
 echo " "
 echo EXAMPLEs:
 echo " "
-echo " $0 -t GM12878 --circ human_K562_circRNA.bed --exp "
+echo " $0 -t GM12878 --circ GM12878_circ_overlap.bed --exp "
 echo " "
 echo " OR ==> "
 echo " "
-echo " $0 -t GM12878 --circ GM12878_circ.bed -R 1 "
+echo " $0 -t GM12878 --circ GM12878_circ_overlap.bed -R 1 "
 echo " "
 
 echo ======================================
@@ -64,27 +64,27 @@ if [ $# == "5" ]  && [ $1 == "-t" ] && [ $3 == "--circ" ] && [ $5 == "--exp" ]; 
 			cut -f 4,9 | sort -k1,1 | uniq > $2_circ_intron_pair
 		echo '    CircRNAs flaning intron pairs selected. '
 		
-# Build training set and predict set according to the known circRNAs intron pairs, add expression (RPM)
+# Build training set and predict set according to the known circRNAs intron pairs, add expression (SRPBM)
 
-		IP=`wc -l $2_circ_intron_pair`
+		IP=`wc -l ${2}_circ_intron_pair`
 		echo "    Total of $IP circRNAs flanking intron pairs."
 		echo " "
 		echo "    Start to make training and predict sets ... ... "
-		echo "    [1] Write head line of $2_exp_pred and $2_exp_train."
-		head -1 $2_anno_comb | sed 's/$/\tRPM/g' > $2_exp_pred
-		head -1 $2_anno_comb | sed 's/$/\tRPM/g' > $2_exp_train
+		echo "    [1] Write head line of ${2}_exp_pred and ${2}_exp_train."
+		head -1 ${2}_anno_comb | sed 's/$/\tSRPBM/g' > ${2}_exp_pred
+		head -1 ${2}_anno_comb | sed 's/$/\tSRPBM/g' > ${2}_exp_train
 		echo "    [2] Make annotation and expression matrix."
-		sed '1d' $2_anno_comb | join -a1 -1 4 -2 1 - $2_circ_intron_pair | sed 's/ /\t/g' | cut -f5- > $2_anno_exp_mat
-		sed '1d' $2_anno_comb | cut -f1-4 | paste - $2_anno_exp_mat > $2_anno_exp
-		echo "    [3] Write annotation and expression data to $2_exp_pred and $2_exp_train."
-		if [ $2 == "A549" ]; then
-			awk -v OFS='\t' '{if (NF==17) print $0,"EP"}' $2_anno_exp >> $2_exp_pred
-			awk -v OFS='\t' '{if (NF==18) print $0}' $2_anno_exp >> $2_exp_train
+		sed '1d' ${2}_anno_comb | join -a1 -1 4 -2 1 - ${2}_circ_intron_pair | sed 's/ /\t/g' | cut -f5- > ${2}_anno_exp_mat
+		sed '1d' ${2}_anno_comb | cut -f1-4 | paste - ${2}_anno_exp_mat > ${2}_anno_exp
+		echo "    [3] Write annotation and expression data to ${2}_exp_pred and ${2}_exp_train."
+		if [ ${2} == "A549" ]; then
+			awk -v OFS='\t' '{if (NF==17) print $0,"EP"}' ${2}_anno_exp >> ${2}_exp_pred
+			awk -v OFS='\t' '{if (NF==18) print $0}' ${2}_anno_exp >> ${2}_exp_train
 		else\
-			awk -v OFS='\t' '{if (NF==19) print $0,"EP"}' $2_anno_exp >> $2_exp_pred
-			awk -v OFS='\t' '{if (NF==20) print $0}' $2_anno_exp >> $2_exp_train 
+			awk -v OFS='\t' '{if (NF==19) print $0,"EP"}' ${2}_anno_exp >> ${2}_exp_pred
+			awk -v OFS='\t' '{if (NF==20) print $0}' ${2}_anno_exp >> ${2}_exp_train 
 		fi
-		rm $2_anno_exp_mat $2_anno_exp
+		rm ${2}_anno_exp_mat ${2}_anno_exp
 		echo '    Training set built. '
 		echo " "
 	
