@@ -379,8 +379,8 @@ Generate `"K562_anno_comb"`, e.g.:
 		prepare_train_set -t <cell_type> --circ <known_circ.bed (with expression (SRPBM) of 6 column)> ] --exp ( prepare data sets for expression prediction )
 
 		e.g.:
-		prepare_train_set -t K562 --circ K562_circ.bed -R 1 --sl 30000 50000 70000
-		prepare_train_set -t K562 --circ human_K562_circRNA.bed --exp
+		prepare_train_set -t K562 --circ K562_circ_overlap.bed -R 1 --sl 30000 50000 70000
+		prepare_train_set -t K562 --circ K562_circ_overlap.bed --exp
 
 Generate multiple files:   "K562_train", "K562_pred", "K562_circ_intron_pair", "K562_IP_part1", "K562_IP_part2", "K562_IP_part3", "K562_IP_part4"
 
