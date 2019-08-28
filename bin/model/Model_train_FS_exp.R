@@ -27,6 +27,10 @@ data_train_all <- data.frame(data_train_all)
 data_train_raw <- data_train_all
 data_train_all$SRPBM <- log2(data_train_all$SRPBM)
 data_train <- data_train_all
+all_num <- dim(data_train)[1]
+cat(">>> Remove outlier circRNAs data points ...\n")
+order_srpbm <- order(data_train[,'SRPBM'], decreasing = F)
+data_train[order_srpbm[-c((1:20),(all_num-20:all_num))],] # remove outlier circRNAs (highest and lowest 20) 
 if (PM == 'glm') {
 	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
@@ -49,6 +53,23 @@ cl <- makeCluster(cores); registerDoParallel(cl)
 
 ctrl <- trainControl(method = 'cv', number = 10 , savePredictions = "all", returnData = T, returnResamp = 'all', 
 					 verboseIter = T, allowParallel = T)
+
+# Normalize RMSE (mean of y)
+scale_fd <- function(model) {
+
+	y_scale <- c()
+	num <- c(paste("0",1:9,sep=''),"10")
+	for (i in num) {
+	fd <- paste("Fold",i,sep='')
+	pred_tmp <- model$pred
+	ind_tmp <- unique(pred_tmp$rowIndex[which(pred_tmp$Resample==fd)])
+	mean_tmp <- mean(model$trainingData$.outcome[ind_tmp])
+	y_scale <- c(y_scale,mean_tmp)
+	}
+	return(y_scale)
+
+}
+
 
 # Train best function
 feature_sel <- function(fn) {
@@ -96,6 +117,8 @@ feature_sel <- function(fn) {
 	## Cross-validation resample
 	cv_perf_df_tmp <- cbind(resample_tune, rep(fn, 10), rep(cell, 10))
 	colnames(cv_perf_df_tmp) <- c(colnames(resample_tune), 'Fea_number', 'Cell_type')
+	cv_perf_df_tmp$scale_y <- scale_fd(Model_tmp)
+	cv_perf_df_tmp$RMSE_norm <- cv_perf_df_tmp$RMSE/cv_perf_df_tmp$scale_y
 	cv_perf_df <<- rbind(cv_perf_df, cv_perf_df_tmp)
 	print('>>> New data frame of resample performance: ')
 	print(cv_perf_df)
@@ -106,6 +129,7 @@ feature_sel <- function(fn) {
 	if (PM == 'rf') {
 		mse_tmp <- mse(data_train$SRPBM, Model_tmp$finalModel$predicted)
 		rmse_tmp <- sqrt(mse_tmp)
+		nrmse_tmp <- rmse_tmp/mean(data_train$SRPBM)
 		SSE_tmp <- sum((Model_tmp$finalModel$predictedi - data_train$SRPBM)^2)
 		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1- SSE_tmp/SST_tmp
@@ -124,12 +148,14 @@ feature_sel <- function(fn) {
 		}
 		mse_tmp <- mse(obs_tmp, pred_tmp)
 		rmse_tmp <- sqrt(mse_tmp)
+		nrmse_tmp <- rmse_tmp/mean(data_train$SRPBM)
 		SSE_tmp <- sum((pred_tmp - obs_tmp) ^ 2)
 		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1 - SSE_tmp/SST_tmp
 	}
 	print('    Model performance ==> ')
 	print(paste('    Total RMSE: ', rmse_tmp, sep = ''))
+	print(paste('    Normalized RMSE: ', nrmse_tmp, sep = ''))
 	print(paste('    Total R2: ', R2_tmp, sep = ''))
 	
 	## feature importance
@@ -150,6 +176,7 @@ feature_sel <- function(fn) {
 	if (rmse_tmp < rmse_best) {
 		Model_best <<- Model_tmp
 		rmse_best <<- rmse_tmp
+		nrmse_best <<- nrmse_tmp
 		SSE_best <<- SSE_tmp
 		SST_best <<- SST_tmp
 		R2_best <<- R2_tmp
@@ -203,12 +230,15 @@ print(resample_tune_all)
 ## Cross-validation resample
 cv_perf_df <- cbind(resample_tune_all, rep(FN, 10), rep(cell, 10))
 colnames(cv_perf_df) <- c(colnames(resample_tune_all), 'Fea_number', 'Cell_type')
+cv_perf_df$scale_y <- scale_fd(Model_all)
+cv_perf_df$RMSE_norm <- cv_perf_df$RMSE/cv_perf_df$scale_y
 write.table(cv_perf_df, paste(cell, PM, 'cv_perf', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
 
 ## model performance of all feature (RMSE, R2)
 if (PM == 'rf') {
 	mmse <- mse(data_train$SRPBM, Model_all$finalModel$predicted)
 	rmse <- sqrt(mmse)
+	nrmse <- rmse/mean(data_train$SRPBM) # normalize RMSE by mean of y
 	SSE <- sum((Model_all$finalModel$predicted - data_train$SRPBM)^2)
 	SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 	R2 <- 1- SSE/SST
@@ -227,17 +257,20 @@ if (PM == 'rf') {
 	}
 	mmse <- mse(obs_all, pred_all)
 	rmse <- sqrt(mmse)
+	nrmse <- rmse/mean(data_train$SRPBM)
 	SSE <- sum((pred_all - obs_all) ^ 2)
 	SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 	R2 <- 1 - SSE/SST
 }
 rmse_best <- rmse
+nrmse_best <- nrmse
 SSE_best <- SSE
 SST_best <- SST
 R2_best <- R2
 
 print('    Model performance ==> ')
 print(paste('    Total RMSE: ', rmse, sep = ''))
+print(paste('    Normalized RMSE: ', nrmse, sep = ''))
 print(paste('    Total R2: ', R2, sep = ''))
 
 ## feature importance
@@ -283,6 +316,7 @@ print('    Model summary: ')
 print(Model_best)
 print('    Performance of best model ==> ')
 print(paste('    Total RMSE: ', rmse_best, sep = ''))
+print(paste('    Normalized RMSE: ', nrmse_best, sep = ''))
 print(paste('    Total R2: ', R2_best, sep = ''))
 if (PM == 'rf') {
 	print('    Pearson\'s r (PCC): ')

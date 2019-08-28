@@ -17,7 +17,7 @@ PM <- args[2]
 
 ## load data
 load(paste(cell, PM, 'train.RData', sep = '_'))
-FN_list <- c(as.numeric(seq(2,FN-1)))
+FN_list <- c(as.numeric(seq(1,FN-1)))
 args <- commandArgs(T)
 if (args[4] != 'all'){
 	FN_list <- as.numeric(strsplit(args[4], ',')[[1]])
