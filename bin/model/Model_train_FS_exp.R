@@ -300,8 +300,6 @@ if (PM == 'rf') {
 print('    Summary of model: ')
 print(Model_all)
 
-save(list = objects(), file=paste(cell, PM, 'train_pred_exp_allfea.RData', sep = '_'))
-
 
 print('>>> [2] Feature selsction ==> ')
 for (fn in seq(length(sort_fea_all)-1,2)) {feature_sel(fn)}
