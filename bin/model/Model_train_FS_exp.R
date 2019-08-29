@@ -17,7 +17,6 @@ args <- commandArgs(T)
 cell <- args[1]
 PM <- args[2]
 cores <- as.numeric(args[3])
-#FIP_list <- args[5]
 seed <- as.numeric(args[4])
 
 # load data_train
@@ -42,15 +41,6 @@ n <- dim(data_train)[1]
 FN <- dim(data_train)[2] - 5
 col_name <- names(data_train)
 fea_all <- col_name[5:(FN+4)]
-#if (args[4] != 'all'){
-#		fn_list <- as.numeric(strsplit(args[4], ',')[[1]])
-#}
-# sort and reverse fn_list (decrease)
-#fn_list <- rev(sort(fn_list))
-#print('>>> Feature number list:')
-#print(fn_list) 
-#len_fn_list <- length(fn_list)
-#max_fn <- fn_list[1]
 data_train_mat <- data_train[,5:(FN+4)]
 
 # show which libraries were loaded  

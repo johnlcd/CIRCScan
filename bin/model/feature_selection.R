@@ -69,7 +69,6 @@ train_cv <- function(fd) {
 	ind_fd <<- pred_fd$rowIndex
 	train_fd_mat <<- data_train_sel_mat[-ind_fd,]
 	test_fd_mat <<- data_train_sel_mat[ind_fd,]
-	#Model_fd <<- train(y = data_train$Type[-ind_fd], x = train_fd_mat, method = PM, tuneGrid = tunegrid, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale"))
 	Model_fd <<- Model_tmp
 	Pred_fd <<- predict(Model_fd, test_fd_mat)
 	if (Pred_type == 'prob') {
@@ -149,7 +148,6 @@ print(fea_all)
 print('############################################')
 print(paste('>>> Top ', FN, ' features: ', sep = ''))
 print(fea_all)
-#data_train_all_mat <- data_train[, fea_all]
 assign(paste('Model_FN', FN, sep = ''), Model_fea_all)
 print('>>> Model summary: ')
 print(Model_fea_all)
