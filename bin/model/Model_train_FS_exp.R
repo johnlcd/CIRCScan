@@ -18,7 +18,7 @@ cell <- args[1]
 PM <- args[2]
 cores <- as.numeric(args[3])
 #FIP_list <- args[5]
-seed <- 111
+seed <- as.numeric(args[4])
 
 # load data_train
 file <- paste(cell, 'exp_train', sep = '_')
@@ -42,6 +42,15 @@ n <- dim(data_train)[1]
 FN <- dim(data_train)[2] - 5
 col_name <- names(data_train)
 fea_all <- col_name[5:(FN+4)]
+#if (args[4] != 'all'){
+#		fn_list <- as.numeric(strsplit(args[4], ',')[[1]])
+#}
+# sort and reverse fn_list (decrease)
+#fn_list <- rev(sort(fn_list))
+#print('>>> Feature number list:')
+#print(fn_list) 
+#len_fn_list <- length(fn_list)
+#max_fn <- fn_list[1]
 data_train_mat <- data_train[,5:(FN+4)]
 
 # show which libraries were loaded  
@@ -83,6 +92,8 @@ feature_sel <- function(fn) {
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		print('Temp feature number EQUAL to sorted feature number, PASS ==>> ')
+#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
+#		print(sort_fea)
 	} else {
 		print('    Incoordinate temp feature number and sorted feature number ! ! ! ')
 	}
@@ -303,7 +314,7 @@ save(list = objects(), file=paste(cell, PM, 'train_pred_exp_allfea.RData', sep =
 
 
 print('>>> [2] Feature selsction ==> ')
-for (fn in seq(14,2)) {feature_sel(fn)}
+for (fn in seq(length(sort_fea_all)-1,2)) {feature_sel(fn)}
 print('>>> Feature selsction finished. ')
 
 

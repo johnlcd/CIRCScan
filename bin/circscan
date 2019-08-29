@@ -8,8 +8,8 @@ echo " "
 echo " $0 --train -t <cell_type> -m <model> -s <seed> -n <cores> "
 echo " $0 --fs -t <cell_type> -m <model> -n <cores> -l < all/feature_number_list (comma separated) > < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ] "
 echo " $0 --pred -t <cell_type> -m <model> -n <cores> "
-echo " $0 --exp -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> -l < known_circ_intron_FIP_list > "
-echo " $0 --exp-fs -t <cell_type> -m <model> -n <cores> "
+echo " $0 --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> "
+echo " $0 --exp-fs -t <cell_type> -m <model> -s <seed> -n <cores> "
 echo " "
 
 echo ------------------------------------------------------------------
@@ -20,8 +20,8 @@ echo " "
 echo " $0 --train -t GM12878 -m rf -s 123456 -n 12 "
 echo " $0 --fs -t GM12878 -m rf -n 12 -l all/1,2,3,4,5 --auc [ -pt raw ] "
 echo " $0 --pred -t GM12878 -m rf -n 12 "
-echo " $0 --exp -t GM12878 -m rf -n 12 -sf all/Alu,H3K36me3,... -l GM12878_circ_FIP.list "
-echo " $0 --exp-fs -t GM12878 -m rf -n 12 "
+echo " $0 --exp-pred -t GM12878 -m rf -n 12 -sf all/Alu,H3K36me3,... "
+echo " $0 --exp-fs -t GM12878 -m rf -s 11111 -n 12 "
 echo " "
 
 echo ==================================================================
@@ -31,7 +31,7 @@ echo Command is: $0 $*
 echo " "
 
 
-if [ $# -ge "5" ] && [ $# -le "12" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
+if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 
 	if [ $1 == "--train" ] && [ $# == "9" ] && [ $6 == "-s" ] && [ $8 == "-n" ]; then
 		echo '>>> Start to train model ... ... '
@@ -92,11 +92,11 @@ if [ $# -ge "5" ] && [ $# -le "12" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 			echo ">>> R data file of model traning ($3_$5_FS.RData) do not exsist, do feature selection first. "
 		fi
 
-	elif [ $1 == "--exp" ] && [ $# == "11" ] && [ $6 == "-n" ] && [ $8 == "-sf" ] && [ ${10} == "-l" ]; then
+	elif [ $1 == "--exp-pred" ] && [ $# == "9" ] && [ $6 == "-n" ] && [ $8 == "-sf" ]; then
 		if [ -f "${11}" ];then
 			echo '>>> Start the job of circRNAs expression level prediction ... ... '
 			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $7 $9 ${11}" $PKG_DIR/bin/model/Model_train_pred_exp.R $3_$5_pred_exp.out
+			nohup time R CMD BATCH --slave "--args $3 $5 $7 ${9}" $PKG_DIR/bin/model/Model_train_pred_exp.R $3_$5_pred_exp.out
 			echo " "
 			echo "### Task finished. "
 			echo " "
@@ -104,11 +104,10 @@ if [ $# -ge "5" ] && [ $# -le "12" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 			echo ">>> Reporeted circRNAs FIP list not found, Plsease check it. "
 		fi
 
-#	elif [ $1 == "--exp-fs" ] && [ $# == "9" ] && [ $6 == "-n" ] && [ $8 == "-sf" ]; then
-	elif [ $1 == "--exp-fs" ] && [ $# == "7" ] && [ $6 == "-n" ]; then
+	elif [ $1 == "--exp-fs" ] && [ $# == "9" ] && [ $6 == "-n" ]; then
 			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... '
 			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R $3_$5_FS_exp.out
+			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R $3_$5_FS_exp.out
 			echo " "
 			echo "### Task finished. "
 			echo " "
