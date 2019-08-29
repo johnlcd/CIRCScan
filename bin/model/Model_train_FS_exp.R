@@ -35,7 +35,7 @@ if (PM == 'glm') {
 }
 summary(data_train)
 set.seed(seed)
-print('>>> Dimension of data matrix: ')
+cat('>>> Dimension of data matrix: ')
 dim(data_train)
 n <- dim(data_train)[1]
 FN <- dim(data_train)[2] - 5
@@ -44,7 +44,7 @@ fea_all <- col_name[5:(FN+4)]
 data_train_mat <- data_train[,5:(FN+4)]
 
 # show which libraries were loaded  
-print('>>> Session Info: ')
+cat('>>> Session Info: \n')
 sessionInfo()
 
 # register parallel front-end
@@ -72,22 +72,20 @@ scale_fd <- function(model) {
 
 # Train best function
 feature_sel <- function(fn) {
-	print('=====================================================')
-	print('    Sorted features: ')
+	cat('=====================================================\n')
+	cat('    Sorted features: \n')
 	print(sort_fea)
 	new_fea_list <<- sort_fea[1: (length(sort_fea)-1)]
-	print('    Selected new features: ')
+	cat('    Selected new features: \n')
 	print(new_fea_list)
-	print('    Feature number input: ')
+	cat('    Feature number input: \n')
 	print(fn)
 	if (fn == length(new_fea_list)) {
-		print('Temp feature number EQUAL to sorted feature number, PASS ==>> ')
-#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
-#		print(sort_fea)
+		cat('Temp feature number EQUAL to sorted feature number, PASS ==>> \n')
 	} else {
-		print('    Incoordinate temp feature number and sorted feature number ! ! ! ')
+		cat('    Incoordinate temp feature number and sorted feature number ! ! ! \n')
 	}
-	print('    Best features: ')
+	cat('    Best features: \n')
 	print(fea_best)
 	
 	data_train_mat_tmp <- data_train_mat[, new_fea_list]
@@ -96,13 +94,13 @@ feature_sel <- function(fn) {
 				   method = PM, trControl = ctrl, metric = "RMSE", importance = T, preProc = c("center", "scale"))
 	
 	# Get results of resample
-	print('>>> summary of resample: ')
+	cat('>>> summary of resample: \n')
 	resample_tmp <- Model_tmp$resample
 	print(resample_tmp)
 	best_tune <- Model_tmp$bestTune
 	tunegrid <- expand.grid(best_tune)
 	tune_met <- colnames(best_tune)
-	print('>>> Best tune: ')
+	cat('>>> Best tune: \n')
 	print(best_tune)
 
 	# tuned resample
@@ -112,7 +110,7 @@ feature_sel <- function(fn) {
 		met_val <- best_tune[,met]
 		resample_tune <- resample_tune[resample_tune[,met]==met_val,]
 	}
-	print('>>> Resamples of best tune: ')
+	cat('>>> Resamples of best tune: \n')
 	print(resample_tune)
 
 	## Cross-validation resample
@@ -121,7 +119,7 @@ feature_sel <- function(fn) {
 	cv_perf_df_tmp$scale_y <- scale_fd(Model_tmp)
 	cv_perf_df_tmp$RMSE_norm <- cv_perf_df_tmp$RMSE/cv_perf_df_tmp$scale_y
 	cv_perf_df <<- rbind(cv_perf_df, cv_perf_df_tmp)
-	print('>>> New data frame of resample performance: ')
+	cat('>>> New data frame of resample performance: \n')
 	print(cv_perf_df)
 	write.table(cv_perf_df_tmp, paste(cell, PM, 'cv_perf', sep = '_'), row.names = F, col.names = F, 
 				append = T, quote = F, sep = '\t')
@@ -135,7 +133,7 @@ feature_sel <- function(fn) {
 		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1- SSE_tmp/SST_tmp
 		PCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$SRPBM,method = "pearson")
-		print('    Pearson\'s r (PCC): ')
+		cat('    Pearson\'s r (PCC): \n')
 		print(PCC_tmp)
 	} else {
 		tmp_pred <- Model_tmp$pred
@@ -154,10 +152,10 @@ feature_sel <- function(fn) {
 		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1 - SSE_tmp/SST_tmp
 	}
-	print('    Model performance ==> ')
-	print(paste('    Total RMSE: ', rmse_tmp, sep = ''))
-	print(paste('    Normalized RMSE: ', nrmse_tmp, sep = ''))
-	print(paste('    Total R2: ', R2_tmp, sep = ''))
+	cat('    Model performance ==> \n')
+	cat(paste('    Total RMSE: ', rmse_tmp, "\n", sep = ''))
+	cat(paste('    Normalized RMSE: ', nrmse_tmp, "\n", sep = ''))
+	cat(paste('    Total R2: ', R2_tmp, "\n", sep = ''))
 	
 	## feature importance
 	imp_tmp <- varImp(Model_tmp)
@@ -168,9 +166,9 @@ feature_sel <- function(fn) {
 	sort_imp_tmp <- data.frame(imp_tmp[,'Overall'][order_imp_tmp])
 	rownames(sort_imp_tmp) <- sort_fea_tmp
 	colnames(sort_imp_tmp) <- 'Importance'
-	print('    Sorted importance of MSE ==> ')
+	cat('    Sorted importance of MSE ==> \n')
 	print(sort_imp_tmp)
-	print('    Summary of model: ')
+	cat('    Summary of model: \n')
 	print(Model_tmp)
 
 	## compare to previous best model
@@ -190,32 +188,32 @@ feature_sel <- function(fn) {
 	}
 
 	sort_fea <<- rownames(sort_imp_tmp)
-	print('   New rank of features: ')
+	cat('   New rank of features: \n')
 	print(sort_fea)
 
 	if (fn == 3) {
 		save(list = objects(), file=paste(cell, PM, 'FS_exp.RData', sep = '_'))
 	}
 
-	print('=====================================================')
+	cat('=====================================================\n')
 
 }
 
 
-print('>>> [1] Train model with all features ==> ')
+cat('>>> [1] Train model with all features ==> \n')
 Model_all <- train(y = data_train$SRPBM, x = data_train_mat, 
 			   method = PM, trControl = ctrl, metric = "RMSE", importance = T, preProc = c("center", "scale"))
 Model_best <- Model_all
 
 # Get results of resample
-print('>>> Summary of resample (all features): ')
+cat('>>> Summary of resample (all features): \n')
 resample_all <- Model_all$resample
 print(resample_all)
 best_tune_all <- Model_all$bestTune
 tune_best <- best_tune_all
 tunegrid <- expand.grid(best_tune_all)
 tune_met_all <- colnames(best_tune_all)
-print('>>> Best tune of all features: ')
+cat('>>> Best tune of all features: \n')
 print(best_tune_all)
 
 # tuned resample
@@ -225,7 +223,7 @@ for (i in 1:length(tune_met_all)) {
 	met_val_all <- best_tune_all[,met_all]
 	resample_tune_all <- resample_tune_all[resample_tune_all[,met_all]==met_val_all,]
 }
-print('>>> Resamples of best tune: ')
+cat('>>> Resamples of best tune: \n')
 print(resample_tune_all)
 
 ## Cross-validation resample
@@ -245,7 +243,7 @@ if (PM == 'rf') {
 	R2 <- 1- SSE/SST
 	PCC <- cor.test(Model_all$finalModel$predicted, data_train$SRPBM,method = "pearson")
 	PCC_best <- PCC
-	print('    Pearson\'s r (PCC): ')
+	cat('    Pearson\'s r (PCC): \n')
 	print(PCC)
 } else {
 	all_pred <- Model_all$pred
@@ -269,10 +267,10 @@ SSE_best <- SSE
 SST_best <- SST
 R2_best <- R2
 
-print('    Model performance ==> ')
-print(paste('    Total RMSE: ', rmse, sep = ''))
-print(paste('    Normalized RMSE: ', nrmse, sep = ''))
-print(paste('    Total R2: ', R2, sep = ''))
+cat('    Model performance ==> \n')
+cat(paste('    Total RMSE: ', rmse, "\n", sep = ''))
+cat(paste('    Normalized RMSE: ', nrmse, "\n", sep = ''))
+cat(paste('    Total R2: ', R2, "\n", sep = ''))
 
 ## feature importance
 imp <- varImp(Model_all)
@@ -290,39 +288,39 @@ fea_best <- sort_fea_all
 fn_best <- length(fea_best)
 sort_fea <- sort_fea_all
 write.table(sort_imp, paste(cell, PM, 'sort_Imp', sep = '_'), row.names = T, col.names = F, quote = F, sep = '\t')
-print('    Sorted importance of MSE ==> ')
+cat('    Sorted importance of MSE ==> \n')
 print(sort_imp)
 if (PM == 'rf') {
 	pdf(file = paste(cell, PM, "Imp.pdf", sep = "_"))
 	varImpPlot(Model_all$finalModel, type = 1, main = 'Feature Importance')
 	dev.off()
 }
-print('    Summary of model: ')
+cat('    Summary of model: \n')
 print(Model_all)
 
 
-print('>>> [2] Feature selsction ==> ')
+cat('>>> [2] Feature selsction ==> \n')
 for (fn in seq(length(sort_fea_all)-1,2)) {feature_sel(fn)}
-print('>>> Feature selsction finished. ')
+cat('>>> Feature selsction finished. \n')
 
 
-print('>>> [3] Summary of feature selection ==> ')
-print('    Best features: ')
+cat('>>> [3] Summary of feature selection ==> \n')
+cat('    Best features: \n')
 print(fea_best)
-print('    Number of best feature is: ')
+cat('    Number of best feature is: \n')
 print(fn_best)
-print('    Model summary: ')
+cat('    Model summary: \n')
 print(Model_best)
-print('    Performance of best model ==> ')
-print(paste('    Total RMSE: ', rmse_best, sep = ''))
-print(paste('    Normalized RMSE: ', nrmse_best, sep = ''))
-print(paste('    Total R2: ', R2_best, sep = ''))
+cat('    Performance of best model ==> \n')
+cat(paste('    Total RMSE: ', rmse_best, "\n", sep = ''))
+cat(paste('    Normalized RMSE: ', nrmse_best, "\n", sep = ''))
+cat(paste('    Total R2: ', R2_best, "\n", sep = ''))
 if (PM == 'rf') {
-	print('    Pearson\'s r (PCC): ')
+	cat('    Pearson\'s r (PCC): \n')
 	print(PCC_best)
 }
 tune_met_best <- colnames(tune_best)
-print('    Best tune of final model: ')
+cat('    Best tune of final model: \n')
 print(tune_best)
 
 
@@ -351,7 +349,7 @@ stopCluster(cl); registerDoSEQ()
 # save R data
 rm(list = 'args')
 save(list = objects(), file=paste(cell, PM, 'FS_exp.RData', sep = '_'))
-print('>>> Task DONE !!!')
+cat('>>> Task DONE !!! \n')
 
 
 ### END

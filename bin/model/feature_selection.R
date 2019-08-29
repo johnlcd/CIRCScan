@@ -24,7 +24,7 @@ if (args[4] != 'all'){
 }
 # sort and reverse FN_list (decrease)
 FN_list <- rev(sort(FN_list))
-print('>>> Feature number list:')
+cat('>>> Feature number list: \n')
 print(FN_list) 
 len_FN_list <- length(FN_list)
 max_FN <- FN_list[1]
@@ -38,7 +38,7 @@ if (ref_index_raw == '--f1') {
    ref_index <<- 'F1'
 } 
 
-print('>>> The reference index is: ')
+cat('>>> The reference index is: \n')
 print(ref_index)
 Pred_type <- args[6]
 
@@ -46,9 +46,9 @@ Pred_type <- args[6]
 t1 = Sys.time()
 
 # show objects and which libraries were loaded
-print('>>> Objects are:')
+cat('>>> Objects are: \n')
 ls()
-print('>>> Session info:')
+cat('>>> Session info: \n')
 sessionInfo()
 
 # register parallel front-end
@@ -58,8 +58,8 @@ cl <- makeCluster(cores); registerDoParallel(cl)
 ## function get_result
 train_cv <- function(fd) {
 
-	print('=====================================================')
-	print(paste('>>> Fold ', fd, " : ", sep = ''))
+	cat('=====================================================\n')
+	cat(paste('>>> Fold ', fd, " : \n", sep = ''))
 	if (fd %in% 1:9) {
 		fd <- paste('Fold0', fd, sep = '')
 	} else if (fd == 10) {
@@ -78,7 +78,7 @@ train_cv <- function(fd) {
 		Perf.auc_fd <<- performance(Prediction_fd, measure = 'auc')
 	}
 	results_fd <<- confusionMatrix(Pred_fd, data_train$Type[ind_fd], positive = 'TRUE')
-	print('>>> Confusion matrix:')
+	cat('>>> Confusion matrix: \n')
 	print(results_fd)
 	ACC_fd <<- as.numeric(results_fd$byClass['Balanced Accuracy'])
 	Pre_fd <<- as.numeric(results_fd$byClass['Precision'])
@@ -104,36 +104,36 @@ train_cv <- function(fd) {
 		Spe_list <<- Spe_list[-1]
 		F1_list <<- F1_list[-1]
 	}
-	print('>>> Precision is: ')
+	cat('>>> Precision is: \n')
 	print(Pre_fd)
-	print('==> New Precision list: ')
+	cat('==> New Precision list: \n')
 	print(Pre_list)
-	print('>>> Sensitivity is: ')
+	cat('>>> Sensitivity is: \n')
 	print(Rec_fd)
-	print('==> New Sensitivity list: ')
+	cat('==> New Sensitivity list: \n')
 	print(Rec_list)
-	print('>>> Specificity is: ')
+	cat('>>> Specificity is: \n')
 	print(Spe_fd)
-	print('==> New Specificity list: ')
+	cat('==> New Specificity list: \n')
 	print(Spe_list)
-	print('>>> ACC is: ')
+	cat('>>> ACC is: \n')
 	print(ACC_fd)
-	print('==> New ACC list: ')
+	cat('==> New ACC list: \n')
 	print(ACC_list)
 	if (Pred_type == 'prob') {
-		print('>>> AUC is: ')
+		cat('>>> AUC is: \n')
 		print(AUC_fd)
-		print('==> New AUC list: ')
+		cat('==> New AUC list: \n')
 		print(AUC_list)
 	}
-	print('>>> F1 score is: ')
+	cat('>>> F1 score is: \n')
 	print(F1_fd)
-	print('==> New F1 list: ')
+	cat('==> New F1 list: \n')
 	print(F1_list)
 
 # running time
 	print(difftime(Sys.time(), t1, units = 'sec'))
-	print('=====================================================')
+	cat('=====================================================\n')
 
 }
 
@@ -142,21 +142,21 @@ ctrl <- trainControl(method = "none", savePredictions = "all", returnData = T, v
 ctrl_cv <- trainControl(method = 'cv', number = 10, savePredictions = "all", returnData = T, returnResamp = 'all', 
 						verboseIter = T, allowParallel = T)
 
-print(paste('>>> Start the feature selection (cross validition) of all ', FN, ' features ... ... ', sep = ''))
-print(paste('>>> All', FN, 'Features are: ', sep = ' '))
+cat(paste('>>> Start the feature selection (cross validition) of all ', FN, ' features ... ... \n', sep = ''))
+cat(paste('>>> All', FN, 'Features are: \n', sep = ' '))
 print(fea_all)
-print('############################################')
-print(paste('>>> Top ', FN, ' features: ', sep = ''))
+cat('############################################\n')
+cat(paste('>>> Top ', FN, ' features: \n', sep = ''))
 print(fea_all)
 assign(paste('Model_FN', FN, sep = ''), Model_fea_all)
-print('>>> Model summary: ')
+cat('>>> Model summary: \n')
 print(Model_fea_all)
 
 # Get results of resample
 all_best_tune <- Model_fea_all$bestTune
 tunegrid <- expand.grid(all_best_tune)
 tune_met_all <- colnames(all_best_tune)
-print('>>> Best tune: ')
+cat('>>> Best tune: \n')
 print(all_best_tune)
 # tuned pred 
 pred_tune <- Model_fea_all$pred
@@ -165,7 +165,7 @@ for (i in 1:length(tune_met_all)) {
 	met_val <- all_best_tune[,met]
 	pred_tune <- pred_tune[pred_tune[,met]==met_val,]
 }
-print('>>> Head of tune predict results: ')
+cat('>>> Head of tune predict results: \n')
 print(head(pred_tune))
 # initialize the performance list
 ACC_list <- c(0)
@@ -241,10 +241,10 @@ for (fn in FN_list[1:len_FN_list]) {
 #	assign(paste('fea_', fn, sep = ''), sort_fea_final[1:fn])
 	fea_tmp <- get(paste('sort_fea', fn, sep = ''))
 
-	print('############################################')
-	print(paste('>>> Top', fn, 'Features are:', sep = ' '))
+	cat('############################################\n')
+	cat(paste('>>> Top', fn, 'Features are: \n', sep = ' '))
 	print(fea_tmp)
-	print('>>> Model summary: ')
+	cat('>>> Model summary: \n')
 	Model_tmp <- get(paste('Model_FN', fn, sep = ''))
 	print(Model_tmp)
 
@@ -252,7 +252,7 @@ for (fn in FN_list[1:len_FN_list]) {
 	best_tune <- Model_tmp$bestTune
 	tunegrid <- expand.grid(best_tune)
 	tune_met <- colnames(best_tune)
-	print('>>> Best tune: ')
+	cat('>>> Best tune: \n')
 	print(best_tune)
 
 	# tuned pred 
@@ -262,7 +262,7 @@ for (fn in FN_list[1:len_FN_list]) {
 		met_val <- best_tune[,met]
 			pred_tune <- pred_tune[pred_tune[,met]==met_val,]
 	}
-	print('>>> Head of tune predict results: ')
+	cat('>>> Head of tune predict results: \n')
 	print(head(pred_tune))
 	# initialize the performance list
 	ACC_list <- c(0)
@@ -345,43 +345,43 @@ for (fn in FN_list[1:len_FN_list]) {
 		}
 	}
 
-	print('>>> Now the best feature number is: ')
+	cat('>>> Now the best feature number is: \n')
 	print(FN_best)
-	print('>>> Best features: ')
+	cat('>>> Best features: \n')
 	print(fea_best)
 	Model_best <<- get(paste('Model_FN', FN_best, sep = ''))
-	print('>>> Best model: ')
+	cat('>>> Best model: \n')
 	print(Model_best)
-	print(paste('>>> Finish the comparation of ', fn, ' features. ', sep = ''))
+	cat(paste('>>> Finish the comparation of ', fn, ' features. \n', sep = ''))
 
 }
 
 
 # best features
 
-print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-print('>>> Best features are:')
+cat('+++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
+cat('>>> Best features are: \n')
 print(fea_best)
-print('>>> Best feature number is: ')
-print(paste('    ', FN_best, sep = ''))
-print('>>> Mean value of precision is:')
+cat('>>> Best feature number is: \n')
+cat(paste('    ', FN_best, "\n", sep = ''))
+cat('>>> Mean value of precision is: \n')
 print(Pre_mean_best)
-print('>>> Mean value of sensitivity is:')
+cat('>>> Mean value of sensitivity is: \n')
 print(Rec_mean_best)
-print('>>> Mean value of specificity is:')
+cat('>>> Mean value of specificity is: \n')
 print(Spe_mean_best)
-print('>>> Mean value of ACC is:')
+cat('>>> Mean value of ACC is: \n')
 print(ACC_mean_best)
 if (Pred_type == 'prob') {
-	print('>>> Mean value of AUC is:')
+	cat('>>> Mean value of AUC is: \n')
 	print(AUC_mean_best)
 }
-print('>>> Mean value of F1 score is:')
+cat('>>> Mean value of F1 score is: \n')
 print(F1_mean_best)
-print('>>> Summary of best model: ')
-print('Model_best')
-print('#END')
-print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
+cat('>>> Summary of best model: \n')
+print(Model_best)
+cat('>>> Task DONE!\n')
+cat('+++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
 
 
 # stop cluster and register sequntial front end

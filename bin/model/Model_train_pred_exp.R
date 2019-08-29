@@ -33,7 +33,7 @@ if (PM == 'glm') {
 	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
 summary(data_train)
-print('>>> Dimension of data matrix: ')
+cat('>>> Dimension of data matrix: \n')
 dim(data_train)
 n <- dim(data_train)[1]
 FN <- dim(data_train)[2] - 5
@@ -48,13 +48,13 @@ data_train_mat <- data_train[,5:(FN+4)]
 
 
 # show which libraries were loaded  
-print('>>> Session Info: ')
+cat('>>> Session Info: \n')
 sessionInfo()
 
 # register parallel front-end
 cl <- makeCluster(cores); registerDoParallel(cl)
 
-print('>>> [1] Train model with circRNAs expression (SRPBM) of ENCODE Long Non-Poly(A) RNA-seq data ... ... ')
+cat('>>> [1] Train model with circRNAs expression (SRPBM) of ENCODE Long Non-Poly(A) RNA-seq data ... ... \n')
 ctrl <- trainControl(method = 'none', savePredictions = "all", returnData = T,
 					 verboseIter = T, allowParallel = T)
 Model <- train(y = data_train$SRPBM, 
@@ -74,28 +74,28 @@ SSE <- sum((Model$finalModel$predicted - data_train$SRPBM)^2)
 SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 R2 <- 1- SSE/SST
 PCC <- cor.test(Model$finalModel$predicted, data_train$SRPBM, method = "pearson")
-print('    Model performance ==> ')
-print(paste('    Total RMSE: ', rmse, sep = ''))
-print(paste('    Normalized RMSE: ', nrmse, sep = ''))
-print(paste('    Total R2: ', R2, sep = ''))
-print('    Pearson\'s r (PCC): ')
+cat('    Model performance ==> \n')
+cat(paste('    Total RMSE: ', rmse, "\n", sep = ''))
+cat(paste('    Normalized RMSE: ', nrmse, "\n", sep = ''))
+cat(paste('    Total R2: ', R2, "\n", sep = ''))
+cat('    Pearson\'s r (PCC): \n')
 print(PCC)
 
-print('    Summary of model: ')
+cat('    Summary of model: \n')
 print(Model)
 
 # stop cluster and register sepuntial front end
 stopCluster(cl); registerDoSEQ()
 
 # load pred data
-print('>>> [2] Predict circRNAs expression (SRPBM) with final model ... ... ')
+cat('>>> [2] Predict circRNAs expression (SRPBM) with final model ... ... \n')
 data_pred <- read.table(paste(cell, 'exp_pred', sep = '_'), head = T)
 data_pred.bed <- data_pred[1:4]
 all_pred_mat <- data_pred[-(1:3)]
 sel_pred_mat <- all_pred_mat[,fea_sel]
 rownames(sel_pred_mat) <- data_pred$Intron_pair
-print('>>> Number of intron pairs and all feature:')
-print(paste(dim(all_pred_mat)[1], dim(all_pred_mat)[2]-2, sep = ';'))
+cat('>>> Number of intron pairs and all feature: \n')
+cat(paste(dim(all_pred_mat)[1], dim(all_pred_mat)[2]-2, "\n", sep = ';'))
 
 # prediction by trained model
 circ_pred <- predict(Model, sel_pred_mat)
@@ -107,9 +107,9 @@ max_exp <- max(circ_pred_df)
 min_exp <- min(circ_pred_df)
 max_exp_bed <- circ_pred_bed[c(which(circ_pred_df == max_exp)),]
 min_exp_bed <- circ_pred_bed[c(which(circ_pred_df == min_exp)),]
-print('    The max expressed circRNA:')
+cat('    The max expressed circRNA: \n')
 print(max_exp_bed)
-print('    The min expressed circRNA:')
+cat('    The min expressed circRNA: \n')
 print(min_exp_bed)
 
 write.table(circ_pred_bed, paste(cell, PM, 'pred_exp.bed', sep = '_'), row.names = F, col.names = F, quote = F, sep = '\t')
