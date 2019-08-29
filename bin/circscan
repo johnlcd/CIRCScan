@@ -96,7 +96,7 @@ if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 		if [ -f "${11}" ];then
 			echo '>>> Start the job of circRNAs expression level prediction ... ... '
 			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $7 ${9}" $PKG_DIR/bin/model/Model_train_pred_exp.R $3_$5_pred_exp.out
+			nohup time R CMD BATCH --slave "--args $3 $5 $7 $9" $PKG_DIR/bin/model/Model_train_pred_exp.R $3_$5_pred_exp.out
 			echo " "
 			echo "### Task finished. "
 			echo " "
@@ -104,7 +104,7 @@ if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 			echo ">>> Reporeted circRNAs FIP list not found, Plsease check it. "
 		fi
 
-	elif [ $1 == "--exp-fs" ] && [ $# == "9" ] && [ $6 == "-n" ]; then
+	elif [ $1 == "--exp-fs" ] && [ $# == "9" ] && [ $8 == "-n" ]; then
 			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... '
 			echo " "
 			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R $3_$5_FS_exp.out
