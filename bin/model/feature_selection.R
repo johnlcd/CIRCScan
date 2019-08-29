@@ -69,7 +69,8 @@ train_cv <- function(fd) {
 	ind_fd <<- pred_fd$rowIndex
 	train_fd_mat <<- data_train_sel_mat[-ind_fd,]
 	test_fd_mat <<- data_train_sel_mat[ind_fd,]
-	Model_fd <<- Model_tmp
+	ctrl_fd <- trainControl(method = 'none', savePredictions = "all", returnData = T, verboseIter = T, allowParallel = T)
+	Model_fd <<- train(y = data_train$Type[-ind_fd], x = train_fd_mat, method = PM, tuneGrid = tunegrid, trControl = ctrl_fd, prob.model = TRUE, preProc = c("center", "scale"))
 	Pred_fd <<- predict(Model_fd, test_fd_mat)
 	if (Pred_type == 'prob') {
 		Prob_fd <<- predict(Model_fd, test_fd_mat, type = 'prob')
