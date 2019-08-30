@@ -172,7 +172,7 @@ feature_sel <- function(fn) {
 	print(Model_tmp)
 
 	## compare to previous best model
-	if (rmse_tmp < rmse_best) {
+	if (nrmse_tmp < nrmse_best) {
 		Model_best <<- Model_tmp
 		rmse_best <<- rmse_tmp
 		nrmse_best <<- nrmse_tmp
