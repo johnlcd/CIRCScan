@@ -74,7 +74,7 @@ for (fn in 1:FN)
 {
 	assign(paste('sort_fea', fn, sep = ''), sort_fea_final[1:fn])
 	cat(paste('>>> Top', fn, 'sorted features are: \n', sep = ' '))
-	cat(get(paste('sort_fea', fn, "\n", sep = '')))
+	print(get(paste('sort_fea', fn, sep = '')))
 }
 
 cat('>>> Write down feature ranking table ... ... \n')
