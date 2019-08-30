@@ -73,19 +73,19 @@ scale_fd <- function(model) {
 # Train best function
 feature_sel <- function(fn) {
 	cat('=====================================================\n')
-	cat('    Sorted features: \n')
+	cat('>>> Sorted features: \n')
 	print(sort_fea)
 	new_fea_list <<- sort_fea[1: (length(sort_fea)-1)]
-	cat('    Selected new features: \n')
+	cat('>>> Selected new features: \n')
 	print(new_fea_list)
-	cat('    Feature number input: \n')
+	cat('>>> Feature number input: \n')
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		cat('Temp feature number EQUAL to sorted feature number, PASS ==>> \n')
 	} else {
-		cat('    Incoordinate temp feature number and sorted feature number ! ! ! \n')
+		cat('>>> Incoordinate temp feature number and sorted feature number ! ! ! \n')
 	}
-	cat('    Best features: \n')
+	cat('>>> Best features: \n')
 	print(fea_best)
 	
 	data_train_mat_tmp <- data_train_mat[, new_fea_list]
@@ -133,7 +133,7 @@ feature_sel <- function(fn) {
 		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1- SSE_tmp/SST_tmp
 		PCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$SRPBM,method = "pearson")
-		cat('    Pearson\'s r (PCC): \n')
+		cat('>>> Pearson\'s r (PCC): \n')
 		print(PCC_tmp)
 	} else {
 		tmp_pred <- Model_tmp$pred
@@ -152,10 +152,10 @@ feature_sel <- function(fn) {
 		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
 		R2_tmp <- 1 - SSE_tmp/SST_tmp
 	}
-	cat('    Model performance ==> \n')
-	cat(paste('    Total RMSE: ', rmse_tmp, "\n", sep = ''))
-	cat(paste('    Normalized RMSE: ', nrmse_tmp, "\n", sep = ''))
-	cat(paste('    Total R2: ', R2_tmp, "\n", sep = ''))
+	cat('>>> Model performance ==> \n')
+	cat(paste('>>> Total RMSE: ', rmse_tmp, "\n", sep = ''))
+	cat(paste('>>> Normalized RMSE: ', nrmse_tmp, "\n", sep = ''))
+	cat(paste('>>> Total R2: ', R2_tmp, "\n", sep = ''))
 	
 	## feature importance
 	imp_tmp <- varImp(Model_tmp)
@@ -166,9 +166,9 @@ feature_sel <- function(fn) {
 	sort_imp_tmp <- data.frame(imp_tmp[,'Overall'][order_imp_tmp])
 	rownames(sort_imp_tmp) <- sort_fea_tmp
 	colnames(sort_imp_tmp) <- 'Importance'
-	cat('    Sorted importance of MSE ==> \n')
+	cat('>>> Sorted importance of MSE ==> \n')
 	print(sort_imp_tmp)
-	cat('    Summary of model: \n')
+	cat('>>> Summary of model: \n')
 	print(Model_tmp)
 
 	## compare to previous best model
@@ -243,7 +243,7 @@ if (PM == 'rf') {
 	R2 <- 1- SSE/SST
 	PCC <- cor.test(Model_all$finalModel$predicted, data_train$SRPBM,method = "pearson")
 	PCC_best <- PCC
-	cat('    Pearson\'s r (PCC): \n')
+	cat('>>> Pearson\'s r (PCC): \n')
 	print(PCC)
 } else {
 	all_pred <- Model_all$pred
@@ -267,10 +267,10 @@ SSE_best <- SSE
 SST_best <- SST
 R2_best <- R2
 
-cat('    Model performance ==> \n')
-cat(paste('    Total RMSE: ', rmse, "\n", sep = ''))
-cat(paste('    Normalized RMSE: ', nrmse, "\n", sep = ''))
-cat(paste('    Total R2: ', R2, "\n", sep = ''))
+cat('>>> Model performance ==> \n')
+cat(paste('>>> Total RMSE: ', rmse, "\n", sep = ''))
+cat(paste('>>> Normalized RMSE: ', nrmse, "\n", sep = ''))
+cat(paste('>>> Total R2: ', R2, "\n", sep = ''))
 
 ## feature importance
 imp <- varImp(Model_all)
@@ -288,14 +288,14 @@ fea_best <- sort_fea_all
 fn_best <- length(fea_best)
 sort_fea <- sort_fea_all
 write.table(sort_imp, paste(cell, PM, 'sort_Imp', sep = '_'), row.names = T, col.names = F, quote = F, sep = '\t')
-cat('    Sorted importance of MSE ==> \n')
+cat('>>> Sorted importance of MSE ==> \n')
 print(sort_imp)
 if (PM == 'rf') {
 	pdf(file = paste(cell, PM, "Imp.pdf", sep = "_"))
 	varImpPlot(Model_all$finalModel, type = 1, main = 'Feature Importance')
 	dev.off()
 }
-cat('    Summary of model: \n')
+cat('>>> Summary of model: \n')
 print(Model_all)
 
 
@@ -305,22 +305,22 @@ cat('>>> Feature selsction finished. \n')
 
 
 cat('>>> [3] Summary of feature selection ==> \n')
-cat('    Best features: \n')
+cat('>>> Best features: \n')
 print(fea_best)
-cat('    Number of best feature is: \n')
+cat('>>> Number of best feature is: \n')
 print(fn_best)
-cat('    Model summary: \n')
+cat('>>> Model summary: \n')
 print(Model_best)
-cat('    Performance of best model ==> \n')
-cat(paste('    Total RMSE: ', rmse_best, "\n", sep = ''))
-cat(paste('    Normalized RMSE: ', nrmse_best, "\n", sep = ''))
-cat(paste('    Total R2: ', R2_best, "\n", sep = ''))
+cat('>>> Performance of best model ==> \n')
+cat(paste('>>> Total RMSE: ', rmse_best, "\n", sep = ''))
+cat(paste('>>> Normalized RMSE: ', nrmse_best, "\n", sep = ''))
+cat(paste('>>> Total R2: ', R2_best, "\n", sep = ''))
 if (PM == 'rf') {
-	cat('    Pearson\'s r (PCC): \n')
+	cat('>>> Pearson\'s r (PCC): \n')
 	print(PCC_best)
 }
 tune_met_best <- colnames(tune_best)
-cat('    Best tune of final model: \n')
+cat('>>> Best tune of final model: \n')
 print(tune_best)
 
 
