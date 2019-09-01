@@ -29,6 +29,10 @@ data_train_all <- data.frame(data_train_all)
 data_train_raw <- data_train_all
 data_train_all$SRPBM <- log2(data_train_all$SRPBM)
 data_train <- data_train_all
+all_num <- dim(data_train)[1]
+cat(">>> Remove outlier circRNAs data points ...\n")
+order_srpbm <- order(data_train[,'SRPBM'], decreasing = F)
+data_train[order_srpbm[-c((1:20),(all_num-20:all_num))],] # remove outlier circRNAs (highest and lowest 20) 
 if (PM == 'glm') {
 	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
