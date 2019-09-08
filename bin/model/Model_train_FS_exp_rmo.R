@@ -27,6 +27,16 @@ data_train_raw <- data_train_all
 data_train_all$SRPBM <- log2(data_train_all$SRPBM)
 data_train <- data_train_all
 all_num <- dim(data_train)[1]
+cat(">>> Remove outlier circRNAs data points ...\n")
+order_srpbm <- order(data_train[,'SRPBM'], decreasing = F)
+if (cell=="NHA") {
+	rmn <- 10
+} else {
+	rmn <- 30
+}
+rm_list <- as.data.table(data_train)[,Intron_pair][c((1:rmn),((all_num-rmn+1):all_num))]
+write.table(as.data.table(matrix(rm_list,length(rm_list))), "RM_IP.list", col.name=F, quote=F, sep='\t')
+data_train <- data_train[order_srpbm[-c((1:rmn),((all_num-rmn+1):all_num))],] # remove outlier
 if (PM == 'glm') {
 	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
