@@ -209,10 +209,6 @@ Pre_mean <- mean(Pre_list)
 Rec_mean <- mean(Rec_list)
 Spe_mean <- mean(Spe_list)
 F1_mean <- mean(F1_list)
-ACC_mean_best <- ACC_mean
-Pre_mean_best <- Pre_mean
-Rec_mean_best <- Spe_mean
-Spe_mean_best <- Spe_mean
 F1_mean_best <- F1_mean
 FN_best <- FN
 fea_best<- fea_all
@@ -317,10 +313,6 @@ for (fn in FN_list[1:len_FN_list]) {
 				fea_best <<- fea_tmp
 				AUC_mean_best <<- AUC_mean
 				F1_mean_best <<- F1_mean
-				ACC_mean_best <<- ACC_mean
-				Pre_mean_best <<- Pre_mean
-				Rec_mean_best <<- Rec_mean
-				Spe_mean_best <<- Spe_mean
 			}
 		} else if (ref_index == 'F1') {
 			if (F1_mean > F1_mean_best) {
@@ -328,10 +320,6 @@ for (fn in FN_list[1:len_FN_list]) {
 				fea_best <<- fea_tmp
 				AUC_mean_best <<- AUC_mean
 				F1_mean_best <<- F1_mean
-				ACC_mean_best <<- ACC_mean
-				Pre_mean_best <<- Pre_mean
-				Rec_mean_best <<- Rec_mean
-				Spe_mean_best <<- Spe_mean
 			}
 		}
 	} else if (Pred_type == 'raw') {
@@ -339,10 +327,6 @@ for (fn in FN_list[1:len_FN_list]) {
 			FN_best <<- fn
 			fea_best <<- fea_tmp
 			F1_mean_best <<- F1_mean
-			ACC_mean_best <<- ACC_mean
-			Pre_mean_best <<- Pre_mean
-			Rec_mean_best <<- Rec_mean
-			Spe_mean_best <<- Spe_mean
 		}
 	}
 
@@ -366,18 +350,24 @@ print(fea_best)
 cat('>>> Best feature number is: \n')
 cat(paste('    ', FN_best, "\n", sep = ''))
 cat('>>> Mean value of precision is: \n')
+Pre_mean_best <- mean(Pre_list_best)
 print(Pre_mean_best)
 cat('>>> Mean value of sensitivity is: \n')
+Rec_mean_best <- mean(Rec_list_best)
 print(Rec_mean_best)
 cat('>>> Mean value of specificity is: \n')
+Spe_mean_best <- mean(Spe_list_best)
 print(Spe_mean_best)
 cat('>>> Mean value of ACC is: \n')
+ACC_mean_best <- mean(ACC_list_best)
 print(ACC_mean_best)
 if (Pred_type == 'prob') {
 	cat('>>> Mean value of AUC is: \n')
+	AUC_mean_best <- mean(AUC_list_best)
 	print(AUC_mean_best)
 }
 cat('>>> Mean value of F1 score is: \n')
+F1_mean_best <- mean(F1_list_best)
 print(F1_mean_best)
 cat('>>> Summary of best model: \n')
 print(Model_best)
