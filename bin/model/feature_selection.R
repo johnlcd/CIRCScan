@@ -359,7 +359,7 @@ cat('>>> Mean value of specificity is: \n')
 Spe_mean_best <- mean(Spe_list_best)
 print(Spe_mean_best)
 cat('>>> Mean value of FPR is: \n')
-FPR_mean_best <- 1 - mean(Spe_list_best)
+FPR_mean_best <- 1 - Spe_mean_best
 print(FPR_mean_best)
 cat('>>> Mean value of ACC is: \n')
 ACC_mean_best <- mean(ACC_list_best)
