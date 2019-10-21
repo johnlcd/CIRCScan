@@ -160,21 +160,21 @@
 
 ***CMD:***
 
-		For each histone mark: (e.g.: H3K36me3)
+For each histone mark: (e.g.: H3K36me3)
 		
 		zcat wgEncodeBroadHistoneGm12878H3k36me3StdPk.broadPeak.gz | awk -v OFS='\t' '{print "K562","None","H3K36me3",$1,$2,$3}' > K562_H3K36me3.txt
 
-		then merged all marks of selected cell lines:
+then merged all marks of selected cell lines:
 
 		#rm -f Histon.txt
 		cat <(echo "cell treatment antibody chr start end" | sed 's/ /\t/g') *.txt > Histon.txt (Put these '.txt' file in one directory)
 
 
-		For DHS:
+For DHS:
 
 		zcat wgEncodeAwgDnaseUwdukeK562UniPk.narrowPeak.gz | awk -v OFS='\t' '{print "K562","None",$1,$2,$3}' > K562_DNaseI.txt
 
-		then merged all cell line:
+then merged all cell line:
 
 		#rm -f DNaseI.txt
 		cat <(echo "cell treatment chr start end" | sed 's/ /\t/g') *.txt > DNaseI.txt
