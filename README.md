@@ -154,9 +154,33 @@
 <br>
 
 ### 1. Data preparation and feature generation
-- ### Extract features data from `.txt` file, transform into `BED` fromate
 > Epigenetic data including DNaseI HS, Histone modification, downloaded from `ENCODE`
 > \( [ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/) \)  
+- ### process the raw broadPeak file of ENCODE
+
+***CMD:***
+
+		For each histone mark: (e.g.: H3K36me3)
+		
+		zcat wgEncodeBroadHistoneGm12878H3k36me3StdPk.broadPeak.gz | awk -v OFS='\t' '{print "K562","None","H3K36me3",$1,$2,$3}' > K562_H3K36me3.txt
+
+		then merged all marks of selected cell lines:
+
+		#rm -f Histon.txt
+		cat <(echo "cell treatment antibody chr start end" | sed 's/ /\t/g') *.txt > Histon.txt (Put these '.txt' file in one directory)
+
+
+		For DHS:
+
+		zcat wgEncodeAwgDnaseUwdukeK562UniPk.narrowPeak.gz | awk -v OFS='\t' '{print "K562","None",$1,$2,$3}' > K562_DNaseI.txt
+
+		then merged all cell line:
+
+		#rm -f DNaseI.txt
+		cat <(echo "cell treatment chr start end" | sed 's/ /\t/g') *.txt > DNaseI.txt
+		
+
+- ### Extract features data from `.txt` file, transform into `BED` fromate
 
 ***CMD:***  
 
