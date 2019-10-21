@@ -162,7 +162,7 @@
 
 For each histone mark: (e.g.: H3K36me3)
 		
-		zcat wgEncodeBroadHistoneGm12878H3k36me3StdPk.broadPeak.gz | awk -v OFS='\t' '{print "K562","None","H3K36me3",$1,$2,$3}' > K562_H3K36me3.txt
+		zcat wgEncodeBroadHistoneK562H3k36me3StdPk.broadPeak.gz | awk -v OFS='\t' '{print "K562","None","H3K36me3",$1,$2,$3}' > K562_H3K36me3.txt
 
 then merged all marks of selected cell lines:
 
