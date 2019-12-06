@@ -27,8 +27,10 @@ file <- paste(cell, 'exp_train', sep = '_')
 data_train_all <- read.table(file, head = T)
 data_train_all <- data.frame(data_train_all)
 data_train_raw <- data_train_all
+data_train_all_mat <- data_train_all[,5:(FN+4)]
 data_train_all$SRPBM <- log2(data_train_all$SRPBM)
 data_train <- data_train_all
+data_train_mat <- data_train[,5:(FN+4)]
 all_num <- dim(data_train)[1]
 if (PM == 'glm') {
 	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
@@ -56,32 +58,13 @@ sessionInfo()
 cl <- makeCluster(cores); registerDoParallel(cl)
 
 cat('>>> [1] Train model with circRNAs expression (SRPBM) of ENCODE Long Non-Poly(A) RNA-seq data ... ... \n')
-ctrl <- trainControl(method = 'none', savePredictions = "all", returnData = T,
+ctrl <- trainControl(method = 'cv', number = 10 , savePredictions = "all", returnData = T, returnResamp = 'all', 
 					 verboseIter = T, allowParallel = T)
 Model <- train(y = data_train$SRPBM, 
 			   x = data_train_mat, 
 			   method = PM, trControl = ctrl, tuneGrid = tune_best, metric = "RMSE", importance = T, preProc = c("center", "scale"))
 
-## write the observed and predicted expression to file
-obs_pred_exp <- data.frame(cbind(levels(data_train$Intron_pair), data_train$SRPBM, Model$finalModel$predicted))
-colnames(obs_pred_exp) <- c('Intron_pair','true_exp', 'pred_exp')
-write.table(obs_pred_exp, paste(cell, PM, 'train_pred_exp', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
-
-## model performance (RMSE, R2)
-mse <- mse(data_train$SRPBM, Model$finalModel$predicted)
-rmse <- sqrt(mse)
-nrmse <- rmse/mean(data_train$SRPBM)
-SSE <- sum((Model$finalModel$predicted - data_train$SRPBM)^2)
-SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
-R2 <- 1- SSE/SST
-PCC <- cor.test(Model$finalModel$predicted, data_train$SRPBM, method = "pearson")
-cat('    Model performance ==> \n')
-cat(paste('    Total RMSE: ', rmse, "\n", sep = ''))
-cat(paste('    Normalized RMSE: ', nrmse, "\n", sep = ''))
-cat(paste('    Total R2: ', R2, "\n", sep = ''))
-cat('    Pearson\'s r (PCC): \n')
-print(PCC)
-
+# model summary
 cat('    Summary of model: \n')
 print(Model)
 

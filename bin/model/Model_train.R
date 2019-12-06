@@ -19,18 +19,25 @@ seed <- as.numeric(args[4])
 
 # load data_train
 file <- paste(cell, 'train', sep = '_')
-data_train <- read.table(file, head = T)
-data_train <- data.frame(data_train)
-summary(data_train)
+data_train_all <- read.table(file, head = T)
+data_train_all <- data.frame(data_train_all)
+summary(data_train_all)
+n_all <- dim(data_train_all)[1]
+FN <- dim(data_train_all)[2] - 5
+col_name <- names(data_train_all)
+fea_all <- col_name[5:(FN+4)]
+data_train_all$Type <- factor(as.character(data_train_all$Type))
 set.seed(seed)
-cat('>>> Dimension of data matrix: \n')
+inTraining <- createDataPartition(data_train_all$Type, p = .9, list = FALSE)
+data_train <- data_train_all[inTraining,]
+data_test <- data_train_all[-inTraining,]
+cat('>>> Dimension of training data matrix: \n')
 dim(data_train)
 n <- dim(data_train)[1]
-FN <- dim(data_train)[2] - 5
-col_name <- names(data_train)
-fea_all <- col_name[5:(FN+4)]
 data_train_mat <- data_train[,5:(FN+4)]
 data_train$Type <- factor(as.character(data_train$Type))
+data_test_mat <- data_test[,5:(FN+4)]
+data_test$Type <- factor(as.character(data_test$Type))
 
 # show which libraries were loaded  
 cat('>>> Session Info: \n')

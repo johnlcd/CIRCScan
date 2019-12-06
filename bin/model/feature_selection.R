@@ -24,7 +24,7 @@ if (args[4] != 'all'){
 }
 # sort and reverse FN_list (decrease)
 FN_list <- rev(sort(FN_list))
-cat('>>> Feature number list: \n')
+cat('>>> Feature number list:\n')
 print(FN_list) 
 len_FN_list <- length(FN_list)
 max_FN <- FN_list[1]
@@ -38,7 +38,7 @@ if (ref_index_raw == '--f1') {
    ref_index <<- 'F1'
 } 
 
-cat('>>> The reference index is: \n')
+cat('>>> The reference index is: ')
 print(ref_index)
 Pred_type <- args[6]
 
@@ -46,9 +46,9 @@ Pred_type <- args[6]
 t1 = Sys.time()
 
 # show objects and which libraries were loaded
-cat('>>> Objects are: \n')
+cat('>>> Objects are:\n')
 ls()
-cat('>>> Session info: \n')
+cat('>>> Session info:\n')
 sessionInfo()
 
 # register parallel front-end
@@ -74,12 +74,13 @@ train_cv <- function(fd) {
 	Pred_fd <<- predict(Model_fd, test_fd_mat)
 	if (Pred_type == 'prob') {
 		Prob_fd <<- predict(Model_fd, test_fd_mat, type = 'prob')
+		Prob_fd_test <<- predict(Model_fd, test_fd_mat, type = 'prob')
 		pp_fd <<- Prob_fd[, 2]
 		Prediction_fd <<- prediction(predictions = pp_fd, labels = data_train$Type[ind_fd])
 		Perf.auc_fd <<- performance(Prediction_fd, measure = 'auc')
 	}
 	results_fd <<- confusionMatrix(Pred_fd, data_train$Type[ind_fd], positive = 'TRUE')
-	cat('>>> Confusion matrix: \n')
+	cat('>>> Confusion matrix:\n')
 	print(results_fd)
 	ACC_fd <<- as.numeric(results_fd$byClass['Balanced Accuracy'])
 	Pre_fd <<- as.numeric(results_fd$byClass['Precision'])
@@ -174,8 +175,15 @@ Pre_list <- c(0)
 Rec_list <- c(0)
 Spe_list <- c(0)
 F1_list <- c(0)
+ACC_test <- c()
+Pre_test <- c()
+Rec_test <- c()
+Spe_test <- c()
+FPR_test <- c()
+F1_test <- c()
 if (Pred_type == 'prob') {
 	AUC_list <- c(0)
+	AUC_test <- c()
 }
 
 data_train_all_mat <- data_train_mat
@@ -184,6 +192,33 @@ for (fold in 1:10) {
 	Model_tmp <- Model_fea_all
 	train_cv(fold)
 }
+
+pred_test_all <- predict(Model_fea_all, data_test_mat)
+if (Pred_type == 'prob') {
+	Prob_test_all <<- predict(Model_fea_all, data_test_mat, type = 'prob')
+	pp_test_all <<- Prob_test_all[, 2]
+	Prediction_test_all <<- prediction(predictions = pp_test_all, labels = data_test$Type)
+	Perf.auc_test_all <<- performance(Prediction_test_all, measure = 'auc')
+}
+results_test_all <<- confusionMatrix(pred_test_all, data_test$Type, positive = 'TRUE')
+cat('>>> Confusion matrix:\n')
+print(results_test_all)
+ACC_test_all <<- as.numeric(results_test_all$byClass['Balanced Accuracy'])
+Pre_test_all <<- as.numeric(results_test_all$byClass['Precision'])
+Rec_test_all <<- as.numeric(results_test_all$byClass['Recall']) # Sensitivity
+Spe_test_all <<- as.numeric(results_test_all$byClass['Specificity'])
+FPR_test_all <<- 1 - Spe_test_all
+if (Pred_type == 'prob') {
+	AUC_test_all <<- unlist(Perf.auc_test_all@y.values)
+	AUC_test <<- c(AUC_test, AUC_test_all)
+}
+F1_test_all <<- as.numeric(results_test_all$byClass['F1'])
+ACC_test <<- c(ACC_test, ACC_test_all)
+Pre_test <<- c(Pre_test, Pre_test_all)
+Rec_test <<- c(Rec_test, Rec_test_all)
+Spe_test <<- c(Spe_test, Spe_test_all)
+FPR_test <<- c(FPR_test, FPR_test_all)
+F1_test <<- c(F1_test, F1_test_all)
 
 fold_list <- paste('Fold0', seq(1,9), sep = '')
 fold_list <- c(fold_list, 'Fold10')
@@ -235,11 +270,10 @@ if (Pred_type == 'prob') {
 ## Summary of feature groups with different numbers ( in FN_list) 
 for (fn in FN_list[1:len_FN_list]) {
 
-#	assign(paste('fea_', fn, sep = ''), sort_fea_final[1:fn])
 	fea_tmp <- get(paste('sort_fea', fn, sep = ''))
 
 	cat('############################################\n')
-	cat(paste('>>> Top', fn, 'Features are: \n', sep = ' '))
+	cat(paste('>>> Top', fn, 'Features are:\n', sep = ' '))
 	print(fea_tmp)
 	cat('>>> Model summary: \n')
 	Model_tmp <- get(paste('Model_FN', fn, sep = ''))
@@ -339,6 +373,35 @@ for (fn in FN_list[1:len_FN_list]) {
 	print(Model_best)
 	cat(paste('>>> Finish the comparation of ', fn, ' features. \n', sep = ''))
 
+	# evaluation of model performance
+	pred_test_tmp <- predict(Model_tmp, data_test_mat)
+	if (Pred_type == 'prob') {
+		Prob_test_tmp <<- predict(Model_tmp, data_test_mat, type = 'prob')
+		pp_test_tmp <<- Prob_test_tmp[, 2]
+		Prediction_test_tmp <<- prediction(predictions = pp_test_tmp, labels = data_test$Type)
+		Perf.auc_test_tmp <<- performance(Prediction_test_tmp, measure = 'auc')
+	}
+	results_test_tmp <<- confusionMatrix(pred_test_tmp, data_test$Type, positive = 'TRUE')
+	cat('>>> Confusion matrix:\n')
+	print(results_test_tmp)
+	ACC_test_tmp <<- as.numeric(results_test_tmp$byClass['Balanced Accuracy'])
+	Pre_test_tmp <<- as.numeric(results_test_tmp$byClass['Precision'])
+	Rec_test_tmp <<- as.numeric(results_test_tmp$byClass['Recall']) # Sensitivity
+	Spe_test_tmp <<- as.numeric(results_test_tmp$byClass['Specificity'])
+	FPR_test_tmp <<- 1 - Spe_test_tmp
+	if (Pred_type == 'prob') {
+		AUC_test_tmp <<- unlist(Perf.auc_test_tmp@y.values)
+		AUC_test <<- c(AUC_test, AUC_test_tmp)
+	}
+	F1_test_tmp <<- as.numeric(results_test_tmp$byClass['F1'])
+	ACC_test <<- c(ACC_test, ACC_test_tmp)
+	Pre_test <<- c(Pre_test, Pre_test_tmp)
+	Rec_test <<- c(Rec_test, Rec_test_tmp)
+	Spe_test <<- c(Spe_test, Spe_test_tmp)
+	FPR_test <<- c(FPR_test, FPR_test_tmp)
+	F1_test <<- c(F1_test, F1_test_tmp)
+
+
 }
 
 
@@ -349,32 +412,48 @@ cat('>>> Best features are: \n')
 print(fea_best)
 cat('>>> Best feature number is: \n')
 cat(paste('    ', FN_best, "\n", sep = ''))
-cat('>>> Mean value of precision is: \n')
+cat('>>> Mean value of precision is:\n')
 Pre_mean_best <- mean(Pre_list_best)
 print(Pre_mean_best)
-cat('>>> Mean value of sensitivity is: \n')
+cat('>>> Mean value of sensitivity is:\n')
 Rec_mean_best <- mean(Rec_list_best)
 print(Rec_mean_best)
-cat('>>> Mean value of specificity is: \n')
+cat('>>> Mean value of specificity is:\n')
 Spe_mean_best <- mean(Spe_list_best)
 print(Spe_mean_best)
 cat('>>> Mean value of FPR is: \n')
 FPR_mean_best <- 1 - Spe_mean_best
 print(FPR_mean_best)
-cat('>>> Mean value of ACC is: \n')
+cat('>>> Mean value of ACC is:\n')
 ACC_mean_best <- mean(ACC_list_best)
 print(ACC_mean_best)
 if (Pred_type == 'prob') {
-	cat('>>> Mean value of AUC is: \n')
+	cat('>>> Mean value of AUC is:\n')
 	AUC_mean_best <- mean(AUC_list_best)
 	print(AUC_mean_best)
 }
-cat('>>> Mean value of F1 score is: \n')
+cat('>>> Mean value of F1 score is:\n')
 F1_mean_best <- mean(F1_list_best)
 print(F1_mean_best)
 cat('>>> Summary of best model: \n')
 print(Model_best)
-cat('>>> Task DONE!\n')
+
+# Model performance
+FN_test <- c(FN, FN_list)
+cell_test <- rep(cell, length(FN_test))
+model_test <- rep(PM, length(FN_test))
+if (Pred_type == 'prob') {
+	perf_test_df <- data.frame(cbind(AUC_test, FPR_test, F1_test, cell_test, model_test, FN_test))
+	colnames(perf_test_df) <- c('AUC', 'FPR', 'F1', 'Cell_type', 'Model', 'Feature_num')
+} else {
+	perf_test_df <- data.frame(cbind(FPR_test, F1_test, cell_test, model_test, FN_test))
+	colnames(perf_test_df) <- c('FPR', 'F1', 'Cell_type', 'Model', 'Feature_num')
+}
+write.table(perf_test_df, paste(cell, PM, 'perf_test.txt', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
+cat(">>> Summary of model performance in testing set:\n")
+print(perf_test_df)
+
+cat('#END\n')
 cat('+++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
 
 
