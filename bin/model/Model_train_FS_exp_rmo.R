@@ -18,6 +18,7 @@ args <- commandArgs(T)
 cell <- args[1]
 PM <- args[2]
 cores <- as.numeric(args[3])
+#FIP_list <- args[5]
 seed <- as.numeric(args[4])
 
 # load data_train
@@ -38,7 +39,7 @@ rmn <- 30
 rm_list <- as.data.table(data_train_all)[,Intron_pair][c((1:rmn),((all_num-rmn+1):all_num))]
 write.table(as.data.table(matrix(rm_list,length(rm_list))), "RM_IP.list", col.name=F, quote=F, sep='\t')
 data_train_all <- data_train_all[order_srpbm[-c((1:rmn),((all_num-rmn+1):all_num))],]
-set.seed(seed)
+set.seed(123)
 inTraining <- createDataPartition(data_train_all$SRPBM, p = .9, list = FALSE)
 data_train <- data_train_all[inTraining,]
 data_test <- data_train_all[-inTraining,]
@@ -49,6 +50,7 @@ summary(data_train)
 set.seed(seed)
 cat('>>> Dimension of training data matrix: \n')
 dim(data_train)
+#all_num <- dim(data_train)[1]
 n <- dim(data_train)[1]
 data_train_mat <- data_train[,5:(FN+4)]
 data_test_mat <- data_test[,5:(FN+4)]
@@ -93,6 +95,8 @@ feature_sel <- function(fn) {
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		cat('>>> Temp feature number EQUAL to sorted feature number, PASS ==>> \n')
+#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
+#		print(sort_fea)
 	} else {
 		print('>>> Incoordinate temp feature number and sorted feature number ! ! ! \n')
 	}
@@ -314,6 +318,7 @@ rownames(sort_imp) <- sort_fea_all
 colnames(sort_imp) <- 'Importance'
 sort_imp <- data.frame(sort_imp)
 colnames(sort_imp) <- c('Importance')
+#max_fea <- sort_fea_all[1:max_fn]
 fea_best <- sort_fea_all
 fn_best <- length(fea_best)
 sort_fea <- sort_fea_all

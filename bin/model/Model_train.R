@@ -27,10 +27,11 @@ FN <- dim(data_train_all)[2] - 5
 col_name <- names(data_train_all)
 fea_all <- col_name[5:(FN+4)]
 data_train_all$Type <- factor(as.character(data_train_all$Type))
-set.seed(seed)
+set.seed(123)
 inTraining <- createDataPartition(data_train_all$Type, p = .9, list = FALSE)
 data_train <- data_train_all[inTraining,]
 data_test <- data_train_all[-inTraining,]
+set.seed(seed)
 cat('>>> Dimension of training data matrix: \n')
 dim(data_train)
 n <- dim(data_train)[1]

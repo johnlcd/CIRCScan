@@ -18,6 +18,7 @@ args <- commandArgs(T)
 cell <- args[1]
 PM <- args[2]
 cores <- as.numeric(args[3])
+#FIP_list <- args[5]
 seed <- as.numeric(args[4])
 
 # load data_train
@@ -31,7 +32,7 @@ n_all <- dim(data_train_all)[1]
 FN <- dim(data_train_all)[2] - 5
 col_name <- names(data_train_all)
 fea_all <- col_name[5:(FN+4)]
-set.seed(seed)
+set.seed(123)
 inTraining <- createDataPartition(data_train_all$SRPBM, p = .9, list = FALSE)
 data_train <- data_train_all[inTraining,]
 data_test <- data_train_all[-inTraining,]
@@ -87,6 +88,8 @@ feature_sel <- function(fn) {
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		cat('>>> Temp feature number EQUAL to sorted feature number, PASS ==>> \n')
+#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
+#		print(sort_fea)
 	} else {
 		print('>>> Incoordinate temp feature number and sorted feature number ! ! ! \n')
 	}
@@ -308,6 +311,7 @@ rownames(sort_imp) <- sort_fea_all
 colnames(sort_imp) <- 'Importance'
 sort_imp <- data.frame(sort_imp)
 colnames(sort_imp) <- c('Importance')
+#max_fea <- sort_fea_all[1:max_fn]
 fea_best <- sort_fea_all
 fn_best <- length(fea_best)
 sort_fea <- sort_fea_all
