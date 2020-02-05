@@ -5,11 +5,11 @@ echo ==================================================================
 echo " "
 echo USAGE:
 echo " "
-echo " $0 --train -t <cell_type> -m <model> -s <seed> -n <cores> "
+echo " $0 --train -t <cell_type> -m <model> -s/r <seed>/<run (1-5)> -n <cores> "
 echo " $0 --fs -t <cell_type> -m <model> -n <cores> -l < all/feature_number_list (comma separated) > < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ] "
 echo " $0 --pred -t <cell_type> -m <model> -n <cores> "
 echo " $0 --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> [ --RM (remove outlier) ] "
-echo " $0 --exp-fs -t <cell_type> -m <model> -s <seed> -n <cores> [ --RM (remove outlier) ] "
+echo " $0 --exp-fs -t <cell_type> -m <model> -s/-r <seed>/<run (1-5)> -n <cores> [ --RM (remove outlier) ] "
 echo " "
 
 echo ------------------------------------------------------------------
@@ -17,11 +17,11 @@ echo ------------------------------------------------------------------
 echo " "
 echo EXAMPLEs:
 echo " "
-echo " $0 --train -t GM12878 -m rf -s 123456 -n 12 "
+echo " $0 --train -t GM12878 -m rf -s/-r 123456/1 -n 12 "
 echo " $0 --fs -t GM12878 -m rf -n 12 -l all/1,2,3,4,5 --auc [ -pt raw ] "
 echo " $0 --pred -t GM12878 -m rf -n 12 "
 echo " $0 --exp-pred -t GM12878 -m rf -n 12 -sf all/Alu,H3K36me3,... [ --RM ] "
-echo " $0 --exp-fs -t GM12878 -m rf -s 11111 -n 12 [ --RM ] "
+echo " $0 --exp-fs -t GM12878 -m rf -s/-r 11111/1 -n 12 [ --RM ] "
 echo " "
 
 echo ==================================================================
@@ -33,10 +33,19 @@ echo " "
 
 if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 
-	if [ $1 == "--train" ] && [ $# == "9" ] && [ $6 == "-s" ] && [ $8 == "-n" ]; then
-		echo '>>> Start to train model ... ... '
-		echo " "
-		nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train.R $3_$5_train.out
+	if [ $1 == "--train" ] && [ $# == "9" ] && [ $8 == "-n" ]; then
+		if [ $6 == "-s" ]; then
+			echo '>>> Start to train model in "SEED" mode ... ... '
+			echo " "
+			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train.R $3_$5_train.out
+		elif [ $6 == "-r" ]; then
+			echo '>>> Start to train model in "REPLICATION" mode ... ... '
+			echo " "
+			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_rep.R $3_$5_train.out
+		else \
+			echo ">>> Wrong arguments!!!"
+			exit
+		fi
 		echo " "
 		echo '    Model training finished. '
 		echo " "
@@ -109,17 +118,35 @@ if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 		echo " "
 
 	elif [ $1 == "--exp-fs" ] && [ $# == "9" ] && [ $8 == "-n" ]; then
-			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... '
-			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R $3_$5_FS_exp.out
+			if [ $6 == "-s" ]; then
+				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... ("SEED" mode) '
+				echo " "
+				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R $3_$5_FS_exp.out
+			elif [ $6 == "-r" ]; then
+				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... ("RUN" mode) '
+				echo " "
+				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rep.R $3_$5_FS_exp.out
+			else \
+				echo ">>> Wrong arguments!!!"
+				exit
+			fi
 			echo " "
 			echo "### Task finished. "
 			echo " "
 
 	elif [ $1 == "--exp-fs" ] && [ $# == "10" ] && [ $8 == "-n" ] && [ ${10} == "--RM" ]; then
-			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... '
-			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rmo.R $3_$5_FS_exp.out
+			if [ $6 == "-s" ]; then
+				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection, remove outlier) ... ... ("SEED" mode) '
+				echo " "
+				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rmo.R $3_$5_FS_exp.out
+			elif [ $6 == "-r" ]; then
+				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection, remove outlier) ... ... ("RUN" mode) '
+				echo " "
+				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rmo_rep.R $3_$5_FS_exp.out
+			else \
+				echo ">>> Wrong arguments!!!"
+				exit
+			fi
 			echo " "
 			echo "### Task finished. "
 			echo " "
