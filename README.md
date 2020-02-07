@@ -485,12 +485,15 @@ OR:
 
 ***CMD:***  
 
-		circscan --train -t <cell_type> -m <model> -s <seed> -n <cores>
+		circscan --train -t <cell_type> -m <model> -s/-r <seed>/<run (1-5)> -n <cores>
 		# "-n": used for models training by parellel
-		# "-s": used for random sample training set ( multiple traning and reproducibility )
+		# "-s": used for random sample training set ("seed" mode, multiple traning and reproducibility )
+		# "-r": used for 5 independent CV run ("run" mode)
 
 		e.g.:
 		circscan --train -t K562 -m rf -s 111 -n 8
+		or:
+		circscan --train -t K562 -m rf -r 1 -n 8
 
 Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_train.out"` with model evaluation  
 
