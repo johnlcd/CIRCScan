@@ -529,31 +529,6 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 
 Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`  
 
-
-- ### Complete process for predicting circRNAs expression levels 
-
-***Mode 1). Model training and feature selection (Core mode)***  
-
-***CMD:***  
-
-		circscan --exp-fs -t <cell_type> -m <model> -n <cores>
-		# "-n": used for models training by parellel
-
-		e.g.:
-		circscan --exp-fs -t K562 -m rf -n 8
-
-Output files:
-
-models and R data file `"K562_rf_FS_exp.RData", "K562_rf_train_pred_exp_allfea.RData"`
-
-log file `"K562_rf_FS_exp.out"` with model evaluation
-
-model performance of each resample `"K562_rf_cv_perf"` in cross-validation
-
-importance of features `"K562_rf_Imp_all", "K562_rf_sort_Imp"`
-
-observed and predited expression levels `"K562_rf_train_pred_exp"`
-
 <br>
 
 ***Mode 2). Model training, feature selection, and validation (known circRNAs) (Optional)***  
