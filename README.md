@@ -511,7 +511,7 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 		e.g.:
 		circscan --fs -t K562 -m rf -n 8 -l all --auc
 
-Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"` with results of feature selection	( Feature number with highest *F1* score )  
+Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"`, and "K562_rf_perf_test.txt" with results of feature selection	( Feature number with highest *F1* score )  
 
 >***NOTE:***  
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
@@ -568,6 +568,42 @@ observed and predited expression levels `"K562_rf_train_pred_exp"`
 		e.g.:
 		circscan --exp -t K562 -m rf -n 8 -sf all/Alu,H3K36me3,... -l GM12878_circ_FIP.list
 
+
+<br><br>
+
+- ### Complete process for predicting circRNAs expression levels 
+
+***a). Model training and feature selection( Used for obtaining rank of importance and select the best features)***  
+
+***CMD:***  
+
+		circscan --exp-fs -t <cell_type> -m <model> -s/-r <seed>/<run (1-5)> -n <cores> [ --RM (remove outlier) ]
+		# "-n": used for models training by parellel
+		# "-s": used for random sample training set ("seed" mode, multiple traning and reproducibility )
+		# "-r": used for 5 independent CV run ("run" mode)
+		# "--RM": whether remove outlier data points
+
+		e.g.:
+		circscan --exp-fs -t K562 -m rf -s 111 -n 8
+		or:
+		circscan --exp-fs -t K562 -m rf -r 1 -n 8
+
+Generate models and R data file `"K562_rf_FS_exp.RData"`, log file `"K562_rf_FS_exp.out"`, result of model performance "GM12878_rf_perf_test_reg.txt" with model evaluation of feature selection  
+
+
+***b). Predict expression***  
+
+***CMD:***  
+
+		./bin/circscan --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> [ --RM (remove outlier) ]
+		# "-n": used for models training by parellel
+		# "-sf": select fea list (according to results of feature selection)
+		# "--RM": whether remove outlier data points
+
+		e.g.:
+		circscan --exp-pred -t K562 -m rf -n 8 -sf all
+
+Generate predicted circRNAs expression file `"K562_rf_train_pred_exp"`  
 
 <br><br>
 
