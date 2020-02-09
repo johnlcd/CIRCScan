@@ -570,7 +570,7 @@ Generate models and R data file `"K562_rf_FS_exp.RData"`, log file `"K562_rf_FS_
 
 ***CMD:***  
 
-		./bin/circscan --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> [ --RM (remove outlier) ]
+		circscan --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> [ --RM (remove outlier) ]
 		# "-n": used for models training by parellel
 		# "-sf": select fea list (according to results of feature selection)
 		# "--RM": whether remove outlier data points
