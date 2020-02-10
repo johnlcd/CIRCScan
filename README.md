@@ -104,13 +104,13 @@
 		- NHDF_circ_overlap.bed
 		- NHEK_circ_overlap.bed
 		- NHLF_circ_overlap.bed
-	- **pred_circ_bycell**
-		- GM12878_pred_circ.bed.gz
-		- H1-hESC_pred_circ.bed.gz
-		- HeLa-S3_pred_circ.bed.gz
-		- HepG2_pred_circ.bed.gz
-		- K562_pred_circ.bed.gz
-		- NHEK_pred_circ.bed.gz
+	- **pred_true_bycell**
+		- GM12878_pred_true.bed.gz
+		- H1-hESC_pred_true.bed.gz
+		- HeLa-S3_pred_true.bed.gz
+		- HepG2_pred_true.bed.gz
+		- K562_pred_true.bed.gz
+		- NHEK_pred_true.bed.gz
 	- **raw_data**
 		- DNaseI.txt.gz
 		- Histone_part1.txt.gz
