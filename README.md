@@ -540,7 +540,7 @@ Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K5
 		# "-n": used for models training by parellel
 
 		e.g.:
-		circsca -t K562 -m rf -n 8
+		circscan --eval -t K562 -m rf -n 8
 
 Generate R data file `"K562_rf_test_perf_eval.RData"` of model performance evaluation and log file `"eval_K562_rf_perf.out"`, and `"K562_rf_eval_test_perf"` with results of model performance in testing data  
 
