@@ -44,7 +44,6 @@ out_train3 <- out_train2[-inTraining3,]
 inTraining4 <- createDataPartition(out_train3$Type, p = 1/2, list = FALSE)
 data_train4 <- out_train3[inTraining4,]
 data_train5 <- out_train3[-inTraining4,]
-#set.seed(seed)
 data_train <- get(paste("data_train", part, sep=""))
 cat('>>> Dimension of training data matrix: ( replication', part, ') \n')
 dim(data_train)
@@ -63,6 +62,7 @@ cl <- makeCluster(cores); registerDoParallel(cl)
 
 # Get feature importance
 cat('>>> Start to sort importance ... ... \n')
+#set.seed(123)
 ctrl <- trainControl(method = 'cv', number = 10 , savePredictions = "all", returnData = T, returnResamp = 'all', 
 					 verboseIter = T,allowParallel = T)
 Model_fea_all <- train(y = data_train$Type, x = data_train_mat, method = PM, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale"))
@@ -79,6 +79,7 @@ for (fn in rev(2:(FN-1)))
 	sort_fea_tmp <- sort_fea_ori[1:fn]
 	cat(paste('>>> Top', fn, 'features (unsorted) are: \n', sep = ' '))
 	print(sort_fea_tmp)
+#	set.seed(123)
 	assign(paste('Model_FN', fn, sep = ''), train(y = data_train$Type, x = data_train[sort_fea_tmp], method = PM, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale")))
 	assign(paste('imp_FN', fn, sep = ''), varImp(get(paste('Model_FN', fn, sep = '')), scale = T))
 	assign(paste('sort_imp_FN', fn, sep = ''), data.frame(sortImp(get(paste('imp_FN', fn, sep = '')), fn)))

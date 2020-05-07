@@ -144,6 +144,10 @@ feature_sel <- function(fn) {
 		cat('>>> Pearson\'s r (PCC): \n')
 		print(PCC_tmp)
 		PCC_tmp <- PCC_tmp$estimate[[1]]
+		SCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$SRPBM,method = "spearman")
+		cat('>>> Spearman\'s r (SCC): \n')
+		print(SCC_tmp)
+		SCC_tmp <- SCC_tmp$estimate[[1]]
 	} else {
 		tmp_pred <- Model_tmp$pred
 		obs_tmp <- Model_tmp$pred$obs
@@ -190,6 +194,7 @@ feature_sel <- function(fn) {
 		R2_best <<- R2_tmp
 		if (PM == 'rf') {
 			PCC_best <<- PCC_tmp
+			SCC_best <<- SCC_tmp
 		}
 		fea_best <<- new_fea_list
 		fn_best <<- fn
@@ -216,6 +221,9 @@ feature_sel <- function(fn) {
 		PCC_test_tmp <- cor.test(data_test$SRPBM,pred_exp_test_tmp,method = "pearson")
 		PCC_test_tmp <- PCC_test_tmp$estimate[[1]]
 		PCC_test <<- c(PCC_test, PCC_test_tmp)
+		SCC_test_tmp <- cor.test(data_test$SRPBM,pred_exp_test_tmp,method = "spearman")
+		SCC_test_tmp <- SCC_test_tmp$estimate[[1]]
+		SCC_test <<- c(SCC_test, SCC_test_tmp)
 	}
 
 
@@ -273,6 +281,10 @@ if (PM == 'rf') {
 	PCC_best <- PCC
 	cat('>>> Pearson\'s r (PCC): \n')
 	print(PCC)
+	SCC <- cor.test(Model_all$finalModel$predicted, data_train$SRPBM,method = "spearman")
+	SCC_best <- SCC
+	cat('>>> Spearman\'s r (SCC): \n')
+	print(SCC)
 } else {
 	all_pred <- Model_all$pred
 	for (i in 1:length(tune_met_all)) {
@@ -332,6 +344,7 @@ rmse_test <- c()
 nrmse_test <- c()
 R2_test <- c()
 PCC_test <- c()
+SCC_test <- c()
 # evaluation of performance in testing set
 pred_exp_test_all <- predict(Model_all, data_test_mat)
 pred_exp_test_all <- as.vector(pred_exp_test_all)
@@ -348,6 +361,9 @@ if (PM == 'rf') {
 	PCC_test_all <- cor.test(data_test$SRPBM,pred_exp_test_all,method = "pearson")
 	PCC_test_all <- PCC_test_all$estimate[[1]]
 	PCC_test <- c(PCC_test, PCC_test_all)
+	SCC_test_all <- cor.test(data_test$SRPBM,pred_exp_test_all,method = "spearman")
+	SCC_test_all <- SCC_test_all$estimate[[1]]
+	SCC_test <- c(SCC_test, SCC_test_all)
 }
 
 cat('>>> [2] Feature selsction ==> \n')
@@ -371,6 +387,8 @@ cat(paste('>>> Total R2: ', R2_best, "\t", sep = ''))
 if (PM == 'rf') {
 	cat('>>> Pearson\'s r (PCC): \n')
 	print(PCC_best)
+	cat('>>> Spearman\'s r (SCC): \n')
+	print(SCC_best)
 }
 tune_met_best <- colnames(tune_best)
 cat('>>> Best tune of final model: \n')
@@ -381,8 +399,8 @@ FN_test <- c(FN,seq(length(sort_fea_all)-1,2))
 cell_test <- rep(cell, length(FN_test))
 model_test <- rep(PM, length(FN_test))
 if (PM == 'rf') {
-	perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, PCC_test, cell_test, model_test, FN_test))
-	colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","PCC","Cell_type","Model","Feature_num")
+	perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, PCC_test, SCC_test, cell_test, model_test, FN_test))
+	colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","PCC","SCC","Cell_type","Model","Feature_num")
 } else {
 	perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, cell_test, model_test, FN_test))
 	colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","Cell_type","Model","Feature_num")

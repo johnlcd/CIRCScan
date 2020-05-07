@@ -54,6 +54,7 @@ sessionInfo()
 # register parallel front-end
 cores <- as.numeric(args[3])
 cl <- makeCluster(cores); registerDoParallel(cl)
+set.seed(123)
 
 ## function get_result
 train_cv <- function(fd) {
@@ -150,6 +151,7 @@ print(fea_all)
 cat('############################################\n')
 cat(paste('>>> Top ', FN, ' features: \n', sep = ''))
 print(fea_all)
+#data_train_all_mat <- data_train[, fea_all]
 assign(paste('Model_FN', FN, sep = ''), Model_fea_all)
 cat('>>> Model summary: \n')
 print(Model_fea_all)
@@ -244,6 +246,10 @@ Pre_mean <- mean(Pre_list)
 Rec_mean <- mean(Rec_list)
 Spe_mean <- mean(Spe_list)
 F1_mean <- mean(F1_list)
+#ACC_mean_best <- ACC_mean
+#Pre_mean_best <- Pre_mean
+#Rec_mean_best <- Spe_mean
+#Spe_mean_best <- Spe_mean
 F1_mean_best <- F1_mean
 FN_best <- FN
 fea_best<- fea_all
@@ -270,6 +276,7 @@ if (Pred_type == 'prob') {
 ## Summary of feature groups with different numbers ( in FN_list) 
 for (fn in FN_list[1:len_FN_list]) {
 
+#	assign(paste('fea_', fn, sep = ''), sort_fea_final[1:fn])
 	fea_tmp <- get(paste('sort_fea', fn, sep = ''))
 
 	cat('############################################\n')
@@ -290,7 +297,7 @@ for (fn in FN_list[1:len_FN_list]) {
 	pred_tune <- Model_tmp$pred
 	for (i in 1:length(tune_met)) {
 			met <- tune_met[i]
-		met_val <- best_tune[,met]
+			met_val <- best_tune[,met]
 			pred_tune <- pred_tune[pred_tune[,met]==met_val,]
 	}
 	cat('>>> Head of tune predict results: \n')
@@ -347,6 +354,10 @@ for (fn in FN_list[1:len_FN_list]) {
 				fea_best <<- fea_tmp
 				AUC_mean_best <<- AUC_mean
 				F1_mean_best <<- F1_mean
+#				ACC_mean_best <<- ACC_mean
+#				Pre_mean_best <<- Pre_mean
+#				Rec_mean_best <<- Rec_mean
+#				Spe_mean_best <<- Spe_mean
 			}
 		} else if (ref_index == 'F1') {
 			if (F1_mean > F1_mean_best) {
@@ -354,6 +365,10 @@ for (fn in FN_list[1:len_FN_list]) {
 				fea_best <<- fea_tmp
 				AUC_mean_best <<- AUC_mean
 				F1_mean_best <<- F1_mean
+#				ACC_mean_best <<- ACC_mean
+#				Pre_mean_best <<- Pre_mean
+#				Rec_mean_best <<- Rec_mean
+#				Spe_mean_best <<- Spe_mean
 			}
 		}
 	} else if (Pred_type == 'raw') {
@@ -361,6 +376,10 @@ for (fn in FN_list[1:len_FN_list]) {
 			FN_best <<- fn
 			fea_best <<- fea_tmp
 			F1_mean_best <<- F1_mean
+#			ACC_mean_best <<- ACC_mean
+#			Pre_mean_best <<- Pre_mean
+#			Rec_mean_best <<- Rec_mean
+#			Spe_mean_best <<- Spe_mean
 		}
 	}
 

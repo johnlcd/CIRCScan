@@ -18,7 +18,8 @@ args <- commandArgs(T)
 cell <- args[1]
 PM <- args[2]
 cores <- as.numeric(args[3])
-part <- args[4]
+#FIP_list <- args[5]
+seed <- as.numeric(args[4])
 
 # load data_train
 file <- paste(cell, 'exp_train', sep = '_')
@@ -26,48 +27,32 @@ data_train_all <- read.table(file, head = T)
 data_train_all <- data.frame(data_train_all)
 data_train_raw <- data_train_all
 data_train_all$SRPBM <- log2(data_train_all$SRPBM)
-summary(data_train_all)
-n_all <- dim(data_train_all)[1]
-FN <- dim(data_train_all)[2] - 5
-col_name <- names(data_train_all)
-fea_all <- col_name[5:(FN+4)]
-
-# remove outlier circRNAs (top 50)
-cat(">>> Remove outlier circRNAs data points ...\n")
-order_train_all <- order(data_train_all[,'SRPBM'], decreasing = T)
-rmn <- as.numeric(args[5])
-rm_list <- as.data.table(data_train_all[order_train_all[c(1:rmn)],])[,Intron_pair]
-write.table(as.data.table(matrix(rm_list,length(rm_list))), "RM_IP.list", col.name=F, quote=F, sep='\t')
-data_train_all <- data_train_all[order_train_all[-c(1:rmn)],]
-
-set.seed(123)
-inTraining_rep <- createDataPartition(data_train_all$SRPBM, p = .9, list = FALSE)
-data_train_rep <- data_train_all[inTraining_rep,]
-data_test <- data_train_all[-inTraining_rep,]
-inTraining1 <- createDataPartition(data_train_rep$SRPBM, p = 1/5, list = FALSE)
-data_train1 <- data_train_rep[inTraining1,]
-out_train1 <- data_train_rep[-inTraining1,]
-inTraining2 <- createDataPartition(out_train1$SRPBM, p = 1/4, list = FALSE)
-data_train2 <- out_train1[inTraining2,]
-out_train2 <- out_train1[-inTraining2,]
-inTraining3 <- createDataPartition(out_train2$SRPBM, p = 1/3, list = FALSE)
-data_train3 <- out_train2[inTraining3,]
-out_train3 <- out_train2[-inTraining3,]
-inTraining4 <- createDataPartition(out_train3$SRPBM, p = 1/2, list = FALSE)
-data_train4 <- out_train3[inTraining4,]
-data_train5 <- out_train3[-inTraining4,]
-data_train <- get(paste("data_train", part, sep=""))
+data_train <- data_train_all
+all_num <- dim(data_train)[1]
+#cat(">>> Remove outlier circRNAs data points ...\n")
+#order_srpbm <- order(data_train[,'SRPBM'], decreasing = F)
+#data_train[order_srpbm[-c((1:20),(all_num-20:all_num))],] # remove outlier circRNAs (highest and lowest 20) 
 if (PM == 'glm') {
 	data_train$SRPBM <- data_train$SRPBM/10 # value = log2(SRPBM)/10
 }
 summary(data_train)
-cat('>>> Dimension of training data matrix: ( replication', part, ') \n')
+set.seed(seed)
+cat('>>> Dimension of data matrix: \n')
 dim(data_train)
-all_num <- dim(data_train)[1]
 n <- dim(data_train)[1]
+FN <- dim(data_train)[2] - 5
+col_name <- names(data_train)
+fea_all <- col_name[5:(FN+4)]
+#if (args[4] != 'all'){
+#		fn_list <- as.numeric(strsplit(args[4], ',')[[1]])
+#}
+# sort and reverse fn_list (decrease)
+#fn_list <- rev(sort(fn_list))
+#print('>>> Feature number list:')
+#print(fn_list) 
+#len_fn_list <- length(fn_list)
+#max_fn <- fn_list[1]
 data_train_mat <- data_train[,5:(FN+4)]
-data_test_mat <- data_test[,5:(FN+4)]
-y_scale_test <- mean(data_test$SRPBM)
 
 # show which libraries were loaded  
 cat('>>> Session Info: \n')
@@ -108,6 +93,8 @@ feature_sel <- function(fn) {
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		cat('>>> Temp feature number EQUAL to sorted feature number, PASS ==>> \n')
+#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
+#		print(sort_fea)
 	} else {
 		print('>>> Incoordinate temp feature number and sorted feature number ! ! ! \n')
 	}
@@ -151,35 +138,37 @@ feature_sel <- function(fn) {
 				append = T, quote = F, sep = '\t')
 	
 	## model performance (RMSE, R2)
-	obs_tmp <- data_train$SRPBM
 	if (PM == 'rf') {
-		pred_tmp <- Model_tmp$finalModel$predicted
+		mse_tmp <- mse(data_train$SRPBM, Model_tmp$finalModel$predicted)
+		rmse_tmp <- sqrt(mse_tmp)
+		nrmse_tmp <- rmse_tmp/mean(data_train$SRPBM)
+		SSE_tmp <- sum((Model_tmp$finalModel$predictedi - data_train$SRPBM)^2)
+		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
+		R2_tmp <- 1- SSE_tmp/SST_tmp
+		PCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$SRPBM,method = "pearson")
+		cat('>>> Pearson\'s r (PCC): \n')
+		print(PCC_tmp)
 	} else {
 		tmp_pred <- Model_tmp$pred
+		obs_tmp <- Model_tmp$pred$obs
 		for (i in 1:length(tune_met)) {
 			met <- tune_met[i]
 			met_val <- best_tune[,met]
 			tmp_pred <- tmp_pred[tmp_pred[,met]==met_val,]
-			pred_tmp <- tmp_pred$pred[order(tmp_pred$rowIndex)]
+			obs_tmp <- tmp_pred$obs
+			pred_tmp <- tmp_pred$pred
 		}
+		mse_tmp <- mse(obs_tmp, pred_tmp)
+		rmse_tmp <- sqrt(mse_tmp)
+		nrmse_tmp <- rmse_tmp/mean(data_train$SRPBM)
+		SSE_tmp <- sum((pred_tmp - obs_tmp) ^ 2)
+		SST_tmp <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
+		R2_tmp <- 1 - SSE_tmp/SST_tmp
 	}
-	mse_tmp <- mse(obs_tmp, pred_tmp)
-	rmse_tmp <- sqrt(mse_tmp)
-	nrmse_tmp <- rmse_tmp/mean(obs_tmp)
-	SSE_tmp <- sum((pred_tmp - obs_tmp) ^ 2)
-	SST_tmp <- sum((obs_tmp - mean(obs_tmp)) ^ 2)
-	R2_tmp <- 1 - SSE_tmp/SST_tmp
-	PCC_tmp <- cor.test(pred_tmp, obs_tmp,method = "pearson")
-	PCC_tmp <- PCC_tmp$estimate[[1]]
-	SCC_tmp <- cor.test(pred_tmp, obs_tmp,method = "spearman")
-	SCC_tmp <- SCC_tmp$estimate[[1]]
-	
 	cat('>>> Model performance ==> \n')
 	cat(paste('>>> Total RMSE: ', rmse_tmp, "\n",sep = ''))
 	cat(paste('>>> Normalized RMSE: ', nrmse_tmp, "\n", sep = ''))
 	cat(paste('>>> Total R2: ', R2_tmp, "\n", sep = ''))
-	cat(paste(">>> Pearson\'s r (PCC): ", PCC_tmp, "\n", sep= ''))
-	cat(paste(">>> Spearman\'s r (CCC): ", SCC_tmp, "\n", sep = ''))
 	
 	## feature importance
 	imp_tmp <- varImp(Model_tmp)
@@ -203,8 +192,9 @@ feature_sel <- function(fn) {
 		SSE_best <<- SSE_tmp
 		SST_best <<- SST_tmp
 		R2_best <<- R2_tmp
-		PCC_best <<- PCC_tmp
-		SCC_best <<- SCC_tmp
+		if (PM == 'rf') {
+			PCC_best <<- PCC_tmp
+		}
 		fea_best <<- new_fea_list
 		fn_best <<- fn
 		tune_best <<- best_tune
@@ -214,27 +204,7 @@ feature_sel <- function(fn) {
 	cat('   New rank of features: \n')
 	print(sort_fea)
 
-	# evaluation of model performance
-	pred_exp_test_tmp <- predict(Model_tmp, data_test_mat)
-	pred_exp_test_tmp <- as.vector(pred_exp_test_tmp)
-	mmse_test_tmp <- mse(data_test$SRPBM,pred_exp_test_tmp)
-	rmse_test_tmp <- sqrt(mmse_test_tmp)
-	nrmse_test_tmp <- rmse_test_tmp/y_scale_test
-	SSE_test_tmp <- sum((pred_exp_test_tmp - data_test$SRPBM) ^ 2)
-	SST_test_tmp <- sum((data_test$SRPBM - y_scale_test) ^ 2)
-	R2_test_tmp <- 1 - SSE_test_tmp/SST_test_tmp
-	rmse_test <<- c(rmse_test, rmse_test_tmp)
-	nrmse_test <<- c(nrmse_test, nrmse_test_tmp)
-	R2_test <<- c(R2_test, R2_test_tmp)
-	PCC_test_tmp <- cor.test(data_test$SRPBM,pred_exp_test_tmp,method = "pearson")
-	PCC_test_tmp <- PCC_test_tmp$estimate[[1]]
-	PCC_test <<- c(PCC_test, PCC_test_tmp)
-	SCC_test_tmp <- cor.test(data_test$SRPBM,pred_exp_test_tmp,method = "spearman")
-	SCC_test_tmp <- SCC_test_tmp$estimate[[1]]
-	SCC_test <<- c(SCC_test, SCC_test_tmp)
-
-
-	if (fn == 4) {
+	if (fn == 3) {
 		save(list = objects(), file=paste(cell, PM, 'FS_exp.RData', sep = '_'))
 	}
 
@@ -277,43 +247,43 @@ cv_perf_df$RMSE_norm <- cv_perf_df$RMSE/cv_perf_df$scale_y
 write.table(cv_perf_df, paste(cell, PM, 'cv_perf', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
 
 ## model performance of all feature (RMSE, R2)
-obs_all <- data_train$SRPBM
 if (PM == 'rf') {
-	pred_all <- Model_all$finalModel$predicted
+	mmse <- mse(data_train$SRPBM, Model_all$finalModel$predicted)
+	rmse <- sqrt(mmse)
+	nrmse <- rmse/mean(data_train$SRPBM) # normalize RMSE by mean of y
+	SSE <- sum((Model_all$finalModel$predicted - data_train$SRPBM)^2)
+	SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
+	R2 <- 1- SSE/SST
+	PCC <- cor.test(Model_all$finalModel$predicted, data_train$SRPBM,method = "pearson")
+	PCC_best <- PCC
+	cat('>>> Pearson\'s r (PCC): \n')
+	print(PCC)
 } else {
 	all_pred <- Model_all$pred
 	for (i in 1:length(tune_met_all)) {
 		met_all <- tune_met_all[i]
 		met_val_all <- best_tune_all[,met_all]
 		all_pred <- all_pred[all_pred[,met_all]==met_val_all,]
-		pred_all <- all_pred$pred[order(all_pred$rowIndex)]
+		obs_all <- all_pred$obs
+		pred_all <- all_pred$pred
 	}
+	mmse <- mse(obs_all, pred_all)
+	rmse <- sqrt(mmse)
+	nrmse <- rmse/mean(data_train$SRPBM)
+	SSE <- sum((pred_all - obs_all) ^ 2)
+	SST <- sum((data_train$SRPBM - mean(data_train$SRPBM)) ^ 2)
+	R2 <- 1 - SSE/SST
 }
-mse_all <- mse(obs_all, pred_all)
-rmse_all <- sqrt(mse_all)
-nrmse_all <- rmse_all/mean(obs_all)
-SSE_all <- sum((pred_all - obs_all) ^ 2)
-SST_all <- sum((obs_all - mean(obs_all)) ^ 2)
-R2_all <- 1 - SSE_all/SST_all
-PCC_all <- cor.test(pred_all, obs_all,method = "pearson")
-PCC_all <- PCC_all$estimate[[1]]
-SCC_all <- cor.test(pred_all, obs_all,method = "spearman")
-SCC_all <- SCC_all$estimate[[1]]
-
-rmse_best <- rmse_all
-nrmse_best <- nrmse_all
-SSE_best <- SSE_all
-SST_best <- SST_all
-R2_best <- R2_all
-PCC_best <- PCC_all
-SCC_best <- SCC_all
+rmse_best <- rmse
+nrmse_best <- nrmse
+SSE_best <- SSE
+SST_best <- SST
+R2_best <- R2
 
 cat('>>> Model performance ==> \n')
-cat(paste('>>> Total RMSE: ', rmse_all, "\n", sep = ''))
-cat(paste('>>> Normalized RMSE: ', nrmse_all, "\n", sep = ''))
-cat(paste('>>> Total R2: ', R2_all, "\n", sep = ''))
-cat(paste(">>> Pearson\'s r (PCC): ", PCC_all, "\n", sep = ''))
-cat(paste(">>> Spearman\'s r (CCC): ", SCC_all, "\n", sep = ''))
+cat(paste('>>> Total RMSE: ', rmse, "\n", sep = ''))
+cat(paste('>>> Normalized RMSE: ', nrmse, "\n", sep = ''))
+cat(paste('>>> Total R2: ', R2, "\n", sep = ''))
 
 ## feature importance
 imp <- varImp(Model_all)
@@ -342,39 +312,8 @@ cat('>>> Summary of model: \n')
 print(Model_all)
 
 
-# initialize the performance list
-rmse_test <- c()
-nrmse_test <- c()
-R2_test <- c()
-PCC_test <- c()
-SCC_test <- c()
-# evaluation of performance in testing set
-pred_exp_test_all <- predict(Model_all, data_test_mat)
-pred_exp_test_all <- as.vector(pred_exp_test_all)
-mmse_test_all <- mse(data_test$SRPBM,pred_exp_test_all)
-rmse_test_all <- sqrt(mmse_test_all)
-nrmse_test_all <- rmse_test_all/y_scale_test
-SSE_test_all <- sum((pred_exp_test_all - data_test$SRPBM) ^ 2)
-SST_test_all <- sum((data_test$SRPBM - y_scale_test) ^ 2)
-R2_test_all <- 1 - SSE_test_all/SST_test_all
-rmse_test <- c(rmse_test, rmse_test_all)
-nrmse_test <- c(nrmse_test, nrmse_test_all)
-R2_test <- c(R2_test, R2_test_all)
-PCC_test_all <- cor.test(data_test$SRPBM,pred_exp_test_all,method = "pearson")
-PCC_test_all <- PCC_test_all$estimate[[1]]
-PCC_test <- c(PCC_test, PCC_test_all)
-SCC_test_all <- cor.test(data_test$SRPBM,pred_exp_test_all,method = "spearman")
-SCC_test_all <- SCC_test_all$estimate[[1]]
-SCC_test <- c(SCC_test, SCC_test_all)
-
 cat('>>> [2] Feature selsction ==> \n')
-fn_min <- 2
-if (PM=="treebag") {
-	fn_min <- 5
-}
-for (fn in seq(length(sort_fea_all)-1,fn_min)) {
-	feature_sel(fn)
-}
+for (fn in seq(length(sort_fea_all)-1,2)) {feature_sel(fn)}
 cat('>>> Feature selsction finished. \n')
 
 
@@ -388,30 +327,33 @@ print(Model_best)
 cat('>>> Performance of best model ==> \n')
 cat(paste('>>> Total RMSE: ', rmse_best, "\n", sep = ''))
 cat(paste('>>> Normalized RMSE: ', nrmse_best, "\n", sep = ''))
-cat(paste('>>> Total R2: ', R2_best, "\n", sep = ''))
-cat('>>> Pearson\'s r (PCC): \n')
-print(PCC_best)
-cat('>>> Spearman\'s r (SCC): \n')
-print(SCC_best)
+cat(paste('>>> Total R2: ', R2_best, "\t", sep = ''))
+if (PM == 'rf') {
+	cat('>>> Pearson\'s r (PCC): \n')
+	print(PCC_best)
+}
 tune_met_best <- colnames(tune_best)
 cat('>>> Best tune of final model: \n')
 print(tune_best)
 
-# Model performance
-FN_test <- c(FN,seq(length(sort_fea_all)-1,fn_min))
-cell_test <- rep(cell, length(FN_test))
-model_test <- rep(PM, length(FN_test))
-perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, PCC_test, SCC_test, cell_test, model_test, FN_test))
-colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","PCC","SCC","Cell_type","Model","Feature_num")
-write.table(perf_test_df, paste(cell, PM, 'perf_test_reg.txt', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
-
 
 ## write the observed and predicted expression to file
-best_pred_test <- predict(Model_best, data_test_mat)
-best_pred_test <- as.vector(best_pred_test)
-data_test <- as.data.table(data_test) 
-obs_pred_exp <- data.frame(cbind(data_test[,"Intron_pair"], data_test$SRPBM, best_pred_test))
-colnames(obs_pred_exp) <- c('Intron_pair','true_exp', 'pred_exp')
+if (PM == 'rf') {
+	obs_pred_exp <- data.frame(cbind(levels(data_train$Intron_pair), data_train$SRPBM, Model_best$finalModel$predicted))
+	colnames(obs_pred_exp) <- c('Intron_pair','true_exp', 'pred_exp')
+} else {
+	best_pred <- Model_best$pred
+	for (i in 1:length(tune_met_best)) {
+		met_best <- tune_met_best[i]
+		met_val_best <- tune_best[,met_best]
+		best_pred <- best_pred[best_pred[,met_best]==met_val_best,]
+		pred_best <- best_pred$pred
+		obs_best <- best_pred$obs
+		index_best <- best_pred$rowIndex
+	}
+	obs_pred_exp <- data.frame(cbind(levels(data_train[index_best,]$Intron_pair), obs_best, pred_best))
+	colnames(obs_pred_exp) <- c('Intron_pair', 'true_exp', 'pred_exp')
+}
 write.table(obs_pred_exp, paste(cell, PM, 'train_pred_exp', sep = '_'), row.names = F, col.names = T, quote = F, sep = '\t')
 
 # stop cluster and register sepuntial front end

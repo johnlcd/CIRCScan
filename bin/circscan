@@ -1,15 +1,34 @@
 #!/bin/bash
+#########################################################################
+# File Name: circscan
+# Author: CJB
+# mail: johnlcd@stu.xjtu.edu.cn
+# Created Time: Thu Mar 2020
+#########################################################################
+
+red='\e[0;31m'
+green='\e[0;32m'
+yellow='\e[0;33m'
+yellow='\e[0;33m'
+blue='\e[34;1m'
+pink='\e[35;1m'
+skyblue='\e[36;1m'
+black='\e[39;1m'
+endColor='\e[0m'
+
 
 echo ==================================================================
 
 echo " "
 echo USAGE:
 echo " "
-echo " $0 --train -t <cell_type> -m <model> -s/r <seed>/<run (1-5)> -n <cores> "
-echo " $0 --fs -t <cell_type> -m <model> -n <cores> -l < all/feature_number_list (comma separated) > < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ] "
-echo " $0 --pred -t <cell_type> -m <model> -n <cores> "
-echo " $0 --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> [ --RM (remove outlier) ] "
-echo " $0 --exp-fs -t <cell_type> -m <model> -s/-r <seed>/<run (1-5)> -n <cores> [ --RM (remove outlier) ] "
+echo -e " ${blue}${0}${endColor} --train -t <cell_type> -m <model> -s/-r <seed>/<run (1-5)> -n <cores> "
+echo -e " ${blue}${0}${endColor} --fs -t <cell_type> -m <model> -n <cores> -l < all/feature_number_list (comma separated) > < --auc / --f1 (referenece index) > [ -pt (type of prediction) raw/prob (probabilities, default) ] "
+echo -e " ${blue}${0}${endColor} --eval -t <cell_type> -m <model> -n <cores> "
+echo -e " ${blue}${0}${endColor} --pred -t <cell_type> -m <model> -n <cores> "
+echo -e " ${blue}${0}${endColor} --exp-pred -t <cell_type> -m <model> -n <cores> -sf < all/select_fea_list (comma separated)> [ --RM ] "
+echo -e " ${blue}${0}${endColor} --exp-fs -t <cell_type> -m <model> -s/-r <seed>/<run (1-5)> -n <cores> [ --RM <removed number> ] "
+echo -e " ${blue}${0}${endColor} --exp-eval -t <cell_type> -m <model> -n <cores> "
 echo " "
 
 echo ------------------------------------------------------------------
@@ -17,31 +36,36 @@ echo ------------------------------------------------------------------
 echo " "
 echo EXAMPLEs:
 echo " "
-echo " $0 --train -t GM12878 -m rf -s/-r 123456/1 -n 12 "
-echo " $0 --fs -t GM12878 -m rf -n 12 -l all/1,2,3,4,5 --auc [ -pt raw ] "
-echo " $0 --pred -t GM12878 -m rf -n 12 "
-echo " $0 --exp-pred -t GM12878 -m rf -n 12 -sf all/Alu,H3K36me3,... [ --RM ] "
-echo " $0 --exp-fs -t GM12878 -m rf -s/-r 11111/1 -n 12 [ --RM ] "
-echo " "
+echo -e " ${blue}${0}${endColor} --train -t GM12878 -m rf -s/-r 123456/1 -n 12 "
+echo -e " ${blue}${0}${endColor} --fs -t GM12878 -m rf -n 12 -l all/1,2,3,4,5 --auc [ -pt raw ] "
+echo -e " ${blue}${0}${endColor} --eval -t GM12878 -m rf -n 12 "
+echo -e " ${blue}${0}${endColor} --pred -t GM12878 -m rf -n 12 "
+echo -e " ${blue}${0}${endColor} --exp-pred -t GM12878 -m rf -n 12 -sf all/Alu,H3K36me3,... [ --RM ] "
+echo -e " ${blue}${0}${endColor} --exp-fs -t GM12878 -m rf -s/-r 11111/1 -n 12 [ --RM 30 ] "
+echo -e " ${blue}${0}${endColor} --exp-eval -t GM12878 -m rf -n 12 "
+echo -e " "
 
 echo ==================================================================
 
 echo " "
-echo Command is: $0 $*
+echo -e Command is: ${blue}${0}${endColor} $*
 echo " "
 
 
 if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 
+	cell=${3}
+	PM=${5}
+
 	if [ $1 == "--train" ] && [ $# == "9" ] && [ $8 == "-n" ]; then
 		if [ $6 == "-s" ]; then
 			echo '>>> Start to train model in "SEED" mode ... ... '
 			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train.R $3_$5_train.out
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $9 $7" $PKG_DIR/bin/model/Model_train.R ${cell}_${PM}_train.out
 		elif [ $6 == "-r" ]; then
 			echo '>>> Start to train model in "REPLICATION" mode ... ... '
 			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_rep.R $3_$5_train.out
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $9 $7" $PKG_DIR/bin/model/Model_train_rep.R ${cell}_${PM}_train.out
 		else \
 			echo ">>> Wrong arguments!!!"
 			exit
@@ -53,12 +77,12 @@ if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 		echo " "
 
 	elif [ $1 == "--fs" ]; then
-		if [ -f "$3_$5_train.RData" ]; then
+		if [ -f "${cell}_${PM}_train.RData" ]; then
 			if [ $# == "10" ] && [ $6 == "-n" ] && [ $8 == "-l" ]; then
 				if [ ${10} == '--auc' ] || [ ${10} == '--f1' ]; then
 					echo ">>> Start to do feature selection ... ... "
 					echo " "
-					nohup time R CMD BATCH --slave "--args $3 $5 $7 $9 ${10} prob" $PKG_DIR/bin/model/feature_selection.R $3_$5_FS.out
+					nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7 $9 ${10} prob" $PKG_DIR/bin/model/feature_selection.R ${cell}_${PM}_FS.out
 					echo " "
 					echo '    Feature selection finished. '
 					echo " "
@@ -75,7 +99,7 @@ if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 				else \
 					echo ">>> Start to do feature selection ... ... "
 					echo " "
-					nohup time R CMD BATCH --slave "--args $3 $5 $7 $9 ${10} ${12}" $PKG_DIR/bin/model/feature_selection.R $3_$5_FS.out
+					nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7 $9 ${10} ${12}" $PKG_DIR/bin/model/feature_selection.R ${cell}_${PM}_FS.out
 					echo " "
 					echo '    Feature selection finished. '
 					echo " "
@@ -84,72 +108,102 @@ if [ $# -ge "5" ] && [ $# -le "13" ] && [ $2 == "-t" ] && [ $4 == "-m" ]; then
 				fi
 			fi
 		else \
-			echo ">>> R data file of trained model ($3_$5_train.RData) do not exsist, do model traning first. "
+			echo ">>> R data file of trained model (${cell}_${PM}_train.RData) do not exsist, do model traning first. "
+		fi
+
+	elif [ $1 == "--eval" ] && [ $# == "7" ]; then
+		if [ -f "${cell}_${PM}_FS.RData" ]; then
+			echo -e ">>> Evaluation of model performance by testing data ... ... "
+			echo " "
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7" $PKG_DIR/bin/model/Eval_test_perf.R ${cell}_${PM}_eval_perf.out
+			echo " "
+			echo '    Model performance evaluation finished. '
+			echo " "
+			echo "### Task Done. "
+			echo " "
+		else \
+			echo -e ">>> R data file of feature selection (${red}${cell}_${PM}_FS.RData${endColor}) do not exsist, do feature selection first. "
 		fi
 
 	elif [ $1 == "--pred" ] && [ $# == "7" ]; then
-		if [ -f "$3_$5_FS.RData" ]; then
+		if [ -f "${cell}_${PM}_FS.RData" ]; then
 			echo ">>> Start to predict circRNAs ... ... "
 			echo " "
-			nohup time R CMD BATCH --slave "--args $3 $5 $7" $PKG_DIR/bin/model/Circ_pred.R $3_$5_pred.out
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7" $PKG_DIR/bin/model/Circ_pred.R ${cell}_${PM}_pred.out
 			echo " "
 			echo '    Predicting of circRNAs finished. '
 			echo " "
 			echo "### Task finished. "
 			echo " "
 		else \
-			echo ">>> R data file of model traning ($3_$5_FS.RData) do not exsist, do feature selection first. "
+			echo ">>> R data file of model traning (${cell}_${PM}_FS.RData) do not exsist, do feature selection first. "
 		fi
 
 	elif [ $1 == "--exp-pred" ] && [ $# == "9" ] && [ $6 == "-n" ] && [ $8 == "-sf" ]; then
 		echo '>>> Start the job of circRNAs expression level prediction ... ... '
 		echo " "
-		nohup time R CMD BATCH --slave "--args $3 $5 $7 $9" $PKG_DIR/bin/model/Model_train_pred_exp.R $3_$5_pred_exp.out
+		nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7 $9" $PKG_DIR/bin/model/Model_train_pred_exp.R ${cell}_${PM}_pred_exp.out
 		echo " "
 		echo "### Task finished. "
 		echo " "
 
 	elif [ $1 == "--exp-pred" ] && [ $# == "10" ] && [ $6 == "-n" ] && [ $8 == "-sf" ] && [ ${10} == "--RM" ]; then
-		echo '>>> Start the job of circRNAs expression level prediction ... ... '
+		echo '>>> Start the job of circRNAs expression level prediction (remove outlier) ... ... '
 		echo " "
-		nohup time R CMD BATCH --slave "--args $3 $5 $7 $9" $PKG_DIR/bin/model/Model_train_pred_exp_rmo.R $3_$5_pred_exp.out
+		nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7 $9" $PKG_DIR/bin/model/Model_train_pred_exp_rmo.R ${cell}_${PM}_pred_exp.out
 		echo " "
 		echo "### Task finished. "
 		echo " "
 
 	elif [ $1 == "--exp-fs" ] && [ $# == "9" ] && [ $8 == "-n" ]; then
-			if [ $6 == "-s" ]; then
-				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... ("SEED" mode) '
-				echo " "
-				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R $3_$5_FS_exp.out
-			elif [ $6 == "-r" ]; then
-				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... ("RUN" mode) '
-				echo " "
-				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rep.R $3_$5_FS_exp.out
-			else \
-				echo ">>> Wrong arguments!!!"
-				exit
-			fi
+		if [ $6 == "-s" ]; then
+			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... ("SEED" mode) '
 			echo " "
-			echo "### Task finished. "
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp.R ${cell}_${PM}_FS_exp.out
+		elif [ $6 == "-r" ]; then
+			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection) ... ... ("REPLICATION" mode) '
 			echo " "
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rep.R ${cell}_${PM}_FS_exp.out
+		else \
+			echo ">>> Wrong arguments!!!"
+			exit
+		fi
+		echo " "
+		echo "### Task finished. "
+		echo " "
 
-	elif [ $1 == "--exp-fs" ] && [ $# == "10" ] && [ $8 == "-n" ] && [ ${10} == "--RM" ]; then
-			if [ $6 == "-s" ]; then
-				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection, remove outlier) ... ... ("SEED" mode) '
-				echo " "
-				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rmo.R $3_$5_FS_exp.out
-			elif [ $6 == "-r" ]; then
-				echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection, remove outlier) ... ... ("RUN" mode) '
-				echo " "
-				nohup time R CMD BATCH --slave "--args $3 $5 $9 $7" $PKG_DIR/bin/model/Model_train_FS_exp_rmo_rep.R $3_$5_FS_exp.out
-			else \
-				echo ">>> Wrong arguments!!!"
-				exit
-			fi
+	elif [ $1 == "--exp-fs" ] && [ $# == "11" ] && [ $8 == "-n" ] && [ ${10} == "--RM" ]; then
+			
+		num_rm=${11}
+		if [ $6 == "-s" ]; then
+			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection, remove outlier) ... ... ("SEED" mode) '
 			echo " "
-			echo "### Task finished. "
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $9 $7 ${num_rm}" $PKG_DIR/bin/model/Model_train_FS_exp_rmo.R ${cell}_${PM}_FS_exp.out
+		elif [ $6 == "-r" ]; then
+			echo '>>> Start the job of circRNAs expression level prediction (train model and featrue selection, remove outlier) ... ... ("REPLICATION" mode) '
 			echo " "
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $9 $7 ${num_rm}" $PKG_DIR/bin/model/Model_train_FS_exp_rmo_rep.R ${cell}_${PM}_FS_exp.out
+		else \
+			echo ">>> Wrong arguments!!!"
+			exit
+		fi
+		echo " "
+		echo "### Task finished. "
+		echo " "
+
+	elif [ $1 == "--exp-eval" ] && [ $# == "7" ]; then
+		if [ -f "${cell}_${PM}_FS_exp.RData" ]; then
+			echo -e ">>> Evaluation of model performance by testing data ... ... "
+			echo " "
+			nohup time R CMD BATCH --slave "--args ${cell} ${PM} $7" $PKG_DIR/bin/model/Eval_test_cor.R ${cell}_${PM}_eval_cor.out
+			echo " "
+			echo '    Model performance evaluation finished. '
+			echo " "
+			echo "### Task Done. "
+			echo " "
+		else \
+			echo -e ">>> R data file of feature selection (${red}${cell}_${PM}_FS_exp.RData${endColor}) do not exsist, do feature selection first. "
+		fi
 
 	fi
 

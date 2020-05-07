@@ -18,7 +18,6 @@ args <- commandArgs(T)
 cell <- args[1]
 PM <- args[2]
 cores <- as.numeric(args[3])
-#FIP_list <- args[5]
 seed <- as.numeric(args[4])
 
 # load data_train
@@ -35,7 +34,7 @@ col_name <- names(data_train_all)
 fea_all <- col_name[5:(FN+4)]
 cat(">>> Remove outlier circRNAs data points ...\n")
 order_srpbm <- order(data_train_all[,'SRPBM'], decreasing = F) # remove outlier circRNAs (highest and lowest 30)
-rmn <- 30
+rmn <- as.numeric(args[5])
 rm_list <- as.data.table(data_train_all)[,Intron_pair][c((1:rmn),((all_num-rmn+1):all_num))]
 write.table(as.data.table(matrix(rm_list,length(rm_list))), "RM_IP.list", col.name=F, quote=F, sep='\t')
 data_train_all <- data_train_all[order_srpbm[-c((1:rmn),((all_num-rmn+1):all_num))],]
@@ -95,8 +94,6 @@ feature_sel <- function(fn) {
 	print(fn)
 	if (fn == length(new_fea_list)) {
 		cat('>>> Temp feature number EQUAL to sorted feature number, PASS ==>> \n')
-#		print(paste('>>> Top ', fn+1, ' features ==> ', sep = ''))
-#		print(sort_fea)
 	} else {
 		print('>>> Incoordinate temp feature number and sorted feature number ! ! ! \n')
 	}
@@ -151,6 +148,10 @@ feature_sel <- function(fn) {
 		cat('>>> Pearson\'s r (PCC): \n')
 		print(PCC_tmp)
 		PCC_tmp <- PCC_tmp$estimate[[1]]
+		SCC_tmp <- cor.test(Model_tmp$finalModel$predicted, data_train$SRPBM,method = "spearman")
+		cat('>>> Spearman\'s r (SCC): \n')
+		print(SCC_tmp)
+		SCC_tmp <- SCC_tmp$estimate[[1]]
 	} else {
 		tmp_pred <- Model_tmp$pred
 		obs_tmp <- Model_tmp$pred$obs
@@ -197,6 +198,7 @@ feature_sel <- function(fn) {
 		R2_best <<- R2_tmp
 		if (PM == 'rf') {
 			PCC_best <<- PCC_tmp
+			SCC_best <<- SCC_tmp
 		}
 		fea_best <<- new_fea_list
 		fn_best <<- fn
@@ -223,6 +225,9 @@ feature_sel <- function(fn) {
 		PCC_test_tmp <- cor.test(data_test$SRPBM,pred_exp_test_tmp,method = "pearson")
 		PCC_test_tmp <- PCC_test_tmp$estimate[[1]]
 		PCC_test <<- c(PCC_test, PCC_test_tmp)
+		SCC_test_tmp <- cor.test(data_test$SRPBM,pred_exp_test_tmp,method = "spearman")
+		SCC_test_tmp <- SCC_test_tmp$estimate[[1]]
+		SCC_test <<- c(SCC_test, SCC_test_tmp)
 	}
 
 
@@ -280,6 +285,10 @@ if (PM == 'rf') {
 	PCC_best <- PCC
 	cat('>>> Pearson\'s r (PCC): \n')
 	print(PCC)
+	SCC <- cor.test(Model_all$finalModel$predicted, data_train$SRPBM,method = "spearman")
+	SCC_best <- SCC
+	cat('>>> Spearman\'s r (SCC): \n')
+	print(SCC)
 } else {
 	all_pred <- Model_all$pred
 	for (i in 1:length(tune_met_all)) {
@@ -339,6 +348,7 @@ rmse_test <- c()
 nrmse_test <- c()
 R2_test <- c()
 PCC_test <- c()
+SCC_test <- c()
 # evaluation of performance in testing set
 pred_exp_test_all <- predict(Model_all, data_test_mat)
 pred_exp_test_all <- as.vector(pred_exp_test_all)
@@ -355,6 +365,9 @@ if (PM == 'rf') {
 	PCC_test_all <- cor.test(data_test$SRPBM,pred_exp_test_all,method = "pearson")
 	PCC_test_all <- PCC_test_all$estimate[[1]]
 	PCC_test <- c(PCC_test, PCC_test_all)
+	SCC_test_all <- cor.test(data_test$SRPBM,pred_exp_test_all,method = "spearman")
+	SCC_test_all <- SCC_test_all$estimate[[1]]
+	SCC_test <- c(SCC_test, SCC_test_all)
 }
 
 cat('>>> [2] Feature selsction ==> \n')
@@ -378,6 +391,8 @@ cat(paste('>>> Total R2: ', R2_best, "\t", sep = ''))
 if (PM == 'rf') {
 	cat('>>> Pearson\'s r (PCC): \n')
 	print(PCC_best)
+	cat('>>> Spearman\'s r (SCC): \n')
+	print(SCC_best)
 }
 tune_met_best <- colnames(tune_best)
 cat('>>> Best tune of final model: \n')
@@ -388,8 +403,8 @@ FN_test <- c(FN,seq(length(sort_fea_all)-1,2))
 cell_test <- rep(cell, length(FN_test))
 model_test <- rep(PM, length(FN_test))
 if (PM == 'rf') {
-	perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, PCC_test, cell_test, model_test, FN_test))
-	colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","PCC","Cell_type","Model","Feature_num")
+	perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, PCC_test, SCC_test, cell_test, model_test, FN_test))
+	colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","PCC","SCC","Cell_type","Model","Feature_num")
 } else {
 	perf_test_df <- data.frame(cbind(rmse_test, nrmse_test, R2_test, cell_test, model_test, FN_test))
 	colnames(perf_test_df) <- c ("RMSE","RMSE_norm","R2","Cell_type","Model","Feature_num")
