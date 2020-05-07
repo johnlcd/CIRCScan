@@ -167,8 +167,7 @@
 <br>
 
 ### 1. Data preparation and feature generation
-> Epigenetic data including DNaseI HS, Histone modification, downloaded from `ENCODE`
-> \( [ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/) \)  
+> Epigenetic data including DNaseI HS, Histone modification, downloaded from [ENCODE](ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/)  
 - ### Process the raw broadPeak/narrowPeak file of ENCODE
 
 ***CMD:***
