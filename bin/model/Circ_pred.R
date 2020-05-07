@@ -21,7 +21,7 @@ PM <- args[2]
 load(paste(cell, PM, 'FS.RData', sep = '_'))
 
 # show R objects
-cat('>>> Objects: \n')
+print('>>> Objects:')
 objects()
 
 # register parallel front-end
@@ -29,20 +29,20 @@ cores <- as.numeric(args[3])
 cl <- makeCluster(cores); registerDoParallel(cl)
 
 # re-train model with all data
-cat('>>> Re-train model with best features: \n')
+print('>>> Re-train model with best features: ')
 
-cat('+++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
+print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
-cat('>>> Best features are: \n')
+print('>>> Best features are: ')
 print(fea_best)
-cat('>>> Feature number: \n')
+print('>>> Feature number: ')
 print(length(fea_best))
 data_train_mat <- data.frame(data_train[fea_best])
 data_train$Type <- as.factor(data_train$Type)
 ctrl <- trainControl(method = 'cv', number = 10, savePredictions = "all", returnData = T, returnResamp = 'all', 
 					 verboseIter = T, allowParallel = T)
 Model_final <- train(y = data_train$Type, x = data_train_mat, method = PM, trControl = ctrl, prob.model = TRUE, preProc = c("center", "scale"))
-cat('>>> Summary of final model: \n')
+print('>>> Summary of final model:')
 summary(Model_final)
 
 Pred <- predict(Model_final, data_train_mat)
@@ -54,7 +54,7 @@ if (Pred_type == 'prob') {
 	Perf.auc <- performance(Prediction, measure = 'auc')
 }
 results <- confusionMatrix(Pred, data_train$Type, positive = 'TRUE')
-cat('>>> Confusion matrix: \n')
+print('>>> Confusion matrix:')
 print(results)
 ACC <- as.numeric(results$byClass['Balanced Accuracy'])
 Precision <- as.numeric(results$byClass['Precision'])
@@ -64,44 +64,44 @@ if (Pred_type == 'prob') {
 	AUC <- unlist(Perf.auc@y.values)
 }
 F1 <- as.numeric(results$byClass['F1'])
-cat('>>> Precision is: \n')
+print('>>> Precision is:')
 print(Recall)
-cat('>>> Specificity is: \n')
+print('>>> Specificity is:')
 print(Spe)
-cat('>>> ACC is: \n')
+print('>>> ACC is:')
 print(ACC)
 if (Pred_type == 'prob') {
-	cat('>>> AUC is:\n')
+	print('>>> AUC is:')
 	print(AUC)
 }
-cat('>>> F1 score is: \n')
+print('>>> F1 score is:')
 print(F1)
 
-cat('+++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
+print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
 
 # stop cluster and register sequntial front end
 stopCluster(cl); registerDoSEQ();
 
 # load pred data
-cat('>>> Predict circRNAs with final model ... ... \n')
+print('>>> Predict circRNAs with final model ... ... ')
 
 data_pred <- read.table(paste(cell, 'pred', sep = '_'), head = T)
 data_pred.bed <- data_pred[1:4]
 all_pred_mat <- data_pred[-(1:3)]
 sel_pred_mat <- all_pred_mat[fea_best]
 rownames(sel_pred_mat) <- data_pred$Intron_pair
-cat('>>> Number of intron pairs and all feature: \n')
-cat(paste(dim(all_pred_mat)[1], dim(all_pred_mat)[2]-2, "\n", sep = ';'))
-cat('>>> Selected features: \n')
+print('>>> Number of intron pairs and all feature:')
+print(paste(dim(all_pred_mat)[1], dim(all_pred_mat)[2]-2, sep = ';'))
+print('>>> Selected features:')
 print(fea_best)
-cat('>>> Selected feature number: \n')
+print('>>> Selected feature number:')
 print(length(fea_best))
-cat('>>> Head of prediction matrix: \n')
+print('>>> Head of prediction matrix:')
 head(sel_pred_mat)
 
 # get threshold
-cat('>>> [1] Get the threshold -->> \n')
+print('>>> [1] Get the threshold -->> ')
 roc_num <- length(Perf.roc@x.values[[1]])
 youden <- list()
 i = 0
@@ -113,23 +113,23 @@ youden <- c(youden,youden_i)
 youden_all <- do.call(rbind, youden)
 line <- which(youden_all==youden_all[which.max(youden_all)], arr.ind = T)[1,1]
 threshold <- Perf.roc@alpha.values[[1]][line]
-cat('    Threshold for prediction: \n')
+print('    Threshold for prediction:')
 print(threshold)
 
 # prediction by trained model
-cat('>>> [2] Prediction and classify by threshold -->> \n')
+print('>>> [2] Prediction and classify by threshold -->> ')
 circ_pred_prob <- predict(Model_final, sel_pred_mat, type = 'prob')
 true_prob <- circ_pred_prob[,2]
 true_num <- length(which(true_prob >= threshold))
-cat('    Number of predicted circRNAs: \n')
+print('    Number of predicted circRNAs:')
 print(true_num)
 
 true_row_num <- which(true_prob >= threshold)
-write.table(data_pred.bed[true_row_num,], paste(cell, PM, 'pred_true.bed', sep = '_'), row.names = F, col.names = F, quote = F, append = TRUE, sep = '\t')
+write.table(data_pred.bed[true_row_num,], paste(cell, PM, 'pred_true.bed', sep = '_'), row.names = F, col.names = F, quote = F, append = F, sep = '\t')
 
 
 # summary of prediction
-cat('>>> Sunmmary of prediction: \n')
+print('>>> Sunmmary of prediction:')
 summary(circ_pred_prob)
 
 # write into file and save R data
