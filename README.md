@@ -404,7 +404,8 @@ Generate `"K562_anno_comb"`, e.g.:
 	...  
 
 
-- ### Newly updata: annotated intron (pair) using raw signal (reads count) of `"bigWig"` file
+>***Newly Updated:***  
+>> Annotated intron (pair) using raw signal (reads count) from `"bigWig"` file.  
 
 
 - ### Data set preparation for model training, testing, validation and prediction
