@@ -62,16 +62,29 @@
 	- merge_feature
 	- **model**
 		- Circ_pred.R
+		- Eval_test_cor.R
+		- Eval_test_perf.R
 		- feature_selection.R
 		- make_set.py
 		- Model_train_FS_exp.R
+		- Model_train_FS_exp_rep.R
+		- Model_train_FS_exp_rmo.R
+		- Model_train_FS_exp_rmo_rep.R
 		- Model_train_pred_exp.R
 		- Model_train.R
+		- Model_train_rep.R
 	- prepare_train_set
 - **data**
 	- **Alu**
 		- alu_hg19.bed
 		- pair_anno_alu
+	- **anno**
+		- GM12878_anno_comb.gz
+		- H1-hESC_anno_comb.gz
+		- HeLa-S3_anno_comb.gz
+		- HepG2_anno_comb.gz
+		- K562_anno_comb.gz
+		- NHEK_anno_comb.gz
 	- **DNaseI**
 		- GM12878_dnase.bed
 		- H1-hESC_dnase.bed
@@ -391,6 +404,8 @@ Generate `"K562_anno_comb"`, e.g.:
 	...  
 
 
+- ### Newly updata: annotated intron (pair) using raw signal (reads count) of `"bigWig"` file
+
 
 - ### Data set preparation for model training, testing, validation and prediction
 
@@ -511,13 +526,26 @@ Generate models and R data file `"K562_rf_train.RData"`, log file `"K562_rf_trai
 		e.g.:
 		circscan --fs -t K562 -m rf -n 8 -l all --auc
 
-Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"`, and "K562_rf_perf_test.txt" with results of feature selection	( Feature number with highest *F1* score )  
+Generate R data file `"K562_rf_FS.RData"` of feature selection and log file `"K562_rf_FS.out"`, and `"K562_rf_perf_test.txt"` with results of feature selection	( Feature number with highest *F1* score )  
 
 >***NOTE:***  
 >> Feature selection is required to generate and select the best model for circRNAs prediction.  
 
 
-***c). CircRNAs prediction and annotation***  
+***c). Model performance evaluation (testing data)***  
+
+***CMD:***  
+
+		circscan --eval -t <cell_type> -m <model> -n <cores>
+		# "-n": used for models training by parellel
+
+		e.g.:
+		circsca -t K562 -m rf -n 8
+
+Generate R data file `"K562_rf_test_perf_eval.RData"` of model performance evaluation and log file `"eval_K562_rf_perf.out"`, and `"K562_rf_eval_test_perf"` with results of model performance in testing data  
+
+
+***d). CircRNAs prediction and annotation***  
 
 ***CMD:***  
 
@@ -563,10 +591,23 @@ Generate predicted anaotated circRNAs file `"K562_rf_pred_true.bed"`
 		or:
 		circscan --exp-fs -t K562 -m rf -r 1 -n 8
 
-Generate models and R data file `"K562_rf_FS_exp.RData"`, log file `"K562_rf_FS_exp.out"`, result of model performance "GM12878_rf_perf_test_reg.txt" with model evaluation of feature selection  
+Generate models and R data file `"K562_rf_FS_exp.RData"`, log file `"K562_rf_FS_exp.out"`, result of model performance `"GM12878_rf_perf_test_reg.txt"` with model evaluation of feature selection  
 
 
-***b). Predict expression***  
+***b). Model performance evaluation (testing data)***  
+
+***CMD:***  
+
+		circscan --exp-eval -t <cell_type> -m <model> -n <cores>
+		# "-n": used for models training by parellel
+
+		e.g.:
+		circscan --exp-eval -t K562 -m rf -n 8
+
+Generate models and R data file `"K562_rf_pred_exp_all.RData"`, log file `"K562_rf_eval_cor.out"`, result of model performance `"K562_rf_eval_test_exp_perf"` with model evaluation in testing data, results of predicted expression levels `"K562_rf_obs_pred_exp_test.all"`, `"K562_rf_obs_pred_exp_train.all"`  
+
+
+***c). Predict expression***  
 
 ***CMD:***  
 
