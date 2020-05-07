@@ -404,7 +404,7 @@ Generate `"K562_anno_comb"`, e.g.:
 
 
 >***Newly Updated:***  
->> Annotated intron (pair) using raw signal (reads count) from [ENCODE](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeBroadHistone)  `"bigWig"` file.  
+>> Annotated intron (pair) using raw signal (reads count) from [ENCODE](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeBroadHistone)  `"bigWig"` file. (["data/anno"](https://github.com/johnlcd/CIRCScan/tree/master/data/anno) direstory)  
 
 
 - ### Data set preparation for model training, testing, validation and prediction
