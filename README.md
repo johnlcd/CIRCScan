@@ -405,7 +405,7 @@ Generate `"K562_anno_comb"`, e.g.:
 
 
 >***Newly Updated:***  
->> Annotated intron (pair) using raw signal (reads count) from [ENCODE](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeBroadHistone)  `"bigWig"` file.  
+>> Annotated intron (pair) using raw signal (reads count) from [ENCODE](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeBroadHistone)  [`"bigWig"`](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeBroadHistone) file.  
 
 
 - ### Data set preparation for model training, testing, validation and prediction
