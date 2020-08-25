@@ -23,7 +23,7 @@
 
 ## Contact
 ### Author
-> **Jia-Bin Chen**, **Shan-Shan Dong**, **Shi Yao**, **Yan Guo**, **Tie-Lin Yang**  
+> **Jia-Bin Chen**, **Shan-Shan Dong**, **Yan Guo**, **Tie-Lin Yang**  
 > Key Laboratory of Biomedical Information Engineering of Ministry of Education, School of Life Science and Technology, Xi'an Jiaotong University, Xi'an, Shaanxi Province, 710049, P. R. China  
 > [yangtielin@mail.xjtu.edu.cn](yangtielin@mail.xjtu.edu.cn)  
 <br>
