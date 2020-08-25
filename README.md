@@ -9,6 +9,10 @@
 > This tool, `CIRCScan`, is used for predicting circRNAs expression in a cell/tissue specific manner by machine learning based on epigenetic features.  
 <br>
   
+## Citation
+> [Jia-Bin Chen\*, Shan-Shan Dong\*, Shi Yao, Yuan-Yuan Duan, Wei-Xin Hu, Hao Chen, Nai-Ning Wang, Xiao-Feng Chen, Ruo-Han Hao, Hlaing Nwe Thynn, Ming-Rui Guo, Yu-Jie Zhang, Yu Rong, Yi-Xiao Chen, Fu-Ling Zhou, Yan Guo#, Tie-Lin Yang#. Modeling circRNA expression pattern with integrated sequence and epigenetic features demonstrates the potential involvement of H3K79me2 in circRNA expression. *Bioinformatics*, 2020. ](https://doi.org/10.1093/bioinformatics/btaa567)
+<br>
+
 ## License
 > This software is distributed under the terms of GPL 2.0  
 <br>
