@@ -10,7 +10,7 @@
 <br>
   
 ## Citation
-> [Jia-Bin Chen\*, Shan-Shan Dong\*, Shi Yao, Yuan-Yuan Duan, Wei-Xin Hu, Hao Chen, Nai-Ning Wang, Xiao-Feng Chen, Ruo-Han Hao, Hlaing Nwe Thynn, Ming-Rui Guo, Yu-Jie Zhang, Yu Rong, Yi-Xiao Chen, Fu-Ling Zhou, Yan Guo#, Tie-Lin Yang#. Modeling circRNA expression pattern with integrated sequence and epigenetic features demonstrates the potential involvement of H3K79me2 in circRNA expression. *Bioinformatics*, 2020. ](https://doi.org/10.1093/bioinformatics/btaa567)
+> [Chen JB\*, Dong SS\*, Yao S, Duan YY, Hu WX, Chen H, Wang NN, Chen XF, Hao RH, Thynn HN, Guo MR, Zhang YJ, Rong Y, Chen YX, Zhou FL, Guo Y#, Yang TL#. Modeling circRNA expression pattern with integrated sequence and epigenetic features demonstrates the potential involvement of H3K79me2 in circRNA expression. *Bioinformatics*, 2020. ](https://doi.org/10.1093/bioinformatics/btaa567)
 <br>
 
 ## License
