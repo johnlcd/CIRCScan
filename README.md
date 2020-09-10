@@ -170,6 +170,9 @@
 
 ## Work flow
 <br>
+### **CIRCScan** Pipeline  
+<br>
+![CIRCScan pipeline](https://github.com/johnlcd/CIRCScan/pipeline.jpg)  
 
 ### 1. Data preparation and feature generation
 > Epigenetic data including DNaseI HS, Histone modification, downloaded from `ENCODE` [http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/)  
