@@ -169,9 +169,7 @@
 
 
 ## Work flow
-<br>
 ### **CIRCScan** Pipeline  
-<br>
 ![CIRCScan pipeline](https://github.com/johnlcd/CIRCScan/pipeline.jpg)  
 
 ### 1. Data preparation and feature generation
