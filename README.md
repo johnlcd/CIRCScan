@@ -14,7 +14,7 @@
 <br>
 
 ## License
-> This software is distributed under the terms of GPL 2.0  
+> This software is distributed under the terms of GPL 3.0  
 <br>
 
 ## Source
