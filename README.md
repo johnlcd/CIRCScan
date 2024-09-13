@@ -30,7 +30,7 @@
 
 ## Maintainer
 > **Jia-Bin Chen**  
-> You can contact [:email:](johnlcd@stu.xjtu.edu.cn) johnlcd@stu.xjtu.edu.cn 
+> You can contact [:email:](jblxuan@vip.qq.com) jblxuan@vip.qq.com 
   when you have any questions, suggestions, comments, etc.  
 > Please describe in details, and attach your command line and log messages if possible.  
 <br>
